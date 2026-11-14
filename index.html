@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallSellerSupport - D2C Profit & Pricing Solution</title>
-    <!-- Tab Icon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .tool-section { transition: all 0.4s ease-in-out; }
-        /* Custom dark theme inputs */
         .dark-input { background-color: #18181b; border: 1px solid #3f3f46; color: white; }
         .dark-input:focus { border-color: #f97316; outline: none; }
     </style>
@@ -56,8 +56,7 @@
                     <div class="flex-grow h-px bg-gray-300 ml-4"></div>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Basic Calculator (Dark Theme Replica) -->
+                    <!-- Basic Calculator Button -->
                     <button onclick="openTool('basic-section')" class="text-left w-full bg-white p-6 rounded-2xl border border-gray-200 hover:border-green-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -119,7 +118,7 @@
             <!-- ======================= INTERACTIVE TOOL CONTAINERS ======================= -->
             <div id="tool-container" class="mt-10">
 
-                <!-- 0. SOFTR REPLICA: DARK THEME BASIC CALCULATOR UI -->
+                <!-- 0. EXACT REPLICA: DARK THEME BASIC CALCULATOR + CHARTS/ANALYTICS -->
                 <div id="basic-section" class="tool-section hidden bg-[#0f0f11] p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-800">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-3xl font-extrabold text-white">Calculator</h3>
@@ -128,12 +127,10 @@
                     
                     <div class="grid md:grid-cols-3 gap-6">
                         
-                        <!-- LEFT COLUMN -->
+                        <!-- LEFT COLUMN: Inputs & RCA -->
                         <div class="md:col-span-2 flex flex-col gap-6">
-                            
                             <!-- Product Details Card -->
                             <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative overflow-hidden">
-                                <!-- Top Accent Border -->
                                 <div class="absolute top-0 left-0 w-1/3 h-1 bg-orange-500"></div>
                                 <div class="absolute top-0 left-1/3 w-1/3 h-1 bg-green-500"></div>
                                 
@@ -225,7 +222,7 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT COLUMN -->
+                        <!-- RIGHT COLUMN: Output Summary -->
                         <div class="md:col-span-1">
                             <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative h-full flex flex-col">
                                 <div class="absolute top-0 left-0 w-1/2 h-1 bg-orange-500"></div>
@@ -272,7 +269,7 @@
                             </div>
                         </div>
 
-                        <!-- BOTTOM ROW: "Where the selling price goes" -->
+                        <!-- MIDDLE ROW: "Where the selling price goes" -->
                         <div class="md:col-span-3 mt-2">
                             <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative">
                                 <div class="absolute top-0 left-0 w-1/3 h-1 bg-orange-500"></div>
@@ -283,21 +280,87 @@
                                 </div>
 
                                 <div id="breakdown_data" class="hidden">
-                                    <!-- The Stacked Bar -->
                                     <div class="w-full h-3 rounded-full flex overflow-hidden bg-gray-800 mb-6">
                                         <div id="bar_src" class="bg-blue-500 transition-all duration-500" style="width: 0%"></div>
                                         <div id="bar_ship" class="bg-purple-500 transition-all duration-500" style="width: 0%"></div>
                                         <div id="bar_tax" class="bg-yellow-500 transition-all duration-500" style="width: 0%"></div>
-                                        <div id="bar_ad" class="bg-pink-500 transition-all duration-500" style="width: 0%"></div>
+                                        <div id="bar_ad" class="bg-orange-500 transition-all duration-500" style="width: 0%"></div>
                                         <div id="bar_prof" class="bg-green-500 transition-all duration-500" style="width: 0%"></div>
                                     </div>
-                                    <!-- The Legend -->
                                     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-xs">
                                         <div><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1"></span><span class="text-gray-400">Sourcing:</span> <span id="leg_src" class="text-white font-bold">₹0</span></div>
                                         <div><span class="inline-block w-2 h-2 rounded-full bg-purple-500 mr-1"></span><span class="text-gray-400">Shipping/RTO:</span> <span id="leg_ship" class="text-white font-bold">₹0</span></div>
                                         <div><span class="inline-block w-2 h-2 rounded-full bg-yellow-500 mr-1"></span><span class="text-gray-400">Gateway/Tax:</span> <span id="leg_tax" class="text-white font-bold">₹0</span></div>
-                                        <div><span class="inline-block w-2 h-2 rounded-full bg-pink-500 mr-1"></span><span class="text-gray-400">Ads:</span> <span id="leg_ad" class="text-white font-bold">₹0</span></div>
+                                        <div><span class="inline-block w-2 h-2 rounded-full bg-orange-500 mr-1"></span><span class="text-gray-400">Ads:</span> <span id="leg_ad" class="text-white font-bold">₹0</span></div>
                                         <div><span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span><span class="text-gray-400">Profit:</span> <span id="leg_prof" class="text-white font-bold">₹0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTTOM ROW: TENACIOUS PRO ANALYTICS (GRAPHS & CHARTS) -->
+                        <div class="md:col-span-3 mt-6 border-t border-[#27272a] pt-8">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-xl font-bold text-white">Tenacious Pro Analytics [Preview]</h3>
+                                <span class="bg-[#27272a] text-gray-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">sample data</span>
+                            </div>
+                            <p class="text-sm text-gray-400 mb-6">A look at the Pro dashboard. Showing all channels over the last 30 days.</p>
+                            
+                            <!-- Controls Row -->
+                            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+                                <div class="flex gap-3 w-full md:w-auto">
+                                    <select class="bg-[#18181b] border border-[#27272a] text-white text-sm rounded-lg px-3 py-2 outline-none">
+                                        <option>All channels</option>
+                                    </select>
+                                    <select class="bg-[#18181b] border border-[#27272a] text-white text-sm rounded-lg px-3 py-2 outline-none">
+                                        <option>1 to 30 days</option>
+                                    </select>
+                                </div>
+                                <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">7 days</button>
+                                    <button class="bg-[#27272a] border border-[#3f3f46] text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">30 days</button>
+                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">60 days</button>
+                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">Month</button>
+                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">Year</button>
+                                </div>
+                            </div>
+
+                            <!-- Dashboard KPI Cards -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
+                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg> 
+                                        Profit Margin (%)
+                                    </p>
+                                    <p class="text-3xl font-black text-white">24.8%</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">For all channels</p>
+                                </div>
+                                <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
+                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">Total Break-Even Ad Spend (₹)</p>
+                                    <p class="text-3xl font-black text-white">₹2,97,800</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">Max you can spend on ads</p>
+                                </div>
+                                <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
+                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">Projected Monthly Revenue (₹)</p>
+                                    <p class="text-3xl font-black text-white">₹5,20,000</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">Based on the last 30 days</p>
+                                </div>
+                            </div>
+
+                            <!-- Chart.js Canvases -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
+                                    <p class="text-sm font-bold text-white mb-1">Profitability by Sales Channel</p>
+                                    <p class="text-xs text-gray-500 mb-4">Net profit per channel</p>
+                                    <div class="h-48 w-full">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
+                                    <p class="text-sm font-bold text-white mb-1">RTO Impact on Revenue</p>
+                                    <p class="text-xs text-gray-500 mb-4">Revenue as the return rate climbs.</p>
+                                    <div class="h-48 w-full">
+                                        <canvas id="lineChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -523,15 +586,20 @@
         </div>
     </footer>
 
-    <!-- INTERACTIVE LOGIC FOR ALL CALCULATORS -->
+    <!-- INTERACTIVE LOGIC & CHARTS -->
     <script>
+        let chartsRendered = false; // Prevent re-drawing charts every click
+
         function openTool(toolId) {
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
             const section = document.getElementById(toolId);
             section.classList.remove('hidden');
             section.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            if (toolId === 'basic-section') calculateExactBasic();
+            if (toolId === 'basic-section') {
+                calculateExactBasic();
+                initCharts(); // Render the analytics graphs!
+            }
             if (toolId === 'rto-section') calculateRTO();
             if (toolId === 'discount-section') calculateDiscount();
             if (toolId === 'multi-section') calculateMulti();
@@ -539,6 +607,74 @@
 
         function closeTools() {
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
+        }
+
+        // 0. NATIVE CHART.JS RENDERER FOR ANALYTICS
+        function initCharts() {
+            if (chartsRendered) return;
+            
+            // Profitability Bar Chart
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Shopify', 'Instagram', 'Flipkart', 'Amazon'],
+                    datasets: [{
+                        label: 'Net Profit',
+                        data: [75, 60, 50, 65],
+                        backgroundColor: '#10b981', // green accent to match Softr screenshot
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
+                        x: { grid: { display: false }, ticks: { color: '#71717a' } }
+                    }
+                }
+            });
+
+            // RTO Impact Line Chart
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['0%', '10%', '20%', '30%', '40%', '50%'],
+                    datasets: [
+                        {
+                            label: 'Revenue w/ RTO',
+                            data: [100, 90, 80, 70, 60, 50],
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            pointBackgroundColor: '#10b981',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Gross Revenue',
+                            data: [100, 100, 100, 100, 100, 100],
+                            borderColor: '#3f3f46',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#a1a1aa', boxWidth: 12 } }
+                    },
+                    scales: {
+                        y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
+                        x: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }
+                    }
+                }
+            });
+            chartsRendered = true;
         }
 
         // 0. EXACT MATCH BASIC CALCULATOR LOGIC (WITH PROGRESS BAR)
@@ -554,11 +690,8 @@
             let ad = parseFloat(document.getElementById('bp_ad').value) || 0;
             let gst = parseFloat(document.getElementById('bp_gst').value) || 0;
 
-            // Cost calculations
             let rtoLossPerUnit = rtopen * (rtorate / 100);
             let fixedCosts = src + fwd + pkg + ad + rtoLossPerUnit;
-
-            // Target Margin formula
             let percentageDeductions = (pg + gst + target) / 100;
             
             let suggestedSP = 0;
@@ -575,7 +708,6 @@
 
             let totalProfit = netProfit * qty;
 
-            // Output UI Update
             document.getElementById('out_ssp').innerText = '₹' + suggestedSP.toFixed(2);
             document.getElementById('out_np').innerText = '₹' + netProfit.toFixed(2);
             document.getElementById('out_tp').innerText = '₹' + totalProfit.toFixed(2);
@@ -598,11 +730,10 @@
                 healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
             }
 
-            // Update "Where the selling price goes" Stacked Bar
             if (suggestedSP > 0) {
                 let srcPct = (src / suggestedSP) * 100;
                 let shipPct = ((fwd + pkg + rtoLossPerUnit) / suggestedSP) * 100;
-                let taxPct = pg + gst; // percentage of SP
+                let taxPct = pg + gst; 
                 let adPct = (ad / suggestedSP) * 100;
                 let profPct = target; 
 
@@ -692,7 +823,6 @@
             let profitLossDifference = idealProfitPerUnit - actualProfitPerUnit;
 
             document.getElementById('idealProfit').innerText = '₹' + idealProfitPerUnit.toFixed(2);
-            
             let actualElem = document.getElementById('actualProfit');
             actualElem.innerText = '₹' + actualProfitPerUnit.toFixed(2);
             
@@ -714,10 +844,8 @@
 
             let amazonFee = (sp * 0.15) + 40;
             let amazonProfit = sp - cp - ship - amazonFee;
-
             let meeshoFee = (sp * 0.02);
             let meeshoProfit = sp - cp - ship - meeshoFee;
-
             let shopifyFee = (sp * 0.02);
             let shopifyProfit = sp - cp - ship - shopifyFee;
 
