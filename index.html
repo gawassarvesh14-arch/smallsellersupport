@@ -55,17 +55,17 @@
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- Basic Profit Margin (Softr App - Opens in new tab) -->
-                    <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block w-full bg-white p-6 rounded-2xl border border-gray-200 hover:border-green-500 hover:shadow-md transition group focus:outline-none">
+                    <!-- NATIVE Basic Profit Margin (No Softr) -->
+                    <button onclick="openTool('basic-section')" class="text-left w-full bg-white p-6 rounded-2xl border border-gray-200 hover:border-green-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">Basic Profit Margin</h4>
                         <p class="text-sm text-gray-600 mb-4">Calculate single product margins and marketplace fees.</p>
-                        <span class="text-green-600 font-semibold text-sm flex items-center">Open App <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></span>
-                    </a>
+                        <span class="text-green-600 font-semibold text-sm flex items-center">Open Calculator <svg class="w-4 h-4 ml-1 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
+                    </button>
 
-                    <!-- Discount Simulator (Interactive) -->
+                    <!-- Discount Simulator -->
                     <button onclick="openTool('discount-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-green-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- RTO Tool Tab Button -->
+                    <!-- RTO Tool -->
                     <button onclick="openTool('rto-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -96,7 +96,7 @@
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- Multi Platform Tab Button -->
+                    <!-- Multi Platform -->
                     <button onclick="openTool('multi-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -120,6 +120,74 @@
 
             <!-- ======================= INTERACTIVE TOOL CONTAINERS ======================= -->
             <div id="tool-container" class="mt-10">
+
+                <!-- 0. NATIVE BASIC PROFIT CALCULATOR UI (Replacing Softr) -->
+                <div id="basic-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-green-200">
+                    <div class="flex justify-between items-center mb-8 border-b pb-4">
+                        <div>
+                            <span class="bg-green-100 text-green-700 font-bold px-2 py-1 rounded text-xs">Free Tool</span>
+                            <h3 class="text-2xl font-extrabold text-gray-900 mt-2">Basic Profit Margin Calculator</h3>
+                            <p class="text-gray-500">Calculate net margin after product cost, shipping, and platform fees.</p>
+                        </div>
+                        <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Inputs -->
+                        <div class="md:col-span-2 bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                                    <input type="number" id="bp_sp" value="999" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-sm font-semibold mb-1">Sourcing/Mfg Cost (₹)</label>
+                                    <input type="number" id="bp_cp" value="350" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Shipping Cost (₹)</label>
+                                    <input type="number" id="bp_ship" value="70" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Packaging (₹)</label>
+                                    <input type="number" id="bp_pack" value="15" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Platform/Gateway Fee (%)</label>
+                                    <input type="number" id="bp_fee_pct" value="2" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Ad Spend per Order (₹)</label>
+                                    <input type="number" id="bp_ad" value="0" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none" oninput="calculateBasic()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Outputs -->
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white">
+                            <h4 class="text-lg font-bold mb-4 border-b border-gray-700 pb-2">Margin Summary</h4>
+                            
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-gray-400 text-sm">Total Cost:</span>
+                                <span class="font-semibold text-gray-200" id="bp_total_cost">₹0</span>
+                            </div>
+                            
+                            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 mt-4 mb-4">
+                                <p class="text-xs text-gray-400 mb-1">Net Profit per unit:</p>
+                                <p id="bp_profit" class="text-3xl font-black text-green-400">₹0</p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg border border-gray-700">
+                                <span class="text-gray-400 text-sm">Profit Margin:</span>
+                                <span class="font-bold text-white text-lg" id="bp_margin_pct">0%</span>
+                            </div>
+
+                            <div id="bp_warning" class="mt-4 text-center bg-red-500/20 text-red-300 text-xs font-bold py-2 rounded-lg hidden">
+                                LOW MARGIN WARNING
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- 1. DISCOUNT SIMULATOR UI -->
                 <div id="discount-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-green-200">
@@ -250,7 +318,6 @@
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
                     
-                    <!-- Unified Inputs -->
                     <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8 grid md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-semibold mb-1 text-gray-700">Selling Price (₹)</label>
@@ -266,23 +333,19 @@
                         </div>
                     </div>
 
-                    <!-- Platform Results Grid -->
                     <div class="grid md:grid-cols-3 gap-6">
-                        <!-- Amazon Card -->
                         <div class="bg-white border-2 border-gray-200 p-6 rounded-xl text-center hover:border-gray-800 transition">
                             <h4 class="font-bold text-gray-800 text-xl mb-1">Amazon</h4>
                             <p class="text-xs text-gray-500 mb-4">~15% Fee + Fixed Cost</p>
                             <p class="text-sm text-gray-600 mb-1">Net Profit</p>
                             <p id="res_amazon" class="text-3xl font-black text-gray-800">₹0</p>
                         </div>
-                        <!-- Meesho Card -->
                         <div class="bg-white border-2 border-pink-100 p-6 rounded-xl text-center hover:border-pink-500 transition">
                             <h4 class="font-bold text-pink-600 text-xl mb-1">Meesho</h4>
                             <p class="text-xs text-gray-500 mb-4">0% Comm + ~2% PG Fee</p>
                             <p class="text-sm text-gray-600 mb-1">Net Profit</p>
                             <p id="res_meesho" class="text-3xl font-black text-pink-600">₹0</p>
                         </div>
-                        <!-- Shopify/D2C Card -->
                         <div class="bg-white border-2 border-green-100 p-6 rounded-xl text-center hover:border-green-500 transition">
                             <h4 class="font-bold text-green-600 text-xl mb-1">Your Website</h4>
                             <p class="text-xs text-gray-500 mb-4">2% PG Fee + No Comm</p>
@@ -344,17 +407,13 @@
 
     <!-- INTERACTIVE LOGIC FOR ALL CALCULATORS -->
     <script>
-        // Tab switching logic
         function openTool(toolId) {
-            // Hide all tool sections first
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
-            
-            // Open the requested one
             const section = document.getElementById(toolId);
             section.classList.remove('hidden');
             section.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // Trigger initial calculation
+            if (toolId === 'basic-section') calculateBasic();
             if (toolId === 'rto-section') calculateRTO();
             if (toolId === 'discount-section') calculateDiscount();
             if (toolId === 'multi-section') calculateMulti();
@@ -362,6 +421,43 @@
 
         function closeTools() {
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
+        }
+
+        // 0. NATIVE BASIC PROFIT LOGIC
+        function calculateBasic() {
+            let sp = parseFloat(document.getElementById('bp_sp').value) || 0;
+            let cp = parseFloat(document.getElementById('bp_cp').value) || 0;
+            let ship = parseFloat(document.getElementById('bp_ship').value) || 0;
+            let pack = parseFloat(document.getElementById('bp_pack').value) || 0;
+            let feePct = parseFloat(document.getElementById('bp_fee_pct').value) || 0;
+            let ad = parseFloat(document.getElementById('bp_ad').value) || 0;
+
+            let platformFee = sp * (feePct / 100);
+            let totalCost = cp + ship + pack + platformFee + ad;
+            let profit = sp - totalCost;
+            let marginPct = sp > 0 ? (profit / sp) * 100 : 0;
+
+            document.getElementById('bp_total_cost').innerText = '₹' + totalCost.toFixed(2);
+            let profitElem = document.getElementById('bp_profit');
+            let marginElem = document.getElementById('bp_margin_pct');
+            let warnElem = document.getElementById('bp_warning');
+
+            profitElem.innerText = '₹' + profit.toFixed(2);
+            marginElem.innerText = marginPct.toFixed(1) + '%';
+
+            if(profit < 0) {
+                profitElem.classList.replace('text-green-400', 'text-red-400');
+                warnElem.classList.remove('hidden');
+                warnElem.innerText = "🚨 LOSS DETECTED: Increase price or cut costs!";
+            } else if (marginPct < 15) {
+                profitElem.classList.replace('text-red-400', 'text-yellow-400');
+                warnElem.classList.remove('hidden');
+                warnElem.innerText = "⚠️ LOW MARGIN: Profit is below safe threshold (15%)";
+            } else {
+                profitElem.classList.replace('text-red-400', 'text-green-400');
+                profitElem.classList.replace('text-yellow-400', 'text-green-400');
+                warnElem.classList.add('hidden');
+            }
         }
 
         // 1. DISCOUNT SIMULATOR LOGIC
@@ -440,15 +536,12 @@
             let cp = parseFloat(document.getElementById('mp_cp').value) || 0;
             let ship = parseFloat(document.getElementById('mp_ship').value) || 0;
 
-            // Amazon (~15% fee + fixed closing cost assumption ~40rs)
             let amazonFee = (sp * 0.15) + 40;
             let amazonProfit = sp - cp - ship - amazonFee;
 
-            // Meesho (0% commission, ~2% payment gateway)
             let meeshoFee = (sp * 0.02);
             let meeshoProfit = sp - cp - ship - meeshoFee;
 
-            // Shopify (Only 2% PG fee)
             let shopifyFee = (sp * 0.02);
             let shopifyProfit = sp - cp - ship - shopifyFee;
 
