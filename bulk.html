@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Profit Calculator - SmallSellerSupport</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse for reading CSV files without database -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+        
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold text-blue-600 mb-2">Bulk Margin Calculator (Pro)</h1>
+            <p class="text-gray-600">Upload your product catalog CSV to calculate margins for 100+ items instantly. No database required.</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center bg-blue-50 mb-8">
+            <h3 class="text-lg font-bold mb-4 text-gray-700">1. Upload your CSV File</h3>
+            <p class="text-sm text-gray-500 mb-4">Required columns: Product Name, Cost Price, Selling Price, Shipping Cost</p>
+            <input type="file" id="csvFileInput" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mx-auto cursor-pointer">
+        </div>
+
+        <!-- Processing Controls -->
+        <div class="flex justify-center gap-4 mb-8">
+            <button onclick="processCSV()" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-lg shadow hover:bg-blue-700 transition">
+                Calculate Profits
+            </button>
+            <button id="downloadBtn" onclick="downloadCSV()" class="hidden bg-green-600 text-white font-bold px-8 py-3 rounded-lg shadow hover:bg-green-700 transition">
+                Download Result CSV
+            </button>
+        </div>
+
+        <!-- Results Preview -->
+        <div id="resultsContainer" class="hidden">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Preview Results (First 5 Items)</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="p-3 border-b border-gray-200">Product</th>
+                            <th class="p-3 border-b border-gray-200">Selling Price</th>
+                            <th class="p-3 border-b border-gray-200">Total Cost</th>
+                            <th class="p-3 border-b border-gray-200">Net Profit</th>
+                            <th class="p-3 border-b border-gray-200">Margin %</th>
+                            <th class="p-3 border-b border-gray-200">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be injected here via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic (Runs purely in browser) -->
+    <script>
+        let finalCSVData = [];
+
+        function processCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Bhai, pehle CSV file toh select karo!");
+                return;
+            }
+
+            // Parse CSV using PapaParse
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    const data = results.data;
+                    finalCSVData = [];
+
+                    // Loop through each product row
+                    data.forEach(row => {
+                        let cost = parseFloat(row['Cost Price']) || 0;
+                        let sp = parseFloat(row['Selling Price']) || 0;
+                        let shipping = parseFloat(row['Shipping Cost']) || 0;
+                        
+                        // Example calculation: 5% platform fee assumption
+                        let platformFee = sp * 0.05; 
+                        let totalCost = cost + shipping + platformFee;
+                        let netProfit = sp - totalCost;
+                        let marginPercent = sp > 0 ? ((netProfit / sp) * 100).toFixed(2) : 0;
+                        
+                        let status = netProfit > 0 ? "Profitable ✅" : "Loss ❌";
+
+                        // Add to final data for download
+                        finalCSVData.push({
+                            "Product Name": row['Product Name'] || 'Unknown',
+                            "Cost Price (₹)": cost,
+                            "Selling Price (₹)": sp,
+                            "Shipping & Fees (₹)": (shipping + platformFee).toFixed(2),
+                            "Net Profit (₹)": netProfit.toFixed(2),
+                            "Profit Margin (%)": marginPercent + "%",
+                            "Status": status
+                        });
+                    });
+
+                    updatePreviewTable();
+                    document.getElementById('resultsContainer').classList.remove('hidden');
+                    document.getElementById('downloadBtn').classList.remove('hidden');
+                }
+            });
+        }
+
+        function updatePreviewTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = "";
+            
+            // Show only first 5 items in preview so page doesn't hang
+            const previewData = finalCSVData.slice(0, 5);
+
+            previewData.forEach(row => {
+                let isLoss = row["Net Profit (₹)"] < 0;
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 border-b border-gray-100">${row["Product Name"]}</td>
+                    <td class="p-3 border-b border-gray-100 font-semibold">₹${row["Selling Price (₹)"]}</td>
+                    <td class="p-3 border-b border-gray-100 text-gray-500">₹${row["Cost Price (₹)"]}</td>
+                    <td class="p-3 border-b border-gray-100 font-bold ${isLoss ? 'text-red-500' : 'text-green-500'}">₹${row["Net Profit (₹)"]}</td>
+                    <td class="p-3 border-b border-gray-100">${row["Profit Margin (%)"]}</td>
+                    <td class="p-3 border-b border-gray-100">${row["Status"]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function downloadCSV() {
+            // Convert JSON back to CSV
+            const csv = Papa.unparse(finalCSVData);
+            
+            // Create a downloadable file link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Tenacious_Bulk_Profit_Report.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
