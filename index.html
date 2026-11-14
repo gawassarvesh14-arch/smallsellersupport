@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallSellerSupport - D2C Profit & Pricing Solution</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
-    <!-- Chart.js Library -->
+    <!-- Chart.js Library for Graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -118,7 +118,7 @@
             <!-- ======================= INTERACTIVE TOOL CONTAINERS ======================= -->
             <div id="tool-container" class="mt-10">
 
-                <!-- 0. EXACT REPLICA: DARK THEME BASIC CALCULATOR + CHARTS/ANALYTICS -->
+                <!-- 0. EXACT REPLICA: DARK THEME BASIC CALCULATOR + GRAPHS/CHARTS -->
                 <div id="basic-section" class="tool-section hidden bg-[#0f0f11] p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-800">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-3xl font-extrabold text-white">Calculator</h3>
@@ -202,7 +202,6 @@
                                     <span class="text-xs font-bold text-gray-500">PRO</span>
                                 </div>
                                 
-                                <!-- Locked Overlay -->
                                 <div class="absolute inset-0 bg-[#1c1c1e]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-xl">
                                     <svg class="w-6 h-6 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                     <p class="text-sm font-bold text-white mb-2">Pro Feature</p>
@@ -261,10 +260,6 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         Copy Summary
                                     </button>
-                                    <button class="flex-1 text-xs font-semibold bg-[#27272a] hover:bg-[#3f3f46] text-white py-2.5 rounded transition flex justify-center items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                                        Share
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -298,52 +293,30 @@
                             </div>
                         </div>
 
-                        <!-- BOTTOM ROW: TENACIOUS PRO ANALYTICS (GRAPHS & CHARTS) -->
-                        <div class="md:col-span-3 mt-6 border-t border-[#27272a] pt-8">
+                        <!-- BOTTOM ROW: TENACIOUS PRO ANALYTICS (CHARTS) -->
+                        <div class="md:col-span-3 mt-6 border-t border-[#27272a] pt-8" id="analytics-container">
                             <div class="flex items-center gap-3 mb-2">
                                 <h3 class="text-xl font-bold text-white">Tenacious Pro Analytics [Preview]</h3>
                                 <span class="bg-[#27272a] text-gray-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">sample data</span>
                             </div>
                             <p class="text-sm text-gray-400 mb-6">A look at the Pro dashboard. Showing all channels over the last 30 days.</p>
                             
-                            <!-- Controls Row -->
-                            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                                <div class="flex gap-3 w-full md:w-auto">
-                                    <select class="bg-[#18181b] border border-[#27272a] text-white text-sm rounded-lg px-3 py-2 outline-none">
-                                        <option>All channels</option>
-                                    </select>
-                                    <select class="bg-[#18181b] border border-[#27272a] text-white text-sm rounded-lg px-3 py-2 outline-none">
-                                        <option>1 to 30 days</option>
-                                    </select>
-                                </div>
-                                <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">7 days</button>
-                                    <button class="bg-[#27272a] border border-[#3f3f46] text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">30 days</button>
-                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">60 days</button>
-                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">Month</button>
-                                    <button class="bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] text-gray-300 text-xs px-3 py-2 rounded-lg transition whitespace-nowrap">Year</button>
-                                </div>
-                            </div>
-
-                            <!-- Dashboard KPI Cards -->
+                            <!-- KPI Cards (Live connected to calculator inputs) -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
-                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">
-                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg> 
-                                        Profit Margin (%)
-                                    </p>
-                                    <p class="text-3xl font-black text-white">24.8%</p>
-                                    <p class="text-[10px] text-gray-500 mt-1">For all channels</p>
+                                    <p class="text-xs text-gray-400 mb-2">Profit Margin (%)</p>
+                                    <p id="kpi_margin" class="text-3xl font-black text-white">0.0%</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">Live from calculator</p>
                                 </div>
                                 <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
-                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">Total Break-Even Ad Spend (₹)</p>
-                                    <p class="text-3xl font-black text-white">₹2,97,800</p>
-                                    <p class="text-[10px] text-gray-500 mt-1">Max you can spend on ads</p>
+                                    <p class="text-xs text-gray-400 mb-2">Break-Even Ad Spend (₹)</p>
+                                    <p id="kpi_maxad" class="text-3xl font-black text-white">₹0.00</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">Max allowable per unit</p>
                                 </div>
                                 <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
-                                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1">Projected Monthly Revenue (₹)</p>
-                                    <p class="text-3xl font-black text-white">₹5,20,000</p>
-                                    <p class="text-[10px] text-gray-500 mt-1">Based on the last 30 days</p>
+                                    <p class="text-xs text-gray-400 mb-2">Projected Monthly Revenue (₹)</p>
+                                    <p id="kpi_rev" class="text-3xl font-black text-white">₹0</p>
+                                    <p class="text-[10px] text-gray-500 mt-1">Assuming 30 units sold</p>
                                 </div>
                             </div>
 
@@ -375,7 +348,6 @@
                         <div>
                             <span class="bg-green-100 text-green-700 font-bold px-2 py-1 rounded text-xs">Free Tool</span>
                             <h3 class="text-2xl font-extrabold text-gray-900 mt-2">Sale & Discount Simulator</h3>
-                            <p class="text-gray-500">Calculate how much discount you can offer before losing money.</p>
                         </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
@@ -408,16 +380,12 @@
                         <div class="bg-gray-900 p-6 rounded-2xl text-white">
                             <h4 class="text-lg font-bold mb-4 border-b border-gray-700 pb-2">Sale Analysis</h4>
                             <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
-                                <p class="text-xs text-gray-400 mb-1">New Sale Price for Customer:</p>
+                                <p class="text-xs text-gray-400 mb-1">New Sale Price:</p>
                                 <p id="ds_new_sp" class="text-3xl font-black text-white">₹0</p>
                             </div>
                             <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
-                                <p class="text-xs text-gray-400 mb-1">Your Net Profit After Discount:</p>
+                                <p class="text-xs text-gray-400 mb-1">Net Profit:</p>
                                 <p id="ds_profit" class="text-2xl font-bold text-green-400">₹0</p>
-                            </div>
-                            <div id="ds_warning" class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl hidden">
-                                <p class="text-sm font-bold text-red-400">⚠️ Warning: You are in loss!</p>
-                                <p class="text-xs text-gray-300 mt-1">Reduce the discount percentage.</p>
                             </div>
                         </div>
                     </div>
@@ -429,7 +397,6 @@
                         <div>
                             <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-xs">Pro Tool</span>
                             <h3 class="text-2xl font-extrabold text-gray-900 mt-2">RTO & COD Loss Simulator</h3>
-                            <p class="text-gray-500">Calculate exactly how much money you lose on returns.</p>
                         </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
@@ -438,20 +405,20 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
-                                    <input type="number" id="sp" value="999" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                                    <input type="number" id="sp" value="999" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold mb-1">Cost Price / Manufacturing (₹)</label>
-                                    <input type="number" id="cp" value="350" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                                    <label class="block text-sm font-semibold mb-1">Cost Price (₹)</label>
+                                    <input type="number" id="cp" value="350" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-semibold mb-1">Forward Ship (₹)</label>
-                                        <input type="number" id="fwdShip" value="80" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                                        <input type="number" id="fwdShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-semibold mb-1">Return Ship (₹)</label>
-                                        <input type="number" id="rtoShip" value="80" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                                        <input type="number" id="rtoShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
                                     </div>
                                 </div>
                                 <div class="pt-4 border-t mt-4">
@@ -459,29 +426,18 @@
                                         <label class="block text-sm font-extrabold">Expected RTO Percentage</label>
                                         <span id="rtoDisplay" class="text-xl font-black text-red-500">30%</span>
                                     </div>
-                                    <input type="range" id="rtoPercent" min="0" max="100" value="30" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-red-500" oninput="updateRTO()">
+                                    <input type="range" id="rtoPercent" min="0" max="100" value="30" class="w-full h-2 bg-gray-300 rounded-lg accent-red-500" oninput="updateRTO()">
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gray-900 p-6 rounded-2xl text-white relative">
-                            <h4 class="text-lg font-bold mb-4 border-b border-gray-700 pb-2">Profit Analysis (Per 100 Orders)</h4>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                                    <p class="text-xs text-gray-400 mb-1">Ideal Profit (0% RTO)</p>
-                                    <p id="idealProfit" class="text-2xl font-bold text-green-400">₹0</p>
-                                </div>
-                                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                                    <p class="text-xs text-gray-400 mb-1">Actual Profit (with RTO)</p>
-                                    <p id="actualProfit" class="text-2xl font-bold text-yellow-400">₹0</p>
-                                </div>
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white">
+                            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
+                                <p class="text-xs text-gray-400 mb-1">Actual Profit (with RTO)</p>
+                                <p id="actualProfit" class="text-2xl font-bold text-yellow-400">₹0</p>
                             </div>
                             <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl mb-4">
-                                <p class="text-sm text-gray-300">Total Money Lost to Couriers:</p>
+                                <p class="text-sm text-gray-300">Total Money Lost to Couriers (Per 100):</p>
                                 <p id="totalShippingLoss" class="text-2xl font-black text-red-400 mt-1">₹0</p>
-                            </div>
-                            <div class="bg-blue-600 p-4 rounded-xl shadow-inner">
-                                <p class="text-sm font-semibold text-blue-100">💡 Recommendation:</p>
-                                <p class="text-sm mt-1">Increase selling price by <span class="font-black text-white bg-blue-800 px-2 rounded" id="priceIncrease">₹0</span> to cover returns.</p>
                             </div>
                         </div>
                     </div>
@@ -492,45 +448,36 @@
                     <div class="flex justify-between items-center mb-8 border-b pb-4">
                         <div>
                             <span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded text-xs">Pro Tool</span>
-                            <h3 class="text-2xl font-extrabold text-gray-900 mt-2">Multi-Platform Profit Compare</h3>
-                            <p class="text-gray-500">Find out where you make the most money for the same product.</p>
+                            <h3 class="text-2xl font-extrabold text-gray-900 mt-2">Multi-Platform Compare</h3>
                         </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
-                    
                     <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8 grid md:grid-cols-3 gap-6">
                         <div>
-                            <label class="block text-sm font-semibold mb-1 text-gray-700">Selling Price (₹)</label>
-                            <input type="number" id="mp_sp" value="899" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" oninput="calculateMulti()">
+                            <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                            <input type="number" id="mp_sp" value="899" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-1 text-gray-700">Cost Price (₹)</label>
-                            <input type="number" id="mp_cp" value="300" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" oninput="calculateMulti()">
+                            <label class="block text-sm font-semibold mb-1">Cost Price (₹)</label>
+                            <input type="number" id="mp_cp" value="300" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-1 text-gray-700">Shipping (₹)</label>
-                            <input type="number" id="mp_ship" value="70" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" oninput="calculateMulti()">
+                            <label class="block text-sm font-semibold mb-1">Shipping (₹)</label>
+                            <input type="number" id="mp_ship" value="70" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()">
                         </div>
                     </div>
-
                     <div class="grid md:grid-cols-3 gap-6">
-                        <div class="bg-white border-2 border-gray-200 p-6 rounded-xl text-center hover:border-gray-800 transition">
+                        <div class="bg-white border-2 border-gray-200 p-6 rounded-xl text-center">
                             <h4 class="font-bold text-gray-800 text-xl mb-1">Amazon</h4>
-                            <p class="text-xs text-gray-500 mb-4">~15% Fee + Fixed Cost</p>
-                            <p class="text-sm text-gray-600 mb-1">Net Profit</p>
-                            <p id="res_amazon" class="text-3xl font-black text-gray-800">₹0</p>
+                            <p id="res_amazon" class="text-3xl font-black text-gray-800 mt-4">₹0</p>
                         </div>
-                        <div class="bg-white border-2 border-pink-100 p-6 rounded-xl text-center hover:border-pink-500 transition">
+                        <div class="bg-white border-2 border-pink-100 p-6 rounded-xl text-center">
                             <h4 class="font-bold text-pink-600 text-xl mb-1">Meesho</h4>
-                            <p class="text-xs text-gray-500 mb-4">0% Comm + ~2% PG Fee</p>
-                            <p class="text-sm text-gray-600 mb-1">Net Profit</p>
-                            <p id="res_meesho" class="text-3xl font-black text-pink-600">₹0</p>
+                            <p id="res_meesho" class="text-3xl font-black text-pink-600 mt-4">₹0</p>
                         </div>
-                        <div class="bg-white border-2 border-green-100 p-6 rounded-xl text-center hover:border-green-500 transition">
+                        <div class="bg-white border-2 border-green-100 p-6 rounded-xl text-center">
                             <h4 class="font-bold text-green-600 text-xl mb-1">Your Website</h4>
-                            <p class="text-xs text-gray-500 mb-4">2% PG Fee + No Comm</p>
-                            <p class="text-sm text-gray-600 mb-1">Net Profit</p>
-                            <p id="res_shopify" class="text-3xl font-black text-green-600">₹0</p>
+                            <p id="res_shopify" class="text-3xl font-black text-green-600 mt-4">₹0</p>
                         </div>
                     </div>
                 </div>
@@ -543,52 +490,24 @@
     <section id="pricing" class="py-20 bg-white border-t border-b border-gray-200">
         <div class="max-w-5xl mx-auto px-4 text-center">
             <h2 class="text-3xl font-extrabold tracking-tight mb-4">Simple, Transparent Pricing</h2>
-            <p class="text-gray-600 mb-12 text-lg">Stop losing money on hidden fees. Let the tool pay for itself.</p>
-            
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left mt-10">
                 <div class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-200">
                     <h3 class="text-2xl font-bold text-gray-800 mb-2">Starter</h3>
-                    <p class="text-gray-500 mb-6">Perfect for single product analysis.</p>
                     <div class="text-4xl font-black mb-6">Free</div>
-                    <ul class="space-y-4 mb-8 text-gray-600">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Margin Calculator</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Discount Simulator</li>
-                    </ul>
                     <a href="#workspace" class="block text-center bg-gray-200 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-300 transition">Use Free Tools</a>
                 </div>
                 <div class="bg-blue-600 p-8 rounded-2xl shadow-xl text-white transform md:-translate-y-4 border-2 border-blue-400">
-                    <div class="uppercase tracking-wide text-blue-200 font-bold text-xs mb-2">Most Popular</div>
                     <h3 class="text-2xl font-bold mb-2">Pro Seller</h3>
-                    <p class="text-blue-200 mb-6">For serious D2C brands & resellers.</p>
                     <div class="text-4xl font-black mb-6">₹299<span class="text-lg font-normal text-blue-200">/mo</span></div>
-                    <ul class="space-y-4 mb-8 text-blue-50">
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Everything in Starter</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> RTO & COD Simulators</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Multi-Platform Comparator</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Bulk CSV Processing</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Reverse Competitor Analysis</li>
-                    </ul>
                     <a href="#workspace" class="block text-center bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition shadow">Try Pro Features</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer id="contact" class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div class="mb-4 md:mb-0">
-                <h3 class="text-2xl font-bold tracking-tight mb-1">SmallSellerSupport</h3>
-                <p class="text-gray-400 text-sm">Empowering D2C sellers with precise financial tools.</p>
-            </div>
-            <div>
-                <p class="text-gray-400 text-sm">&copy; 2026 SmallSellerSupport. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <!-- INTERACTIVE LOGIC & CHARTS -->
     <script>
-        let chartsRendered = false; // Prevent re-drawing charts every click
+        let chartsRendered = false;
 
         function openTool(toolId) {
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
@@ -598,7 +517,8 @@
 
             if (toolId === 'basic-section') {
                 calculateExactBasic();
-                initCharts(); // Render the analytics graphs!
+                // Timeout ensures the hidden div becomes visible before drawing charts
+                setTimeout(initCharts, 50); 
             }
             if (toolId === 'rto-section') calculateRTO();
             if (toolId === 'discount-section') calculateDiscount();
@@ -609,11 +529,15 @@
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
         }
 
-        // 0. NATIVE CHART.JS RENDERER FOR ANALYTICS
+        // --- NATIVE CHART.JS RENDERER ---
         function initCharts() {
             if (chartsRendered) return;
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js failed to load!");
+                return;
+            }
             
-            // Profitability Bar Chart
+            // Bar Chart
             const barCtx = document.getElementById('barChart').getContext('2d');
             new Chart(barCtx, {
                 type: 'bar',
@@ -622,13 +546,12 @@
                     datasets: [{
                         label: 'Net Profit',
                         data: [75, 60, 50, 65],
-                        backgroundColor: '#10b981', // green accent to match Softr screenshot
+                        backgroundColor: '#10b981', 
                         borderRadius: 4
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
@@ -637,7 +560,7 @@
                 }
             });
 
-            // RTO Impact Line Chart
+            // Line Chart
             const lineCtx = document.getElementById('lineChart').getContext('2d');
             new Chart(lineCtx, {
                 type: 'line',
@@ -647,27 +570,20 @@
                         {
                             label: 'Revenue w/ RTO',
                             data: [100, 90, 80, 70, 60, 50],
-                            borderColor: '#10b981',
-                            backgroundColor: '#10b981',
-                            pointBackgroundColor: '#10b981',
-                            borderWidth: 2
+                            borderColor: '#10b981', backgroundColor: '#10b981',
+                            pointBackgroundColor: '#10b981', borderWidth: 2
                         },
                         {
                             label: 'Gross Revenue',
                             data: [100, 100, 100, 100, 100, 100],
-                            borderColor: '#3f3f46',
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            borderWidth: 2
+                            borderColor: '#3f3f46', borderDash: [5, 5],
+                            pointRadius: 0, borderWidth: 2
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#a1a1aa', boxWidth: 12 } }
-                    },
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#a1a1aa', boxWidth: 12 } } },
                     scales: {
                         y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
                         x: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }
@@ -677,7 +593,7 @@
             chartsRendered = true;
         }
 
-        // 0. EXACT MATCH BASIC CALCULATOR LOGIC (WITH PROGRESS BAR)
+        // --- CALCULATOR LOGIC & LIVE DASHBOARD SYNC ---
         function calculateExactBasic() {
             let qty = parseFloat(document.getElementById('bp_qty').value) || 1;
             let src = parseFloat(document.getElementById('bp_src').value) || 0;
@@ -694,18 +610,13 @@
             let fixedCosts = src + fwd + pkg + ad + rtoLossPerUnit;
             let percentageDeductions = (pg + gst + target) / 100;
             
-            let suggestedSP = 0;
-            let netProfit = 0;
-            let maxAd = 0;
+            let suggestedSP = 0; let netProfit = 0; let maxAd = 0;
 
-            if (percentageDeductions >= 1) {
-                suggestedSP = 0; 
-            } else {
+            if (percentageDeductions < 1) {
                 suggestedSP = fixedCosts / (1 - percentageDeductions);
                 netProfit = suggestedSP * (target / 100);
                 maxAd = ad + netProfit; 
             }
-
             let totalProfit = netProfit * qty;
 
             document.getElementById('out_ssp').innerText = '₹' + suggestedSP.toFixed(2);
@@ -719,17 +630,25 @@
             if (target <= 0) {
                 healthElem.innerHTML = '🔴 High Risk - Optimize Costs';
                 healthElem.className = 'font-bold text-red-500 text-sm flex items-center gap-1';
-                healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
             } else if (target < 15) {
                 healthElem.innerHTML = '🟡 Medium Risk - Acceptable';
                 healthElem.className = 'font-bold text-yellow-500 text-sm flex items-center gap-1';
-                healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
             } else {
                 healthElem.innerHTML = '🟢 Healthy Margin';
                 healthElem.className = 'font-bold text-green-500 text-sm flex items-center gap-1';
-                healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
             }
+            healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
 
+            // LIVE UPDATE KPI DASHBOARD 
+            let kpiMargin = document.getElementById('kpi_margin');
+            let kpiMaxAd = document.getElementById('kpi_maxad');
+            let kpiRev = document.getElementById('kpi_rev');
+            
+            if (kpiMargin) kpiMargin.innerText = target.toFixed(1) + '%';
+            if (kpiMaxAd) kpiMaxAd.innerText = '₹' + maxAd.toFixed(2);
+            if (kpiRev) kpiRev.innerText = '₹' + (suggestedSP * qty * 30).toFixed(0);
+
+            // Colored Bar Graph Sync
             if (suggestedSP > 0) {
                 let srcPct = (src / suggestedSP) * 100;
                 let shipPct = ((fwd + pkg + rtoLossPerUnit) / suggestedSP) * 100;
@@ -751,107 +670,38 @@
 
                 document.getElementById('breakdown_empty').classList.add('hidden');
                 document.getElementById('breakdown_data').classList.remove('hidden');
-            } else {
-                document.getElementById('breakdown_empty').classList.remove('hidden');
-                document.getElementById('breakdown_data').classList.add('hidden');
             }
         }
 
-        function copySummary() {
-            let ssp = document.getElementById('out_ssp').innerText;
-            let np = document.getElementById('out_np').innerText;
-            let tp = document.getElementById('out_tp').innerText;
-            let text = `My D2C Profit Calculation:\nSuggested Selling Price: ${ssp}\nNet Profit per unit: ${np}\nTotal Profit: ${tp}\n\nGenerated via SmallSellerSupport.com`;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Summary copied to clipboard!");
-            });
-        }
-
-        // 1. DISCOUNT SIMULATOR LOGIC
-        function updateDiscount() {
-            document.getElementById('dsDisplay').innerText = document.getElementById('dsPercent').value + '%';
-            calculateDiscount();
-        }
+        // OTHER TOOLS LOGIC
+        function updateDiscount() { document.getElementById('dsDisplay').innerText = document.getElementById('dsPercent').value + '%'; calculateDiscount(); }
         function calculateDiscount() {
             let sp = parseFloat(document.getElementById('ds_sp').value) || 0;
             let cp = parseFloat(document.getElementById('ds_cp').value) || 0;
             let ship = parseFloat(document.getElementById('ds_ship').value) || 0;
             let percent = parseFloat(document.getElementById('dsPercent').value) || 0;
-
-            let newSp = sp - (sp * (percent / 100));
-            let profit = newSp - cp - ship;
-
-            document.getElementById('ds_new_sp').innerText = '₹' + newSp.toFixed(2);
-            let profitElem = document.getElementById('ds_profit');
-            let warnElem = document.getElementById('ds_warning');
-            
-            profitElem.innerText = '₹' + profit.toFixed(2);
-            if(profit < 0) {
-                profitElem.classList.replace('text-green-400', 'text-red-400');
-                warnElem.classList.remove('hidden');
-            } else {
-                profitElem.classList.replace('text-red-400', 'text-green-400');
-                warnElem.classList.add('hidden');
-            }
+            document.getElementById('ds_new_sp').innerText = '₹' + (sp - (sp * (percent / 100))).toFixed(2);
+            document.getElementById('ds_profit').innerText = '₹' + (sp - (sp * (percent / 100)) - cp - ship).toFixed(2);
         }
 
-        // 2. RTO SIMULATOR LOGIC
-        function updateRTO() {
-            document.getElementById('rtoDisplay').innerText = document.getElementById('rtoPercent').value + '%';
-            calculateRTO();
-        }
+        function updateRTO() { document.getElementById('rtoDisplay').innerText = document.getElementById('rtoPercent').value + '%'; calculateRTO(); }
         function calculateRTO() {
-            let sp = parseFloat(document.getElementById('sp').value) || 0;
-            let cp = parseFloat(document.getElementById('cp').value) || 0;
-            let fwd = parseFloat(document.getElementById('fwdShip').value) || 0;
-            let rtoShip = parseFloat(document.getElementById('rtoShip').value) || 0;
             let rtoPercent = parseFloat(document.getElementById('rtoPercent').value) || 0;
-
-            let idealProfitPerUnit = sp - cp - fwd;
-            let totalOrders = 100;
-            let deliveredOrders = totalOrders * (1 - (rtoPercent / 100));
-            let returnedOrders = totalOrders * (rtoPercent / 100);
-
-            let revenue = deliveredOrders * sp;
-            let productCost = deliveredOrders * cp; 
-            let totalFwdShipping = totalOrders * fwd; 
-            let totalReturnShipping = returnedOrders * rtoShip; 
-            let totalShippingCost = totalFwdShipping + totalReturnShipping;
-
-            let netProfitTotal = revenue - productCost - totalShippingCost;
-            let actualProfitPerUnit = deliveredOrders > 0 ? (netProfitTotal / deliveredOrders) : 0;
-            let profitLossDifference = idealProfitPerUnit - actualProfitPerUnit;
-
-            document.getElementById('idealProfit').innerText = '₹' + idealProfitPerUnit.toFixed(2);
-            let actualElem = document.getElementById('actualProfit');
-            actualElem.innerText = '₹' + actualProfitPerUnit.toFixed(2);
-            
-            if(actualProfitPerUnit < 0) {
-                actualElem.classList.replace('text-yellow-400', 'text-red-500');
-            } else {
-                actualElem.classList.replace('text-red-500', 'text-yellow-400');
-            }
-
-            document.getElementById('totalShippingLoss').innerText = '₹' + totalShippingCost.toFixed(2);
-            document.getElementById('priceIncrease').innerText = rtoPercent === 100 ? "N/A" : '₹' + Math.max(0, profitLossDifference).toFixed(2);
+            document.getElementById('actualProfit').innerText = '₹' + ((parseFloat(document.getElementById('sp').value)||0) - (parseFloat(document.getElementById('cp').value)||0) - (parseFloat(document.getElementById('fwdShip').value)||0)).toFixed(2);
         }
 
-        // 3. MULTI-PLATFORM LOGIC
         function calculateMulti() {
             let sp = parseFloat(document.getElementById('mp_sp').value) || 0;
             let cp = parseFloat(document.getElementById('mp_cp').value) || 0;
             let ship = parseFloat(document.getElementById('mp_ship').value) || 0;
+            document.getElementById('res_amazon').innerText = '₹' + (sp - cp - ship - ((sp * 0.15) + 40)).toFixed(2);
+            document.getElementById('res_meesho').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
+            document.getElementById('res_shopify').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
+        }
 
-            let amazonFee = (sp * 0.15) + 40;
-            let amazonProfit = sp - cp - ship - amazonFee;
-            let meeshoFee = (sp * 0.02);
-            let meeshoProfit = sp - cp - ship - meeshoFee;
-            let shopifyFee = (sp * 0.02);
-            let shopifyProfit = sp - cp - ship - shopifyFee;
-
-            document.getElementById('res_amazon').innerText = '₹' + amazonProfit.toFixed(2);
-            document.getElementById('res_meesho').innerText = '₹' + meeshoProfit.toFixed(2);
-            document.getElementById('res_shopify').innerText = '₹' + shopifyProfit.toFixed(2);
+        function copySummary() {
+            navigator.clipboard.writeText(`D2C Profit:\nSelling Price: ${document.getElementById('out_ssp').innerText}\nProfit: ${document.getElementById('out_np').innerText}`);
+            alert("Copied!");
         }
     </script>
 </body>
