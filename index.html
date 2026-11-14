@@ -4,119 +4,241 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallSellerSupport - D2C Profit & Pricing Solution</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 scroll-smooth">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- Header -->
+    <!-- Navbar -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold tracking-tight text-blue-600">SmallSellerSupport</h1>
+            <h1 class="text-2xl font-black tracking-tight text-blue-600 cursor-pointer" onclick="showView('home')">SmallSellerSupport</h1>
             <nav class="space-x-6 hidden md:block font-medium">
-                <a href="#features" class="hover:text-blue-600 transition">Features</a>
-                <a href="#pricing" class="hover:text-blue-600 transition">Pricing</a>
-                <a href="#contact" class="hover:text-blue-600 transition">Contact</a>
+                <a href="#" onclick="showView('home')" class="hover:text-blue-600 transition">Dashboard</a>
+                <a href="#pricing" onclick="showView('home')" class="hover:text-blue-600 transition">Pricing</a>
             </nav>
-            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition">Open App</a>
+            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-blue-600 text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition">Softr Login</a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 text-white py-24 text-center">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">Stop Guessing Your E-Commerce Margins.</h2>
-            <p class="text-lg md:text-xl mb-10 text-blue-100 font-normal max-w-2xl mx-auto">Calculate hidden RTO losses, compare marketplace fees, and simulate bulk discounts before you lose money.</p>
-            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-white text-blue-600 font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:bg-gray-50 transition inline-block">Start Calculating for Free</a>
-        </div>
-    </section>
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow">
 
-    <!-- New Features Section -->
-    <section id="features" class="py-20 max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
-        <!-- Feature 1: Multi-Platform -->
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition text-center">
-            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Multi-Platform Comparator</h3>
-            <p class="text-gray-600">See exactly how much you'll make on Amazon vs. Meesho vs. Shopify side-by-side.</p>
-        </div>
-        
-        <!-- Feature 2: Discount Simulator -->
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition text-center">
-            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Pricing Discount Simulator</h3>
-            <p class="text-gray-600">Running a sale? Find out your breakeven point and max discount limit instantly.</p>
-        </div>
-        
-        <!-- Feature 3: Bulk Upload (Now Clickable & Linked to bulk.html) -->
-        <a href="bulk.html" class="block bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-blue-300 transition transform hover:-translate-y-1 text-center cursor-pointer group">
-            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold mb-3 group-hover:text-blue-600 transition">Bulk CSV Export (Pro)</h3>
-            <p class="text-gray-600 mb-4">Calculate margins for 100+ catalog products at once. Save hours of manual entry.</p>
-            <span class="text-blue-600 font-bold text-sm inline-flex items-center">
-                Try it now 
-                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </span>
-        </a>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-20 bg-gray-100 border-t border-b border-gray-200">
-        <div class="max-w-5xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Simple, Transparent Pricing</h2>
-            <p class="text-gray-600 mb-12 text-lg">Stop losing money on hidden fees. Let the tool pay for itself.</p>
+        <!-- ========================================== -->
+        <!-- VIEW 1: HOME DASHBOARD & DIRECTORY         -->
+        <!-- ========================================== -->
+        <div id="view-home" class="fade-in block">
             
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
-                <!-- Free Tier -->
+            <!-- Hero -->
+            <section class="bg-gradient-to-br from-blue-700 via-indigo-800 to-blue-900 text-white py-20 text-center">
+                <div class="max-w-4xl mx-auto px-4">
+                    <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Your E-Commerce Profit Workspace</h2>
+                    <p class="text-lg text-blue-100 mb-8">Access our suite of free and premium calculators below to stop hidden losses.</p>
+                </div>
+            </section>
+
+            <!-- Tools Directory Section -->
+            <section class="py-16 max-w-6xl mx-auto px-4">
+                
+                <!-- ROW 1: FREE TOOLS -->
+                <div class="mb-16">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full text-sm tracking-wide mr-3">FREE</span>
+                        <h2 class="text-2xl font-bold text-gray-800">Essential Tools</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Free Tool 1 -->
+                        <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md hover:border-green-300 transition group cursor-pointer">
+                            <h3 class="text-xl font-bold mb-2 group-hover:text-green-600 transition flex items-center justify-between">
+                                Basic Profit Calculator 
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </h3>
+                            <p class="text-gray-600 text-sm">Calculate net margin for a single product across marketplaces. Hosted on Softr.</p>
+                        </a>
+                        <!-- Free Tool 2 -->
+                        <div class="block bg-gray-100 p-6 rounded-2xl border border-gray-200 opacity-60">
+                            <h3 class="text-xl font-bold mb-2 flex items-center justify-between">Discount Simulator <span class="text-xs bg-gray-200 px-2 py-1 rounded">Coming Soon</span></h3>
+                            <p class="text-gray-600 text-sm">Find your max discount limit before running a sale.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROW 2: PREMIUM TOOLS -->
+                <div>
+                    <div class="flex items-center mb-6">
+                        <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full text-sm tracking-wide mr-3">PRO</span>
+                        <h2 class="text-2xl font-bold text-gray-800">Advanced Analytics</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Pro Tool 1: RTO -->
+                        <div onclick="showView('rto')" class="block bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-blue-400 transition group cursor-pointer relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Premium</div>
+                            <h3 class="text-xl font-bold mb-2 mt-2 group-hover:text-blue-600 transition flex items-center justify-between">
+                                RTO & COD Loss Simulator
+                                <span class="text-blue-500 group-hover:translate-x-1 transition-transform">→</span>
+                            </h3>
+                            <p class="text-gray-600 text-sm">Find out exactly how much money you lose on returned COD orders and fix your pricing.</p>
+                        </div>
+                        
+                        <!-- Pro Tool 2: Bulk CSV -->
+                        <div onclick="showView('bulk')" class="block bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-blue-400 transition group cursor-pointer relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Premium</div>
+                            <h3 class="text-xl font-bold mb-2 mt-2 group-hover:text-blue-600 transition flex items-center justify-between">
+                                Bulk CSV Margin Export
+                                <span class="text-blue-500 group-hover:translate-x-1 transition-transform">→</span>
+                            </h3>
+                            <p class="text-gray-600 text-sm">Upload an Excel/CSV file to calculate profit margins for 100+ catalog products instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section id="pricing" class="py-20 bg-gray-900 text-white">
+                <div class="max-w-5xl mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-extrabold tracking-tight mb-4">Simple, Transparent Pricing</h2>
+                    <p class="text-gray-400 mb-12 text-lg">Stop losing money on hidden fees. Upgrade to Pro today.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+                        <!-- Free Tier -->
+                        <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700">
+                            <h3 class="text-2xl font-bold mb-2">Starter</h3>
+                            <div class="text-4xl font-black mb-6">Free</div>
+                            <ul class="space-y-4 mb-8 text-gray-400">
+                                <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Profit Calculator</li>
+                                <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Single Channel Costing</li>
+                            </ul>
+                            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block text-center bg-gray-700 text-white font-bold py-3 rounded-xl hover:bg-gray-600 transition">Use Free Tools</a>
+                        </div>
+
+                        <!-- Pro Tier -->
+                        <div class="bg-blue-600 p-8 rounded-2xl shadow-xl transform md:-translate-y-4 border-2 border-blue-400">
+                            <div class="uppercase tracking-wide text-blue-200 font-bold text-xs mb-2">Most Popular</div>
+                            <h3 class="text-2xl font-bold mb-2">Pro Seller</h3>
+                            <div class="text-4xl font-black mb-6">₹299<span class="text-lg font-normal text-blue-200">/mo</span></div>
+                            <ul class="space-y-4 mb-8 text-blue-50">
+                                <li class="flex items-center"><span class="text-white mr-2">✔</span> RTO Loss Simulator</li>
+                                <li class="flex items-center"><span class="text-white mr-2">✔</span> Bulk CSV Export</li>
+                                <li class="flex items-center"><span class="text-white mr-2">✔</span> Multi-Platform Comparator</li>
+                            </ul>
+                            <button onclick="alert('Payment Gateway Integration Pending!')" class="w-full block text-center bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition shadow">Upgrade Now</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: RTO & COD LOSS SIMULATOR (PRO)     -->
+        <!-- ========================================== -->
+        <div id="view-rto" class="hidden fade-in py-12 max-w-6xl mx-auto px-4">
+            <button onclick="showView('home')" class="mb-6 text-gray-500 hover:text-blue-600 font-bold flex items-center transition">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Back to Dashboard
+            </button>
+
+            <div class="text-center mb-10">
+                <span class="bg-blue-100 text-blue-600 font-bold px-3 py-1 rounded-full text-sm uppercase">Pro Feature</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-4">RTO & COD Loss Simulator</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Calculate exactly how much money you lose on RTOs and find your true breakeven price.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Input Section -->
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Starter</h3>
-                    <p class="text-gray-500 mb-6">Perfect for single product analysis.</p>
-                    <div class="text-4xl font-black mb-6">Free</div>
-                    <ul class="space-y-4 mb-8 text-gray-600">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Profit Margin Calculator</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Single Channel Costing</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Standard Support</li>
-                    </ul>
-                    <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block text-center bg-gray-100 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-200 transition">Use Free Tool</a>
+                    <h3 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Product Details</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1 text-gray-700">Selling Price (₹)</label>
+                            <input type="number" id="rto_sp" value="999" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1 text-gray-700">Cost Price (₹)</label>
+                            <input type="number" id="rto_cp" value="350" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-gray-700">Fwd Shipping (₹)</label>
+                                <input type="number" id="rto_fwd" value="80" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1 text-gray-700">Return Ship (₹)</label>
+                                <input type="number" id="rto_ret" value="80" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculateRTO()">
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-bold text-gray-800">Expected RTO Rate</label>
+                                <span id="rtoDisplay" class="text-xl font-black text-red-500">30%</span>
+                            </div>
+                            <input type="range" id="rtoPercent" min="0" max="100" value="30" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-red-500" oninput="updateRTO()">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Pro Tier -->
-                <div class="bg-blue-600 p-8 rounded-2xl shadow-xl text-white transform md:-translate-y-4 border-2 border-blue-400">
-                    <div class="uppercase tracking-wide text-blue-200 font-bold text-xs mb-2">Most Popular</div>
-                    <h3 class="text-2xl font-bold mb-2">Pro Seller</h3>
-                    <p class="text-blue-200 mb-6">For serious D2C brands & resellers.</p>
-                    <div class="text-4xl font-black mb-6">₹299<span class="text-lg font-normal text-blue-200">/mo</span></div>
-                    <ul class="space-y-4 mb-8 text-blue-50">
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Everything in Starter</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Multi-Platform Comparator</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Bulk CSV/Excel Processing</li>
-                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Discount & RTO Simulators</li>
-                    </ul>
-                    <a href="bulk.html" class="block text-center bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition shadow">Try Pro Features</a>
+                <!-- Output Section -->
+                <div class="bg-gray-900 p-8 rounded-2xl shadow-xl text-white relative">
+                    <h3 class="text-xl font-bold mb-6 border-b border-gray-700 pb-2">Analysis (Per 100 Orders)</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                            <p class="text-xs text-gray-400 mb-1">Ideal Profit (0% RTO)</p>
+                            <p id="idealProfit" class="text-2xl font-bold text-green-400">₹0</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-xl border border-red-900/50">
+                            <p class="text-xs text-gray-400 mb-1">Actual Profit (with RTO)</p>
+                            <p id="actualProfit" class="text-2xl font-bold text-yellow-400">₹0</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-500/10 border border-red-500/30 p-5 rounded-xl mb-6">
+                        <p class="text-sm text-gray-300">Total Money Lost to Couriers:</p>
+                        <p id="totalShippingLoss" class="text-3xl font-black text-red-400 mt-1">₹0</p>
+                    </div>
+                    <div class="bg-blue-600 p-5 rounded-xl">
+                        <p class="text-sm font-semibold text-blue-100">💡 Recommendation:</p>
+                        <p class="text-sm mt-1">Increase your selling price by <span class="font-black text-white text-lg bg-blue-800 px-2 py-1 rounded" id="priceIncrease">₹0</span> to maintain ideal margins.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer id="contact" class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-            <div class="mb-4 md:mb-0">
-                <h3 class="text-2xl font-bold tracking-tight mb-1">SmallSellerSupport</h3>
-                <p class="text-gray-400 text-sm">Empowering D2C sellers with precise financial tools.</p>
+        <!-- ========================================== -->
+        <!-- VIEW 3: BULK CSV CALCULATOR (PRO)          -->
+        <!-- ========================================== -->
+        <div id="view-bulk" class="hidden fade-in py-12 max-w-5xl mx-auto px-4">
+            <button onclick="showView('home')" class="mb-6 text-gray-500 hover:text-blue-600 font-bold flex items-center transition">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Back to Dashboard
+            </button>
+
+            <div class="text-center mb-10">
+                <span class="bg-blue-100 text-blue-600 font-bold px-3 py-1 rounded-full text-sm uppercase">Pro Feature</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-2">Bulk Margin Calculator</h1>
+                <p class="text-gray-600">Upload your product catalog CSV to calculate margins for 100+ items instantly.</p>
             </div>
-            <div>
-                <p class="text-gray-400 text-sm">&copy; 2026 SmallSellerSupport. All rights reserved.</p>
+
+            <div class="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center bg-white mb-8 shadow-sm">
+                <h3 class="text-lg font-bold mb-4 text-gray-700">Upload your CSV File</h3>
+                <p class="text-sm text-gray-500 mb-6">Columns needed: Product Name, Cost Price, Selling Price, Shipping Cost</p>
+                <input type="file" id="csvFileInput" accept=".csv" class="block w-full max-w-sm text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 mx-auto cursor-pointer">
+                
+                <div class="mt-8 flex justify-center gap-4">
+                    <button onclick="processCSV()" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-lg shadow hover:bg-blue-700 transition">Calculate</button>
+                    <button id="downloadBtn" onclick="downloadCSV()" class="hidden bg-green-600 text-white font-bold px-8 py-3 rounded-lg shadow hover:bg-green-700 transition">Download Result</button>
+                </div>
             </div>
-        </div>
-    </footer>
-</body>
-</html>
+
+            <div id="resultsContainer" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Preview Results (First 5 Items)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-
