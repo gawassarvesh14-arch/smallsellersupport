@@ -186,6 +186,37 @@
                                 LOW MARGIN WARNING
                             </div>
                         </div>
+                        
+                        <!-- Reverse Competitor Analysis UI (Premium Feature) -->
+                        <div class="md:col-span-3 mt-4">
+                            <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-2xl">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-lg font-bold text-indigo-900">Reverse Competitor Analysis</h4>
+                                    <span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-1 rounded text-xs">PRO</span>
+                                </div>
+                                
+                                <!-- Free state (blurred/locked) -->
+                                <div id="rca-locked" class="relative overflow-hidden rounded-xl bg-white border border-indigo-200 p-6 text-center">
+                                    <div class="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+                                        <svg class="w-8 h-8 text-indigo-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                        <p class="font-bold text-indigo-900 mb-2">Unlock Competitor Analysis</p>
+                                        <button class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 transition text-sm">Upgrade to Pro</button>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-4 opacity-30 pointer-events-none filter blur-[2px]">
+                                         <div>
+                                            <label class="block text-sm font-semibold mb-1 text-left">Competitor's Selling Price (₹)</label>
+                                            <input type="number" value="799" class="w-full p-3 border rounded-lg bg-gray-50" disabled>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold mb-1 text-left">Maximum Sourcing Cost</label>
+                                            <p class="text-2xl font-black text-indigo-600 mt-2 text-left">₹250</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -386,6 +417,7 @@
                         <li class="flex items-center"><span class="text-white mr-2">✔</span> RTO & COD Simulators</li>
                         <li class="flex items-center"><span class="text-white mr-2">✔</span> Multi-Platform Comparator</li>
                         <li class="flex items-center"><span class="text-white mr-2">✔</span> Bulk CSV Processing</li>
+                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Reverse Competitor Analysis</li>
                     </ul>
                     <a href="#workspace" class="block text-center bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition shadow">Try Pro Features</a>
                 </div>
