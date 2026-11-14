@@ -4,86 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallSellerSupport - D2C Profit & Pricing Solution</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Stylish Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 scroll-smooth">
 
-    <!-- Header / Navbar -->
+    <!-- Header -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-extrabold tracking-tight text-blue-600">SmallSellerSupport</h1>
             <nav class="space-x-6 hidden md:block font-medium">
                 <a href="#features" class="hover:text-blue-600 transition">Features</a>
-                <a href="#calculator" class="text-blue-600 font-semibold">Workspace</a>
+                <a href="#pricing" class="hover:text-blue-600 transition">Pricing</a>
                 <a href="#contact" class="hover:text-blue-600 transition">Contact</a>
             </nav>
-            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition">Launch App</a>
+            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition">Open App</a>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 text-white py-24 text-center relative overflow-hidden">
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">Calculate Profit Margins & Volume Pricing Instantly</h2>
-            <p class="text-lg md:text-xl mb-10 text-blue-100 font-normal max-w-2xl mx-auto">Engineered specifically for direct-to-consumer (D2C) sellers and online resellers to optimize sales channels, pricing, and revenue.</p>
-            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-white text-blue-600 font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:bg-gray-50 transition inline-block">Open Calculator App</a>
+    <section class="bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 text-white py-24 text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">Stop Guessing Your E-Commerce Margins.</h2>
+            <p class="text-lg md:text-xl mb-10 text-blue-100 font-normal max-w-2xl mx-auto">Calculate hidden RTO losses, compare marketplace fees, and simulate bulk discounts before you lose money.</p>
+            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-white text-blue-600 font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:bg-gray-50 transition inline-block">Start Calculating for Free</a>
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- New Features Section -->
     <section id="features" class="py-20 max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+        <!-- Feature 1: Multi-Platform -->
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition text-center">
-            <div class="text-blue-600 text-2xl mb-4 font-black">01</div>
-            <h3 class="text-xl font-bold mb-3">Profit Margin Analysis</h3>
-            <p class="text-gray-600 leading-relaxed">Accurately calculate net margins after marketplace fees, shipping, and operational overheads.</p>
+            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Multi-Platform Comparator</h3>
+            <p class="text-gray-600">See exactly how much you'll make on Amazon vs. Meesho vs. Shopify side-by-side.</p>
         </div>
+        <!-- Feature 2: Discount Simulator -->
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition text-center">
-            <div class="text-blue-600 text-2xl mb-4 font-black">02</div>
-            <h3 class="text-xl font-bold mb-3">Volume Pricing</h3>
-            <p class="text-gray-600 leading-relaxed">Determine optimal tiered pricing structures for bulk orders and wholesale clients.</p>
+            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Pricing Discount Simulator</h3>
+            <p class="text-gray-600">Running a sale? Find out your breakeven point and max discount limit instantly.</p>
         </div>
+        <!-- Feature 3: Bulk Upload -->
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition text-center">
-            <div class="text-blue-600 text-2xl mb-4 font-black">03</div>
-            <h3 class="text-xl font-bold mb-3">Sales Channel Strategy</h3>
-            <p class="text-gray-600 leading-relaxed">Compare profitability across multiple e-commerce platforms and sales channels seamlessly.</p>
+            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Bulk CSV Export (Pro)</h3>
+            <p class="text-gray-600">Calculate margins for 100+ catalog products at once. Save hours of manual entry.</p>
         </div>
     </section>
 
-    <!-- Redirect Section -->
-    <section id="calculator" class="py-24 bg-white border-t border-b border-gray-100 text-center">
-        <div class="max-w-3xl mx-auto px-4">
-            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Ready to Calculate Your Profits?</h2>
-            <p class="text-gray-600 mb-8 text-lg">Click below to open your dedicated workspace securely in a new tab.</p>
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-gray-100 border-t border-b border-gray-200">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-extrabold tracking-tight mb-4">Simple, Transparent Pricing</h2>
+            <p class="text-gray-600 mb-12 text-lg">Stop losing money on hidden fees. Let the tool pay for itself.</p>
             
-            <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-9 py-4 rounded-xl shadow-lg transition inline-flex items-center gap-3">
-                <span>Launch SmallSellerSupport</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-            </a>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+                <!-- Free Tier -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Starter</h3>
+                    <p class="text-gray-500 mb-6">Perfect for single product analysis.</p>
+                    <div class="text-4xl font-black mb-6">Free</div>
+                    <ul class="space-y-4 mb-8 text-gray-600">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Profit Margin Calculator</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Single Channel Costing</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> standard Support</li>
+                    </ul>
+                    <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block text-center bg-gray-100 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-200 transition">Use Free Tool</a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="bg-blue-600 p-8 rounded-2xl shadow-xl text-white transform md:-translate-y-4 border-2 border-blue-400">
+                    <div class="uppercase tracking-wide text-blue-200 font-bold text-xs mb-2">Most Popular</div>
+                    <h3 class="text-2xl font-bold mb-2">Pro Seller</h3>
+                    <p class="text-blue-200 mb-6">For serious D2C brands & resellers.</p>
+                    <div class="text-4xl font-black mb-6">₹299<span class="text-lg font-normal text-blue-200">/mo</span></div>
+                    <ul class="space-y-4 mb-8 text-blue-50">
+                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Everything in Starter</li>
+                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Multi-Platform Comparator</li>
+                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Bulk CSV/Excel Processing</li>
+                        <li class="flex items-center"><span class="text-white mr-2">✔</span> Discount & RTO Simulators</li>
+                    </ul>
+                    <a href="https://marty68540.mysoftr.app/calculator" target="_blank" class="block text-center bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition shadow">Upgrade in App</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Contact / Footer Section -->
+    <!-- Footer -->
     <footer id="contact" class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0 text-center md:text-left">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-4 md:mb-0">
                 <h3 class="text-2xl font-bold tracking-tight mb-1">SmallSellerSupport</h3>
                 <p class="text-gray-400 text-sm">Empowering D2C sellers with precise financial tools.</p>
             </div>
             <div>
-              <p class="text-gray-400 text-sm">&copy; 2026 SmallSellerSupport. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">&copy; 2026 SmallSellerSupport. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
 </body>
 </html>
