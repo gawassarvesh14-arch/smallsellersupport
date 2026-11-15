@@ -122,7 +122,7 @@
             <!-- ======================= INTERACTIVE TOOL CONTAINERS ======================= -->
             <div id="tool-container" class="mt-10">
 
-                <!-- 0. EXACT REPLICA: DARK THEME BASIC CALCULATOR + GRAPHS/CHARTS -->
+                <!-- 0. EXACT REPLICA: DARK THEME BASIC CALCULATOR + GRAPHS -->
                 <div id="basic-section" class="tool-section hidden bg-[#0f0f11] p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-800">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-3xl font-extrabold text-white">Calculator</h3>
@@ -196,8 +196,8 @@
                                 </div>
                             </div>
 
-                            <!-- RCA Card (Fake Door Trigger) -->
-                            <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative overflow-hidden">
+                            <!-- RCA Card (Fake Door Trigger / Unlockable) -->
+                            <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative overflow-hidden" id="rca-container">
                                 <div class="absolute top-0 left-0 w-1/3 h-1 bg-orange-500"></div>
                                 <div class="absolute top-0 left-1/3 w-1/3 h-1 bg-green-500"></div>
                                 
@@ -206,21 +206,21 @@
                                     <span class="text-xs font-bold text-gray-500">PRO</span>
                                 </div>
                                 
-                                <!-- Locked Overlay clicking opens Fake Door -->
-                                <div class="absolute inset-0 bg-[#1c1c1e]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-xl">
+                                <!-- Locked Overlay (Hidden via JS on unlock) -->
+                                <div id="rca-lock-overlay" class="absolute inset-0 bg-[#1c1c1e]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-xl transition-all duration-300">
                                     <svg class="w-6 h-6 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                     <p class="text-sm font-bold text-white mb-2">Pro Feature</p>
                                     <button onclick="openProModal()" class="bg-gray-700 hover:bg-gray-600 text-white text-xs px-4 py-2 rounded transition font-bold shadow-lg">Upgrade to Unlock</button>
                                 </div>
                                 
-                                <div class="grid grid-cols-2 gap-4 opacity-30 pointer-events-none">
+                                <div id="rca-inputs" class="grid grid-cols-2 gap-4 opacity-30 pointer-events-none transition-all duration-300">
                                     <div>
                                         <label class="block text-xs font-bold text-gray-300 mb-1">Competitor's selling price (₹)</label>
-                                        <input type="number" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input">
+                                        <input type="number" id="rca_comp_sp" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateRCA()">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-300 mb-1">Maximum Sourcing Cost</label>
-                                        <p class="text-2xl font-black text-white mt-1">₹0.00</p>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Max Sourcing Cost Allowable</label>
+                                        <p id="rca_max_src" class="text-2xl font-black text-white mt-1">₹0.00</p>
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +306,6 @@
                             </div>
                             <p class="text-sm text-gray-400 mb-6">A look at the Pro dashboard. Showing all channels over the last 30 days.</p>
                             
-                            <!-- KPI Cards (Live connected to calculator inputs) -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
                                     <p class="text-xs text-gray-400 mb-2">Profit Margin (%)</p>
@@ -325,7 +324,6 @@
                                 </div>
                             </div>
 
-                            <!-- Chart.js Canvases -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="bg-[#1c1c1e] p-5 rounded-xl border border-[#27272a]">
                                     <p class="text-sm font-bold text-white mb-1">Profitability by Sales Channel</p>
@@ -383,7 +381,6 @@
                             </div>
                         </div>
                         <div class="bg-gray-900 p-6 rounded-2xl text-white">
-                            <h4 class="text-lg font-bold mb-4 border-b border-gray-700 pb-2">Sale Analysis</h4>
                             <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
                                 <p class="text-xs text-gray-400 mb-1">New Sale Price:</p>
                                 <p id="ds_new_sp" class="text-3xl font-black text-white">₹0</p>
@@ -441,7 +438,7 @@
                                 <p id="actualProfit" class="text-2xl font-bold text-yellow-400">₹0</p>
                             </div>
                             <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl mb-4">
-                                <p class="text-sm text-gray-300">Total Money Lost to Couriers:</p>
+                                <p class="text-sm text-gray-300">Total Money Lost to Couriers (Per 100):</p>
                                 <p id="totalShippingLoss" class="text-2xl font-black text-red-400 mt-1">₹0</p>
                             </div>
                         </div>
@@ -525,7 +522,7 @@
                 <p class="text-sm text-gray-600 mb-6">We are currently upgrading our payment systems. Enter your WhatsApp number below to get <strong>1 Month of PRO for FREE</strong> as an early bird user.</p>
                 
                 <input type="tel" id="whatsapp-input" placeholder="+91 99999 00000" class="w-full p-4 border border-gray-300 rounded-xl mb-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="submitLead()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition">Claim Free Pro Access</button>
+                <button onclick="submitLead()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition">Unlock Instant Access</button>
             </div>
 
             <div id="modal-success-view" class="hidden">
@@ -533,8 +530,7 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 </div>
                 <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Success! 🎉</h3>
-                <p class="text-sm text-gray-600 mb-6">Your request has been logged. Our team will manually activate your Pro account and notify you on WhatsApp shortly.</p>
-                <button onclick="closeProModal()" class="w-full bg-gray-200 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-300 transition">Close</button>
+                <p class="text-sm text-gray-600 mb-6">Your WhatsApp number is registered. <strong>PRO Features are now UNLOCKED for this session!</strong> Scroll down to use them.</p>
             </div>
         </div>
     </div>
@@ -543,13 +539,13 @@
     <script>
         let chartsRendered = false;
 
-        // FAKE DOOR MODAL LOGIC
+        // --- GMAIL LEAD CAPTURE & FAKE DOOR LOGIC ---
         function openProModal() {
             document.getElementById('pro-modal').classList.remove('hidden');
             document.getElementById('pro-modal').classList.add('flex');
             document.getElementById('modal-form-view').classList.remove('hidden');
             document.getElementById('modal-success-view').classList.add('hidden');
-            document.getElementById('whatsapp-input').value = ""; // clear input
+            document.getElementById('whatsapp-input').value = ""; 
         }
 
         function closeProModal() {
@@ -563,10 +559,38 @@
                 alert("Please enter a valid WhatsApp number.");
                 return;
             }
-            // Transition to success screen instantly (Fake Door validation completed)
+            
+            // 📌 YAHAN TUMHARA EMAIL INTEGRATED HAI 📌
+            fetch("https://formsubmit.co/ajax/gawassarvesh14@gmail.com", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: "New PRO Lead from Website!",
+                    WhatsApp_Number: phone
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Email sent successfully!", data))
+            .catch(error => console.log(error));
+
+            // Show Success Screen instantly
             document.getElementById('modal-form-view').classList.add('hidden');
             document.getElementById('modal-success-view').classList.remove('hidden');
-            console.log("LEAD CAPTURED: ", phone);
+            
+            // MAGIC: INSTANTLY UNLOCK THE RCA FEATURE ON THE PAGE!
+            setTimeout(() => {
+                closeProModal();
+                let lockOverlay = document.getElementById('rca-lock-overlay');
+                if (lockOverlay) lockOverlay.style.display = 'none';
+                
+                let rcaInputs = document.getElementById('rca-inputs');
+                if (rcaInputs) rcaInputs.classList.remove('opacity-30', 'pointer-events-none');
+                
+                document.getElementById('rca-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 2000); 
         }
 
         function openTool(toolId) {
@@ -579,9 +603,7 @@
                 calculateExactBasic();
                 setTimeout(initCharts, 50); 
             }
-            if (toolId === 'rto-section') calculateRTO();
             if (toolId === 'discount-section') calculateDiscount();
-            if (toolId === 'multi-section') calculateMulti();
         }
 
         function closeTools() {
@@ -591,68 +613,38 @@
         // --- NATIVE CHART.JS RENDERER ---
         function initCharts() {
             if (chartsRendered) return;
-            if (typeof Chart === 'undefined') {
-                console.error("Chart.js failed to load!");
-                return;
-            }
+            if (typeof Chart === 'undefined') { console.error("Chart.js failed to load!"); return; }
             
-            // Bar Chart
             const barCtx = document.getElementById('barChart').getContext('2d');
             new Chart(barCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Shopify', 'Instagram', 'Flipkart', 'Amazon'],
-                    datasets: [{
-                        label: 'Net Profit',
-                        data: [75, 60, 50, 65],
-                        backgroundColor: '#10b981', 
-                        borderRadius: 4
-                    }]
+                    datasets: [{ label: 'Net Profit', data: [75, 60, 50, 65], backgroundColor: '#10b981', borderRadius: 4 }]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
-                        x: { grid: { display: false }, ticks: { color: '#71717a' } }
-                    }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }, x: { grid: { display: false }, ticks: { color: '#71717a' } } }
                 }
             });
 
-            // Line Chart
             const lineCtx = document.getElementById('lineChart').getContext('2d');
             new Chart(lineCtx, {
                 type: 'line',
                 data: {
                     labels: ['0%', '10%', '20%', '30%', '40%', '50%'],
                     datasets: [
-                        {
-                            label: 'Revenue w/ RTO',
-                            data: [100, 90, 80, 70, 60, 50],
-                            borderColor: '#10b981', backgroundColor: '#10b981',
-                            pointBackgroundColor: '#10b981', borderWidth: 2
-                        },
-                        {
-                            label: 'Gross Revenue',
-                            data: [100, 100, 100, 100, 100, 100],
-                            borderColor: '#3f3f46', borderDash: [5, 5],
-                            pointRadius: 0, borderWidth: 2
-                        }
+                        { label: 'Revenue w/ RTO', data: [100, 90, 80, 70, 60, 50], borderColor: '#10b981', backgroundColor: '#10b981', pointBackgroundColor: '#10b981', borderWidth: 2 },
+                        { label: 'Gross Revenue', data: [100, 100, 100, 100, 100, 100], borderColor: '#3f3f46', borderDash: [5, 5], pointRadius: 0, borderWidth: 2 }
                     ]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#a1a1aa', boxWidth: 12 } } },
-                    scales: {
-                        y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } },
-                        x: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }
-                    }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#a1a1aa', boxWidth: 12 } } },
+                    scales: { y: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } }, x: { grid: { color: '#27272a' }, ticks: { color: '#71717a' } } }
                 }
             });
             chartsRendered = true;
         }
 
-        // --- CALCULATOR LOGIC & LIVE DASHBOARD SYNC ---
+        // --- CALCULATOR LOGIC & RCA SYNC ---
         function calculateExactBasic() {
             let qty = parseFloat(document.getElementById('bp_qty').value) || 1;
             let src = parseFloat(document.getElementById('bp_src').value) || 0;
@@ -684,82 +676,53 @@
             document.getElementById('out_maxad').innerText = '₹' + maxAd.toFixed(2);
 
             let healthElem = document.getElementById('out_health');
-            let healthDesc = document.getElementById('out_health_desc');
-            
             if (target <= 0) {
-                healthElem.innerHTML = '🔴 High Risk - Optimize Costs';
-                healthElem.className = 'font-bold text-red-500 text-sm flex items-center gap-1';
+                healthElem.innerHTML = '🔴 High Risk';
+                healthElem.className = 'font-bold text-red-500 text-sm';
             } else if (target < 15) {
-                healthElem.innerHTML = '🟡 Medium Risk - Acceptable';
-                healthElem.className = 'font-bold text-yellow-500 text-sm flex items-center gap-1';
+                healthElem.innerHTML = '🟡 Medium Risk';
+                healthElem.className = 'font-bold text-yellow-500 text-sm';
             } else {
                 healthElem.innerHTML = '🟢 Healthy Margin';
-                healthElem.className = 'font-bold text-green-500 text-sm flex items-center gap-1';
+                healthElem.className = 'font-bold text-green-500 text-sm';
             }
-            healthDesc.innerText = `Net profit is ${target.toFixed(1)}% of the selling price.`;
 
-            // LIVE UPDATE KPI DASHBOARD 
-            let kpiMargin = document.getElementById('kpi_margin');
-            let kpiMaxAd = document.getElementById('kpi_maxad');
-            let kpiRev = document.getElementById('kpi_rev');
-            
-            if (kpiMargin) kpiMargin.innerText = target.toFixed(1) + '%';
-            if (kpiMaxAd) kpiMaxAd.innerText = '₹' + maxAd.toFixed(2);
-            if (kpiRev) kpiRev.innerText = '₹' + (suggestedSP * qty * 30).toFixed(0);
-
-            // Colored Bar Graph Sync
+            // Sync Bar Chart & KPIs
             if (suggestedSP > 0) {
-                let srcPct = (src / suggestedSP) * 100;
-                let shipPct = ((fwd + pkg + rtoLossPerUnit) / suggestedSP) * 100;
-                let taxPct = pg + gst; 
-                let adPct = (ad / suggestedSP) * 100;
-                let profPct = target; 
-
-                document.getElementById('bar_src').style.width = srcPct + '%';
-                document.getElementById('bar_ship').style.width = shipPct + '%';
-                document.getElementById('bar_tax').style.width = taxPct + '%';
-                document.getElementById('bar_ad').style.width = adPct + '%';
-                document.getElementById('bar_prof').style.width = profPct + '%';
-
-                document.getElementById('leg_src').innerText = '₹' + src.toFixed(2);
-                document.getElementById('leg_ship').innerText = '₹' + (fwd + pkg + rtoLossPerUnit).toFixed(2);
-                document.getElementById('leg_tax').innerText = '₹' + (suggestedSP * taxPct / 100).toFixed(2);
-                document.getElementById('leg_ad').innerText = '₹' + ad.toFixed(2);
-                document.getElementById('leg_prof').innerText = '₹' + netProfit.toFixed(2);
-
+                document.getElementById('bar_src').style.width = (src / suggestedSP * 100) + '%';
+                document.getElementById('bar_ship').style.width = ((fwd + pkg + rtoLossPerUnit) / suggestedSP * 100) + '%';
+                document.getElementById('bar_tax').style.width = (pg + gst) + '%';
+                document.getElementById('bar_ad').style.width = (ad / suggestedSP * 100) + '%';
+                document.getElementById('bar_prof').style.width = target + '%';
+                
                 document.getElementById('breakdown_empty').classList.add('hidden');
                 document.getElementById('breakdown_data').classList.remove('hidden');
             }
+            
+            calculateRCA(); // Update RCA whenever main calculator changes
         }
 
-        function updateDiscount() { document.getElementById('dsDisplay').innerText = document.getElementById('dsPercent').value + '%'; calculateDiscount(); }
-        function calculateDiscount() {
-            let sp = parseFloat(document.getElementById('ds_sp').value) || 0;
-            let cp = parseFloat(document.getElementById('ds_cp').value) || 0;
-            let ship = parseFloat(document.getElementById('ds_ship').value) || 0;
-            let percent = parseFloat(document.getElementById('dsPercent').value) || 0;
-            document.getElementById('ds_new_sp').innerText = '₹' + (sp - (sp * (percent / 100))).toFixed(2);
-            document.getElementById('ds_profit').innerText = '₹' + (sp - (sp * (percent / 100)) - cp - ship).toFixed(2);
-        }
+        function calculateRCA() {
+            let compSp = parseFloat(document.getElementById('rca_comp_sp').value) || 0;
+            let fwd = parseFloat(document.getElementById('bp_fwd').value) || 0;
+            let pkg = parseFloat(document.getElementById('bp_pkg').value) || 0;
+            let rtopen = parseFloat(document.getElementById('bp_rtopen').value) || 0;
+            let pg = parseFloat(document.getElementById('bp_pg').value) || 0;
+            let rtorate = parseFloat(document.getElementById('bp_rtorate').value) || 0;
+            let target = parseFloat(document.getElementById('bp_target').value) || 0;
+            let ad = parseFloat(document.getElementById('bp_ad').value) || 0;
+            let gst = parseFloat(document.getElementById('bp_gst').value) || 0;
 
-        function updateRTO() { document.getElementById('rtoDisplay').innerText = document.getElementById('rtoPercent').value + '%'; calculateRTO(); }
-        function calculateRTO() {
-            let rtoPercent = parseFloat(document.getElementById('rtoPercent').value) || 0;
-            document.getElementById('actualProfit').innerText = '₹' + ((parseFloat(document.getElementById('sp').value)||0) - (parseFloat(document.getElementById('cp').value)||0) - (parseFloat(document.getElementById('fwdShip').value)||0)).toFixed(2);
-        }
+            let rtoLossPerUnit = rtopen * (rtorate / 100);
+            let fixedFeesWithoutSourcing = fwd + pkg + ad + rtoLossPerUnit;
+            let percentageDeductions = compSp * ((pg + gst + target) / 100);
 
-        function calculateMulti() {
-            let sp = parseFloat(document.getElementById('mp_sp').value) || 0;
-            let cp = parseFloat(document.getElementById('mp_cp').value) || 0;
-            let ship = parseFloat(document.getElementById('mp_ship').value) || 0;
-            document.getElementById('res_amazon').innerText = '₹' + (sp - cp - ship - ((sp * 0.15) + 40)).toFixed(2);
-            document.getElementById('res_meesho').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
-            document.getElementById('res_shopify').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
-        }
-
-        function copySummary() {
-            navigator.clipboard.writeText(`D2C Profit:\nSelling Price: ${document.getElementById('out_ssp').innerText}\nProfit: ${document.getElementById('out_np').innerText}`);
-            alert("Copied!");
+            let maxSourcing = compSp - percentageDeductions - fixedFeesWithoutSourcing;
+            let maxSrcElem = document.getElementById('rca_max_src');
+            
+            if(compSp <= 0) { maxSrcElem.innerText = '₹0.00'; maxSrcElem.className = 'text-2xl font-black text-white mt-1'; } 
+            else if (maxSourcing < 0) { maxSrcElem.innerText = '₹' + maxSourcing.toFixed(2); maxSrcElem.className = 'text-2xl font-black text-red-500 mt-1'; } 
+            else { maxSrcElem.innerText = '₹' + maxSourcing.toFixed(2); maxSrcElem.className = 'text-2xl font-black text-green-400 mt-1'; }
         }
     </script>
 </body>
