@@ -7,6 +7,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
     <!-- Chart.js Library for Graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PDF.js & PDF-Lib for 100% Client-Side Label Cropper & SKU Sorter -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -14,6 +17,7 @@
         .tool-section { transition: all 0.4s ease-in-out; }
         .dark-input { background-color: #18181b; border: 1px solid #3f3f46; color: white; }
         .dark-input:focus { border-color: #3b82f6; outline: none; }
+        .field-hint { font-size: 11px; line-height: 1.3; margin-top: 3px; }
         /* Modal Animation */
         .modal-enter { animation: modalFadeIn 0.3s ease-out forwards; }
         @keyframes modalFadeIn {
@@ -41,7 +45,7 @@
     <section class="bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 text-white py-24 text-center">
         <div class="max-w-4xl mx-auto px-4">
             <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">Stop Guessing Your E-Commerce Margins.</h2>
-            <p class="text-lg md:text-xl mb-10 text-blue-100 font-normal max-w-2xl mx-auto">Calculate hidden RTO losses, compare marketplace fees, and simulate bulk discounts before you lose money.</p>
+            <p class="text-lg md:text-xl mb-10 text-blue-100 font-normal max-w-2xl mx-auto">Crop & sort shipping labels in seconds, calculate hidden RTO losses, compare marketplace fees, and simulate bulk discounts before you lose money.</p>
             <a href="#workspace" class="bg-white text-blue-600 font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:bg-gray-50 transition inline-block">Access Free Tools</a>
         </div>
     </section>
@@ -51,7 +55,7 @@
         <div class="max-w-6xl mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-extrabold tracking-tight mb-4 text-gray-900">Your D2C Workspace</h2>
-                <p class="text-gray-600 text-lg">Select a tool to start calculating instantly.</p>
+                <p class="text-gray-600 text-lg">Select a tool to start instantly. Click <span class="font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">(@)</span> inside any tool for a quick explanation.</p>
             </div>
             
             <!-- ROW 1: FREE TOOLS -->
@@ -69,7 +73,7 @@
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">Basic Profit Margin</h4>
                         <p class="text-sm text-gray-600 mb-4">Calculate suggested selling price & net margins.</p>
-                        <span class="text-green-600 font-semibold text-sm flex items-center">Open Calculator <svg class="w-4 h-4 ml-1 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
+                        <span class="text-green-600 font-semibold text-sm flex items-center">Open Calculator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
                     <!-- 2. Discount Simulator -->
@@ -79,7 +83,7 @@
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">Sale & Discount Simulator</h4>
                         <p class="text-sm text-gray-600 mb-4">Running a sale? Find your breakeven point instantly.</p>
-                        <span class="text-green-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
+                        <span class="text-green-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
                     <!-- 3. Dead Inventory -->
@@ -94,7 +98,7 @@
                 </div>
             </div>
 
-            <!-- ROW 2: PREMIUM TOOLS -->
+            <!-- ROW 2: PREMIUM TOOLS (ADVANCED SIMULATORS) -->
             <div>
                 <div class="flex items-center mb-6">
                     <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full text-xs tracking-wide uppercase mr-3">Pro</span>
@@ -103,21 +107,21 @@
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- Snap & Shield Vault -->
-                    <button onclick="openTool('snap-section')" class="text-left bg-white p-6 rounded-2xl border hover:border-blue-500 hover:shadow-md transition group focus:outline-none border-2 border-indigo-100">
-                        <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition shadow-sm">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <!-- 1. NEW #1 TOOL: Bulk Label Cropper + SKU Sorter -->
+                    <button onclick="openTool('label-section')" class="text-left bg-white p-6 rounded-2xl border-2 border-blue-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
+                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                         </div>
                         <div class="flex items-center gap-2 mb-1">
-                            <h4 class="text-lg font-bold text-gray-900">Snap & Shield</h4>
-                            <span class="bg-indigo-100 text-indigo-700 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded">Hot</span>
+                            <h4 class="text-lg font-bold text-gray-900">Label Cropper & SKU Sorter</h4>
+                            <span class="bg-green-100 text-green-700 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded">New</span>
                         </div>
-                        <p class="text-sm text-gray-600 mb-4">Capture AWB + scale proof with timestamp to win 100% weight disputes.</p>
-                        <span class="text-indigo-600 font-semibold text-sm flex items-center">Open Scanner <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
+                        <p class="text-sm text-gray-600 mb-4">Auto-crop Meesho/Flipkart/Amazon PDFs to 4×6, sort by SKU & add picking list.</p>
+                        <span class="text-blue-600 font-semibold text-sm flex items-center">Open Tool <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- Fake NDR Catcher -->
-                    <button onclick="openTool('ndr-section')" class="text-left bg-white p-6 rounded-2xl border hover:border-blue-500 hover:shadow-md transition group focus:outline-none border-2 border-indigo-100">
+                    <!-- 2. Fake NDR Catcher -->
+                    <button onclick="openTool('ndr-section')" class="text-left bg-white p-6 rounded-2xl border-2 border-indigo-100 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition shadow-sm">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                         </div>
@@ -129,27 +133,27 @@
                         <span class="text-indigo-600 font-semibold text-sm flex items-center">Open Tool <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
                     
-                    <!-- 4. ROAS Stop Loss -->
+                    <!-- 3. ROAS Stop Loss -->
                     <button onclick="openTool('roas-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none relative overflow-hidden">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">FB/Insta Ads Stop-Loss</h4>
-                        <p class="text-sm text-gray-600 mb-4">Find your exact Break-Even ROAS & CPA to stop losing money.</p>
+                        <p class="text-sm text-gray-600 mb-4">Find your exact Break-Even ROAS & CPA to stop losing money on ads.</p>
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- 5. B2B Pricing -->
+                    <!-- 4. B2B Pricing -->
                     <button onclick="openTool('b2b-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">Wholesale B2B Pricing</h4>
-                        <p class="text-sm text-gray-600 mb-4">Generate bulk pricing tables (10, 50, 100 pcs) for wholesale deals.</p>
+                        <p class="text-sm text-gray-600 mb-4">Set your own bulk quantities & custom discounts for wholesale deals.</p>
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Generator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- 6. GST Impact -->
+                    <!-- 5. GST Impact -->
                     <button onclick="openTool('gst-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
@@ -159,27 +163,27 @@
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Calculator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- 7. RTO Simulator -->
+                    <!-- 6. RTO Simulator -->
                     <button onclick="openTool('rto-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">RTO & COD Loss</h4>
-                        <p class="text-sm text-gray-600 mb-4">Calculate return losses and find your true breakeven price.</p>
+                        <p class="text-sm text-gray-600 mb-4">Calculate return losses and find your true profit per 100 orders.</p>
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- 8. Multi Platform -->
+                    <!-- 7. Multi Platform -->
                     <button onclick="openTool('multi-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">Multi-Platform Compare</h4>
-                        <p class="text-sm text-gray-600 mb-4">Compare margins across Amazon, Meesho & Shopify instantly.</p>
+                        <p class="text-sm text-gray-600 mb-4">100% accurate fee, GST & RTO profit compare for Amazon, Meesho & Website.</p>
                         <span class="text-blue-600 font-semibold text-sm flex items-center">Open Simulator <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
-                    <!-- 9. Bulk CSV Tool (Links externally) -->
+                    <!-- 8. Bulk CSV Tool (Links externally) -->
                     <a href="bulk.html" target="_blank" class="block bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
@@ -196,9 +200,16 @@
 
                 <!-- 1. MAIN BASIC CALCULATOR + CHARTS (DARK THEME) -->
                 <div id="basic-section" class="tool-section hidden bg-[#0f0f11] p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-800">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-3xl font-extrabold text-white">Calculator</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl md:text-3xl font-extrabold text-white">Basic Profit Margin</h3>
+                            <button type="button" onclick="toggleInfo('info-basic')" class="bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 border border-blue-400/40 text-xs font-extrabold px-2.5 py-1 rounded-full transition" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-800 rounded-lg">✕ Close</button>
+                    </div>
+                    <!-- (@) Explanation Box -->
+                    <div id="info-basic" class="hidden mb-6 bg-blue-950/60 border border-blue-700/60 text-blue-100 p-4 rounded-xl text-sm">
+                        <strong>What it does:</strong> Finds the exact selling price you should set so you still make your target profit after shipping, RTO losses, ads, and GST. Helps you stop underpricing your products.
                     </div>
                     
                     <div class="grid md:grid-cols-3 gap-6">
@@ -212,29 +223,83 @@
                                 
                                 <h4 class="font-bold text-white mb-5 text-lg">Enter Product Details</h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Product name</label><input type="text" class="w-full p-2.5 text-sm rounded-lg dark-input"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Sales channel</label><select class="w-full p-2.5 text-sm rounded-lg dark-input"><option>Shopify / Own Website</option><option>Amazon</option><option>Meesho</option><option>Instagram</option></select></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Total quantity</label><input type="number" id="bp_qty" value="1" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Sourcing cost (₹)</label><input type="number" id="bp_src" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Forward shipping cost (₹)</label><input type="number" id="bp_fwd" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Packaging cost (₹)</label><input type="number" id="bp_pkg" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">RTO shipping penalty (₹)</label><input type="number" id="bp_rtopen" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Payment gateway fee (%)</label><input type="number" id="bp_pg" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Estimated RTO rate (%)</label><input type="number" id="bp_rtorate" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Target profit margin (%)</label><input type="number" id="bp_target" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">Estimated ad cost per order (₹)</label><input type="number" id="bp_ad" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
-                                    <div><label class="block text-xs font-bold text-gray-300 mb-1">GST / Tax (%)</label><input type="number" id="bp_gst" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()"></div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Product name</label>
+                                        <input type="text" placeholder="e.g. Cotton Kurti" class="w-full p-2.5 text-sm rounded-lg dark-input">
+                                        <p class="field-hint text-gray-400">Any name for your own reference.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Sales channel</label>
+                                        <select class="w-full p-2.5 text-sm rounded-lg dark-input"><option>Shopify / Own Website</option><option>Amazon</option><option>Meesho</option><option>Instagram</option></select>
+                                        <p class="field-hint text-gray-400">Where you are selling this item.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Total quantity</label>
+                                        <input type="number" id="bp_qty" value="1" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Number of units you plan to sell (e.g. 1 or 100).</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Sourcing cost (₹)</label>
+                                        <input type="number" id="bp_src" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Buying or making cost for 1 piece.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Forward shipping cost (₹)</label>
+                                        <input type="number" id="bp_fwd" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Courier charge to send 1 parcel to buyer.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Packaging cost (₹)</label>
+                                        <input type="number" id="bp_pkg" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Polybag, box, tape & label cost per parcel.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">RTO shipping penalty (₹)</label>
+                                        <input type="number" id="bp_rtopen" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Extra courier charge when an order returns undelivered.</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Payment gateway / Platform fee (%)</label>
+                                        <input type="number" id="bp_pg" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Razorpay ~2% or Amazon referral % (0% for Meesho).</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Estimated RTO rate (%)</label>
+                                        <input type="number" id="bp_rtorate" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Out of 100 orders, how many come back (e.g. 20).</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Target profit margin (%)</label>
+                                        <input type="number" id="bp_target" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Clean profit % you want to keep (e.g. 20%).</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">Estimated ad cost per order (₹)</label>
+                                        <input type="number" id="bp_ad" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Avg. FB/Insta/Meesho ad spend to get 1 order (0 if organic).</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-300 mb-1">GST / Tax (%)</label>
+                                        <input type="number" id="bp_gst" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateExactBasic()">
+                                        <p class="field-hint text-gray-400">Your product's GST slab (5%, 12%, 18%, or 0 if not registered).</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- RCA Card (Fake Door Trigger / Unlockable) -->
+                            <!-- RCA Card (Unlockable) -->
                             <div class="bg-[#1c1c1e] p-6 rounded-xl border border-[#27272a] relative overflow-hidden" id="rca-container">
                                 <div class="absolute top-0 left-0 w-1/3 h-1 bg-orange-500"></div>
                                 <div class="absolute top-0 left-1/3 w-1/3 h-1 bg-green-500"></div>
                                 
                                 <div class="flex items-center justify-between mb-4 relative z-0">
-                                    <h4 class="text-sm font-bold text-blue-200 bg-blue-900/50 px-2 py-1 rounded">Reverse Competitor Analysis</h4>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-sm font-bold text-blue-200 bg-blue-900/50 px-2 py-1 rounded">Reverse Competitor Analysis</h4>
+                                        <button type="button" onclick="toggleInfo('info-rca')" class="bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 text-[11px] font-bold px-2 py-0.5 rounded-full">(@)</button>
+                                    </div>
                                     <span class="text-xs font-bold text-gray-500">PRO</span>
+                                </div>
+                                <div id="info-rca" class="hidden mb-3 bg-blue-950/60 border border-blue-700/60 text-blue-100 p-3 rounded-lg text-xs">
+                                    <strong>What it does:</strong> Enter your competitor's price to see the maximum sourcing price you can afford to beat them and still hit your profit target.
                                 </div>
                                 
                                 <div class="absolute inset-0 bg-[#1c1c1e]/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-xl transition-all duration-300 pro-lock-overlay">
@@ -247,10 +312,12 @@
                                     <div>
                                         <label class="block text-xs font-bold text-gray-300 mb-1">Competitor's selling price (₹)</label>
                                         <input type="number" id="rca_comp_sp" value="0" class="w-full p-2.5 text-sm rounded-lg dark-input" oninput="calculateRCA()">
+                                        <p class="field-hint text-gray-400">Price your top competitor sells at.</p>
                                     </div>
                                     <div>
                                         <label class="block text-xs font-bold text-gray-300 mb-1">Max Sourcing Cost</label>
                                         <p id="rca_max_src" class="text-2xl font-black text-white mt-1">₹0.00</p>
+                                        <p class="field-hint text-gray-400">Don't pay your supplier more than this.</p>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +382,7 @@
                         <!-- BOTTOM ROW: ANALYTICS (CHARTS) -->
                         <div class="md:col-span-3 mt-6 border-t border-[#27272a] pt-8" id="analytics-container">
                             <div class="flex items-center gap-3 mb-2">
-                                <h3 class="text-xl font-bold text-white">Tenacious Pro Analytics [Preview]</h3>
+                                <h3 class="text-xl font-bold text-white">Pro Analytics [Preview]</h3>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -349,81 +416,172 @@
 
                 <!-- 2. DISCOUNT SIMULATOR (FREE) -->
                 <div id="discount-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-green-200">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900">Sale & Discount Simulator</h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl font-extrabold text-gray-900">Sale & Discount Simulator</h3>
+                            <button type="button" onclick="toggleInfo('info-discount')" class="bg-green-100 hover:bg-green-200 text-green-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
+                    </div>
+                    <div id="info-discount" class="hidden mb-6 bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl text-sm">
+                        <strong>What it does:</strong> Shows how much profit stays in your pocket before you launch a 10%–50% sale. Helps you avoid giving discounts that put you in a loss.
                     </div>
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Original Selling Price (₹)</label><input type="number" id="ds_sp" value="1299" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()"></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="block text-sm font-semibold mb-1">Cost Price (₹)</label><input type="number" id="ds_cp" value="500" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()"></div>
-                                <div><label class="block text-sm font-semibold mb-1">Shipping (₹)</label><input type="number" id="ds_ship" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Original Selling Price (₹)</label>
+                                <input type="number" id="ds_sp" value="1299" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()">
+                                <p class="field-hint text-gray-500">Your normal selling price before any discount.</p>
                             </div>
-                            <div class="pt-4 border-t mt-4"><label class="block text-sm font-extrabold flex justify-between">Discount <span id="dsDisplay" class="text-green-600">15%</span></label><input type="range" id="dsPercent" min="0" max="80" value="15" class="w-full h-2 bg-gray-300 rounded-lg accent-green-500 mt-2" oninput="updateDiscount()"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Cost Price (₹)</label>
+                                    <input type="number" id="ds_cp" value="500" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()">
+                                    <p class="field-hint text-gray-500">Product + packaging cost.</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Shipping (₹)</label>
+                                    <input type="number" id="ds_ship" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDiscount()">
+                                    <p class="field-hint text-gray-500">Courier fee per order.</p>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t mt-4">
+                                <label class="block text-sm font-extrabold flex justify-between">Discount <span id="dsDisplay" class="text-green-600">15%</span></label>
+                                <input type="range" id="dsPercent" min="0" max="80" value="15" class="w-full h-2 bg-gray-300 rounded-lg accent-green-500 mt-2" oninput="updateDiscount()">
+                                <p class="field-hint text-gray-500">Slide to test different festive or coupon discounts.</p>
+                            </div>
                         </div>
-                        <div class="bg-gray-900 p-6 rounded-2xl text-white">
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white flex flex-col justify-center">
                             <div class="bg-gray-800 p-4 rounded-xl mb-4"><p class="text-xs text-gray-400">New Sale Price:</p><p id="ds_new_sp" class="text-3xl font-black">₹0</p></div>
-                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Profit:</p><p id="ds_profit" class="text-2xl font-bold text-green-400">₹0</p></div>
+                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Profit Per Order:</p><p id="ds_profit" class="text-2xl font-bold text-green-400">₹0</p></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. DEAD INVENTORY (FREE) -->
                 <div id="dead-inv-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-green-200">
-                    <div class="flex justify-between items-center mb-6 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900">Dead Inventory Optimizer</h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl font-extrabold text-gray-900">Dead Inventory Optimizer</h3>
+                            <button type="button" onclick="toggleInfo('info-dead')" class="bg-green-100 hover:bg-green-200 text-green-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
+                    </div>
+                    <div id="info-dead" class="hidden mb-6 bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl text-sm">
+                        <strong>What it does:</strong> Calculates how much cash you can free up by selling old, stuck stock at a clearance price. Helps you turn dead boxes back into working cash.
                     </div>
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Total Units Left</label><input type="number" id="di_qty" value="50" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Mfg Cost Per Unit (₹)</label><input type="number" id="di_cp" value="350" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Clearance Price Per Unit (₹)</label><input type="number" id="di_sp" value="250" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Total Units Left</label>
+                                <input type="number" id="di_qty" value="50" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()">
+                                <p class="field-hint text-gray-500">How many unsold pieces are sitting in stock.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Mfg / Buying Cost Per Unit (₹)</label>
+                                <input type="number" id="di_cp" value="350" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()">
+                                <p class="field-hint text-gray-500">Original cost you paid per piece.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Clearance Price Per Unit (₹)</label>
+                                <input type="number" id="di_sp" value="250" class="w-full p-3 border rounded-lg outline-none" oninput="calculateDeadInv()">
+                                <p class="field-hint text-gray-500">Discounted price you plan to clear it at (after shipping).</p>
+                            </div>
                         </div>
                         <div class="bg-gray-900 p-6 rounded-2xl text-white">
                             <p class="text-gray-400 text-sm mb-4">Capital Blocked: <span id="di_blocked" class="font-bold text-white">₹0</span></p>
-                            <div class="bg-gray-800 p-4 rounded-xl mb-4"><p class="text-xs text-gray-400">Capital Recovered:</p><p id="di_recovered" class="text-3xl font-black text-green-400">₹0</p></div>
-                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Loss on Batch:</p><p id="di_loss" class="text-2xl font-bold text-red-400">₹0</p></div>
+                            <div class="bg-gray-800 p-4 rounded-xl mb-4"><p class="text-xs text-gray-400">Cash Recovered:</p><p id="di_recovered" class="text-3xl font-black text-green-400">₹0</p></div>
+                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Profit / Loss on Batch:</p><p id="di_loss" class="text-2xl font-bold text-red-400">₹0</p></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. SNAP & SHIELD VAULT (PRO) -->
-                <div id="snap-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-indigo-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Snap & Shield Vault <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                <!-- 4. NEW #1 PRO TOOL: BULK LABEL CROPPER + SKU SORTER -->
+                <div id="label-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border-2 border-blue-200 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Bulk Label Cropper & SKU Sorter <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-label')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-label" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Auto-crops bulky A4 Meesho, Flipkart & Amazon shipping PDFs into clean 4×6 thermal labels (or 4-per-A4), sorts all pages by SKU, and adds a Page 1 Picking List—saving 45+ minutes of daily packing chaos. 100% private (runs in your browser, files never leave your PC).
                     </div>
 
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
                         <p class="text-lg font-bold text-gray-900 mb-3">Premium Feature Locked</p>
-                        <button onclick="openProModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold">Upgrade to Unlock</button>
+                        <button onclick="openProModal()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg">Upgrade to Unlock</button>
                     </div>
 
                     <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
-                        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 text-center flex flex-col justify-center items-center h-64 border-dashed border-2 border-indigo-300">
-                            <svg class="w-12 h-12 text-indigo-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                            <p class="font-bold text-gray-700">Initialize Camera Scanner</p>
-                            <p class="text-xs text-gray-500 mt-2">Auto-reads AWB from label and stamps exact weight & time.</p>
-                            <button class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm">Open Web-Cam</button>
-                        </div>
-                        <div class="bg-white border-2 border-gray-200 p-6 rounded-xl flex flex-col">
-                            <h4 class="font-bold text-gray-800 text-lg mb-4 border-b pb-2">Recent Dispute Proofs</h4>
-                            <div class="flex-grow flex items-center justify-center flex-col text-gray-400">
-                                <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                                <p class="text-sm">Vault is empty.</p>
+                        <!-- Left Controls -->
+                        <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1">1. Upload Raw Labels PDF</label>
+                                <input type="file" id="label_pdf_file" accept="application/pdf" class="w-full p-2.5 bg-white border border-blue-200 rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:font-semibold hover:file:bg-blue-700 cursor-pointer">
+                                <p class="field-hint text-gray-600">Select the combined shipping label PDF downloaded from your seller panel.</p>
                             </div>
-                            <button class="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-lg mt-4 text-sm border border-gray-200">Export ZIP for Shiprocket</button>
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-800 mb-1">2. Select Platform & Crop Preset</label>
+                                <select id="label_platform" class="w-full p-3 bg-white border border-blue-200 rounded-xl text-sm outline-none">
+                                    <option value="meesho">Meesho (Crop Top Label — 4×6 Thermal)</option>
+                                    <option value="flipkart">Flipkart (Crop Label Area — 4×6 Thermal)</option>
+                                    <option value="amazon">Amazon Easy Ship (Crop Top Half — 4×6 Thermal)</option>
+                                    <option value="a4_4up">4 Labels per A4 Page (Normal Printer Paper Saver)</option>
+                                    <option value="sort_only">Keep Original Size (Only Sort by SKU + Picking List)</option>
+                                </select>
+                                <p class="field-hint text-gray-600">Choose your marketplace or normal A4 4-in-1 print layout.</p>
+                            </div>
+
+                            <div class="space-y-2 pt-2">
+                                <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer">
+                                    <input type="checkbox" id="label_sort_sku" checked class="w-4 h-4 accent-blue-600 rounded">
+                                    Sort all labels alphabetically by SKU
+                                </label>
+                                <p class="field-hint text-gray-600 ml-6">Groups identical products back-to-back so packing is 3× faster.</p>
+
+                                <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer mt-2">
+                                    <input type="checkbox" id="label_add_summary" checked class="w-4 h-4 accent-blue-600 rounded">
+                                    Add Page 1 "Picking Summary" sheet
+                                </label>
+                                <p class="field-hint text-gray-600 ml-6">Prints a master list of exact SKU quantities to pick before packing.</p>
+                            </div>
+
+                            <button type="button" id="label_process_btn" onclick="processLabelPDF()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                                Crop, Sort & Download PDF
+                            </button>
+                            <p id="label_status" class="text-xs font-semibold text-center text-blue-700 min-h-[16px]"></p>
+                        </div>
+
+                        <!-- Right Preview / Picking Summary -->
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white flex flex-col">
+                            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                                <h4 class="font-bold text-white text-sm">Live Picking Summary Preview</h4>
+                                <span id="label_total_badge" class="bg-blue-600/30 text-blue-300 text-xs font-bold px-2.5 py-1 rounded-full">0 Labels</span>
+                            </div>
+                            <div id="label_summary_output" class="flex-grow overflow-y-auto max-h-64 text-sm text-gray-400">
+                                <p class="text-center py-10 text-xs text-gray-500">Upload a shipping label PDF and click <strong>Crop, Sort & Download PDF</strong>. Your grouped SKU picking list will appear here instantly.</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-800 text-[11px] text-gray-400 flex items-center gap-2">
+                                <span class="text-green-400">🔒</span> 100% browser-based processing. Your customer data is never uploaded to any server.
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 5. FAKE NDR CATCHER (PRO) -->
                 <div id="ndr-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-indigo-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Fake NDR Catcher <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Fake NDR Catcher <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-ndr')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-ndr" class="hidden mb-6 bg-indigo-50 border border-indigo-200 text-indigo-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Sends a quick WhatsApp message to customers when couriers mark "Customer not available" (NDR). Helps you catch fake rider attempts and save orders from turning into costly RTOs.
                     </div>
 
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -433,31 +591,29 @@
 
                     <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
                         <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Customer Phone Number</label><input type="tel" value="" placeholder="+91" class="w-full p-3 border rounded-lg outline-none"></div>
-                            <div><label class="block text-sm font-semibold mb-1">AWB Tracking Number</label><input type="text" value="" placeholder="e.g. 123456789" class="w-full p-3 border rounded-lg outline-none"></div>
-                            <button class="w-full mt-2 bg-green-500 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                Send Verify WhatsApp
-                            </button>
-                            <div class="pt-4 border-t border-indigo-200 text-center">
-                                <p class="text-xs text-gray-500 mb-2">Or upload daily NDR export</p>
-                                <button class="w-full bg-white border border-indigo-300 text-indigo-600 font-bold py-2 rounded-lg text-sm">Upload CSV File</button>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Customer Phone Number</label>
+                                <input type="tel" id="ndr_phone" value="" placeholder="919876543210" class="w-full p-3 border rounded-lg outline-none">
+                                <p class="field-hint text-gray-600">Buyer's 10-digit WhatsApp number (with 91).</p>
                             </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">AWB Tracking Number</label>
+                                <input type="text" id="ndr_awb" value="" placeholder="e.g. 123456789" class="w-full p-3 border rounded-lg outline-none">
+                                <p class="field-hint text-gray-600">Courier tracking ID of the undelivered parcel.</p>
+                            </div>
+                            <button type="button" onclick="sendNDRWhatsApp()" class="w-full mt-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                Open Verify WhatsApp
+                            </button>
                         </div>
                         <div class="bg-gray-900 p-6 rounded-2xl text-white relative">
                             <h4 class="font-bold text-white text-sm mb-4 border-b border-gray-700 pb-2">WhatsApp Preview</h4>
-                            <div class="bg-[#075e54] p-3 rounded-lg rounded-tl-none w-[85%] text-sm mb-2 shadow">
-                                Hi! 📦 SmallSellerSupport here. Courier marked your order as undelivered today. Did the rider call or visit?
+                            <div class="bg-[#075e54] p-3 rounded-lg rounded-tl-none w-[90%] text-sm mb-3 shadow">
+                                Hi! 📦 Your courier marked your order as undelivered today. Did the delivery rider call or visit you? Reply YES or NO so we can arrange fast re-delivery.
                             </div>
-                            <div class="flex gap-2">
-                                <span class="bg-gray-700 text-[11px] px-2 py-1 rounded text-white border border-gray-600">Yes, missed it</span>
-                                <span class="bg-gray-700 text-[11px] px-2 py-1 rounded text-white border border-gray-600">No, nobody called</span>
-                            </div>
-                            <div class="absolute bottom-6 left-6 right-6">
-                                <div class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl">
-                                    <p class="text-xs text-gray-400">Escalation Status</p>
-                                    <p class="text-sm font-bold text-red-400 mt-1">Awaiting customer response...</p>
-                                </div>
+                            <div class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl mt-6">
+                                <p class="text-xs text-gray-400">Pro Tip</p>
+                                <p class="text-xs font-medium text-red-300 mt-1">If the buyer replies "NO", take a screenshot and escalate immediately on your courier panel to stop RTO!</p>
                             </div>
                         </div>
                     </div>
@@ -465,9 +621,18 @@
 
                 <!-- 6. FB ADS ROAS (PRO) -->
                 <div id="roas-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-blue-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-6 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Ads Stop-Loss <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">FB/Insta Ads Stop-Loss (ROAS & CPA) <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-roas')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <!-- Detailed Simple Explanation for ROAS & CPA -->
+                    <div id="info-roas" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-sm space-y-1.5 relative z-20">
+                        <p><strong>What it does:</strong> Tells you the exact danger line for your Facebook/Instagram ads so you know when to turn OFF a losing ad before wasting budget.</p>
+                        <p><strong>CPA / CPP (Cost Per Purchase):</strong> The maximum rupees you can spend on ads to get 1 order. Spend more than this = you lose money.</p>
+                        <p><strong>ROAS (Return on Ad Spend):</strong> Revenue earned for every ₹1 spent on ads (e.g. 2.5x means ₹2.50 sales per ₹1 ad spend). If your ad ROAS drops below Break-Even ROAS, pause the ad!</p>
                     </div>
                     
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -477,22 +642,48 @@
 
                     <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
                         <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Selling Price (₹)</label><input type="number" id="ro_sp" value="1499" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Total Costs (₹)</label><input type="number" id="ro_cp" value="650" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Target Profit (₹)</label><input type="number" id="ro_target" value="300" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                                <input type="number" id="ro_sp" value="1499" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()">
+                                <p class="field-hint text-gray-600">Final price the customer pays for 1 order.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Total Costs Without Ads (₹)</label>
+                                <input type="number" id="ro_cp" value="650" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()">
+                                <p class="field-hint text-gray-600">Product + packaging + shipping + GST + avg. RTO cost.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Target Net Profit Per Order (₹)</label>
+                                <input type="number" id="ro_target" value="300" class="w-full p-3 border rounded-lg outline-none" oninput="calculateROAS()">
+                                <p class="field-hint text-gray-600">Clean profit you want to keep in hand (put 0 for pure break-even).</p>
+                            </div>
                         </div>
-                        <div class="bg-gray-900 p-6 rounded-2xl text-white">
-                            <div class="bg-gray-800 p-4 rounded-xl mb-4"><p class="text-xs text-gray-400">Max Cost Per Purchase (CPP)</p><p id="ro_cpp" class="text-3xl font-black text-red-400">₹0</p></div>
-                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Break-Even ROAS</p><p id="ro_roas" class="text-3xl font-bold text-green-400">0.0x</p></div>
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white flex flex-col justify-center space-y-4">
+                            <div class="bg-gray-800 p-4 rounded-xl">
+                                <p class="text-xs text-gray-400">Max Ad Cost Per Order (CPA / CPP Stop-Loss)</p>
+                                <p id="ro_cpp" class="text-3xl font-black text-red-400 mt-1">₹0</p>
+                                <p class="text-[11px] text-gray-400 mt-1">Pause ad if Meta Ads Manager CPA crosses this amount.</p>
+                            </div>
+                            <div class="bg-gray-800 p-4 rounded-xl">
+                                <p class="text-xs text-gray-400">Target / Break-Even ROAS</p>
+                                <p id="ro_roas" class="text-3xl font-bold text-green-400 mt-1">0.0x</p>
+                                <p class="text-[11px] text-gray-400 mt-1">Your ad ROAS must stay ABOVE this number to hit your profit.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 7. B2B PRICING (PRO) -->
+                <!-- 7. B2B PRICING (PRO - CUSTOM QUANTITY & DISCOUNT COLUMNS) -->
                 <div id="b2b-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-indigo-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-6 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">B2B Bulk Pricing <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Wholesale B2B Pricing <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-b2b')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-b2b" class="hidden mb-6 bg-indigo-50 border border-indigo-200 text-indigo-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Lets you create custom bulk quotes with your own quantities and discounts, while showing exact profit per piece and total profit so you never underprice a wholesale deal.
                     </div>
 
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -500,25 +691,55 @@
                         <button onclick="openProModal()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold">Upgrade to Unlock</button>
                     </div>
 
-                    <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
-                        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Base Mfg Cost (₹)</label><input type="number" id="b2b_cp" value="400" class="w-full p-3 border rounded-lg outline-none" oninput="calculateB2B()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Base Margin (%)</label><input type="number" id="b2b_margin" value="40" class="w-full p-3 border rounded-lg outline-none" oninput="calculateB2B()"></div>
+                    <div class="opacity-30 pointer-events-none pro-inputs space-y-6">
+                        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Base Cost Per Piece (₹)</label>
+                                <input type="number" id="b2b_cp" value="400" class="w-full p-3 border rounded-lg outline-none bg-white" oninput="calculateB2B()">
+                                <p class="field-hint text-gray-600">Your manufacturing or wholesale buying cost for 1 piece.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Standard Retail / Base Price (₹)</label>
+                                <input type="number" id="b2b_base_sp" value="700" class="w-full p-3 border rounded-lg outline-none bg-white" oninput="calculateB2B()">
+                                <p class="field-hint text-gray-600">Your normal selling price for 1 piece (before bulk discount).</p>
+                            </div>
                         </div>
-                        <div class="bg-white border border-gray-200 p-6 rounded-2xl">
-                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">Wholesale Quote</h4>
-                            <div class="flex justify-between py-2"><span class="text-gray-600">10 Pieces</span><span id="b2b_10" class="font-bold text-gray-900">₹0</span></div>
-                            <div class="flex justify-between py-2"><span class="text-gray-600">50 Pieces (5% Off)</span><span id="b2b_50" class="font-bold text-indigo-600">₹0</span></div>
-                            <div class="flex justify-between py-2"><span class="text-gray-600">100 Pieces (10% Off)</span><span id="b2b_100" class="font-bold text-indigo-600">₹0</span></div>
+
+                        <div class="bg-white border border-gray-200 p-6 rounded-2xl overflow-x-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-gray-800">Custom Bulk Tiers (Edit Quantity & Discount %)</h4>
+                                <button type="button" onclick="addB2BRow()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition">+ Add Tier</button>
+                            </div>
+                            <table class="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr class="border-b border-gray-200 text-xs uppercase text-gray-500">
+                                        <th class="py-2 pr-3">Quantity (Pcs)</th>
+                                        <th class="py-2 px-3">Discount (%)</th>
+                                        <th class="py-2 px-3">Price / Pc</th>
+                                        <th class="py-2 px-3">Total Quote</th>
+                                        <th class="py-2 px-3">Total Profit</th>
+                                        <th class="py-2 pl-2 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="b2b_tbody" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Rows rendered by JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
                 <!-- 8. GST IMPACT (PRO) -->
                 <div id="gst-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-blue-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-6 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">GST & ITC Impact <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">GST & ITC Impact <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-gst')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-gst" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Calculates how much GST you actually pay the government after deducting Input Tax Credit (ITC — the GST you already paid to your supplier).
                     </div>
 
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -528,24 +749,46 @@
 
                     <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
                         <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-semibold mb-1">Purchase Price</label><input type="number" id="gst_pur" value="500" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Purchase GST (%)</label><input type="number" id="gst_in" value="5" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Selling Price</label><input type="number" id="gst_sale" value="999" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Sales GST (%)</label><input type="number" id="gst_out" value="5" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Purchase Price (₹)</label>
+                                <input type="number" id="gst_pur" value="500" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()">
+                                <p class="field-hint text-gray-500">Taxable buying price (before GST).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Purchase GST (%)</label>
+                                <input type="number" id="gst_in" value="5" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()">
+                                <p class="field-hint text-gray-500">GST % on supplier bill.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                                <input type="number" id="gst_sale" value="999" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()">
+                                <p class="field-hint text-gray-500">Your selling price (before GST).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Sales GST (%)</label>
+                                <input type="number" id="gst_out" value="5" class="w-full p-3 border rounded-lg outline-none" oninput="calculateGST()">
+                                <p class="field-hint text-gray-500">GST % charged to buyer.</p>
+                            </div>
                         </div>
                         <div class="bg-gray-900 p-6 rounded-2xl text-white">
-                            <div class="flex justify-between mb-4"><span class="text-gray-400">GST Collected:</span><span id="gst_col" class="font-bold">₹0</span></div>
-                            <div class="flex justify-between mb-4"><span class="text-gray-400">ITC Claimable:</span><span id="gst_itc" class="font-bold text-green-400">₹0</span></div>
-                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Tax Payable</p><p id="gst_net" class="text-3xl font-black text-red-400 mt-1">₹0</p></div>
+                            <div class="flex justify-between mb-4"><span class="text-gray-400">GST Collected from Buyer:</span><span id="gst_col" class="font-bold">₹0</span></div>
+                            <div class="flex justify-between mb-4"><span class="text-gray-400">ITC Claimable (Paid to Supplier):</span><span id="gst_itc" class="font-bold text-green-400">₹0</span></div>
+                            <div class="bg-gray-800 p-4 rounded-xl"><p class="text-xs text-gray-400">Net Tax Payable to Govt</p><p id="gst_net" class="text-3xl font-black text-red-400 mt-1">₹0</p></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 9. RTO SIMULATOR (PRO) -->
                 <div id="rto-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-blue-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">RTO & COD Loss <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">RTO & COD Loss <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-rto')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-rto" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Shows how much real profit you keep per delivered order after absorbing wasted forward + reverse shipping on failed COD/RTO orders.
                     </div>
                     
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -555,26 +798,62 @@
 
                     <div class="opacity-30 pointer-events-none pro-inputs grid md:grid-cols-2 gap-8">
                         <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
-                            <div><label class="block text-sm font-semibold mb-1">Selling Price (₹)</label><input type="number" id="sp" value="999" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Cost Price (₹)</label><input type="number" id="cp" value="350" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()"></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label class="block text-sm font-semibold mb-1">Fwd Ship (₹)</label><input type="number" id="fwdShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()"></div>
-                                <div><label class="block text-sm font-semibold mb-1">RTO Ship (₹)</label><input type="number" id="rtoShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                                <input type="number" id="sp" value="999" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
+                                <p class="field-hint text-gray-500">Price customer pays on delivery.</p>
                             </div>
-                            <div class="pt-4 border-t mt-4"><label class="block text-sm font-extrabold flex justify-between">Expected RTO <span id="rtoDisplay" class="text-red-500">30%</span></label><input type="range" id="rtoPercent" min="0" max="100" value="30" class="w-full h-2 bg-gray-300 rounded-lg accent-red-500 mt-2" oninput="updateRTO()"></div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Cost Price (₹)</label>
+                                <input type="number" id="cp" value="350" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
+                                <p class="field-hint text-gray-500">Product + packaging cost.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">Forward Ship (₹)</label>
+                                    <input type="number" id="fwdShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
+                                    <p class="field-hint text-gray-500">Courier fee to ship out.</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-1">RTO Return Ship (₹)</label>
+                                    <input type="number" id="rtoShip" value="80" class="w-full p-3 border rounded-lg outline-none" oninput="calculateRTO()">
+                                    <p class="field-hint text-gray-500">Return fee when parcel comes back.</p>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t mt-4">
+                                <label class="block text-sm font-extrabold flex justify-between">Expected RTO Rate <span id="rtoDisplay" class="text-red-500">30%</span></label>
+                                <input type="range" id="rtoPercent" min="0" max="90" value="30" class="w-full h-2 bg-gray-300 rounded-lg accent-red-500 mt-2" oninput="updateRTO()">
+                                <p class="field-hint text-gray-500">Percentage of orders returned undelivered (typical COD is 20–35%).</p>
+                            </div>
                         </div>
-                        <div class="bg-gray-900 p-6 rounded-2xl text-white">
-                            <div class="bg-gray-800 p-4 rounded-xl mb-4"><p class="text-xs text-gray-400">Actual Profit (with RTO)</p><p id="actualProfit" class="text-2xl font-bold text-yellow-400">₹0</p></div>
-                            <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl"><p class="text-sm text-gray-300">Total Money Lost (Per 100 orders):</p><p id="totalShippingLoss" class="text-2xl font-black text-red-400 mt-1">₹0</p></div>
+                        <div class="bg-gray-900 p-6 rounded-2xl text-white flex flex-col justify-center space-y-4">
+                            <div class="bg-gray-800 p-4 rounded-xl">
+                                <p class="text-xs text-gray-400">Net Profit Per Delivered Order (After RTO Loss)</p>
+                                <p id="actualProfit" class="text-3xl font-bold text-yellow-400 mt-1">₹0</p>
+                            </div>
+                            <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
+                                <p class="text-xs text-gray-300">Wasted RTO Shipping (Per 100 Shipped Orders):</p>
+                                <p id="totalShippingLoss" class="text-2xl font-black text-red-400 mt-1">₹0</p>
+                            </div>
+                            <div class="bg-green-500/10 border border-green-500/30 p-4 rounded-xl">
+                                <p class="text-xs text-gray-300">Total Net Profit (Per 100 Shipped Orders):</p>
+                                <p id="totalBatchProfit" class="text-2xl font-black text-green-400 mt-1">₹0</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 10. MULTI-PLATFORM (PRO) -->
+                <!-- 10. MULTI-PLATFORM COMPARE (PRO - 100% ACCURATE BREAKDOWN) -->
                 <div id="multi-section" class="tool-section hidden bg-white p-8 rounded-3xl shadow-xl border border-indigo-200 relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Multi-Platform Compare <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                    <div class="flex justify-between items-center mb-4 border-b pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">Multi-Platform Compare <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">PRO</span></h3>
+                            <button type="button" onclick="toggleInfo('info-multi')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 text-xs font-extrabold px-2.5 py-1 rounded-full transition relative z-20" title="What does this tool do?">(@)</button>
+                        </div>
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg relative z-20">✕ Close</button>
+                    </div>
+                    <div id="info-multi" class="hidden mb-6 bg-indigo-50 border border-indigo-200 text-indigo-900 p-4 rounded-xl text-sm relative z-20">
+                        <strong>What it does:</strong> Compares your real net profit side-by-side on Amazon, Meesho, and Your Own Website—including referral commissions, closing fees, 18% GST on fees, net product GST, RTO losses, and ad spend.
                     </div>
 
                     <div class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-3xl transition-all duration-300 pro-lock-overlay mt-20">
@@ -583,15 +862,74 @@
                     </div>
 
                     <div class="opacity-30 pointer-events-none pro-inputs">
-                        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8 grid md:grid-cols-3 gap-6">
-                            <div><label class="block text-sm font-semibold mb-1">Selling Price (₹)</label><input type="number" id="mp_sp" value="899" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Cost Price (₹)</label><input type="number" id="mp_cp" value="300" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()"></div>
-                            <div><label class="block text-sm font-semibold mb-1">Shipping (₹)</label><input type="number" id="mp_ship" value="70" class="w-full p-3 border rounded-lg outline-none" oninput="calculateMulti()"></div>
+                        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Selling Price (₹)</label>
+                                <input type="number" id="mp_sp" value="899" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Final customer price (GST inclusive).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Product + Packaging Cost (₹)</label>
+                                <input type="number" id="mp_cp" value="300" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Your total buying + packing cost per unit.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Forward Shipping (₹)</label>
+                                <input type="number" id="mp_ship" value="70" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Avg. courier shipping fee (excl. GST).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Product GST Slab (%)</label>
+                                <input type="number" id="mp_gst" value="5" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">5%, 12%, 18% (or 0 if unregistered).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Amazon Referral Fee (%)</label>
+                                <input type="number" id="mp_amz_ref" value="15" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Category commission (usually 8%–18%).</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Expected RTO Rate (%)</label>
+                                <input type="number" id="mp_rto" value="15" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Undelivered return % (Meesho charges ₹0 RTO).</p>
+                            </div>
+                            <div class="sm:col-span-2 lg:col-span-3">
+                                <label class="block text-sm font-semibold mb-1">Website / Shopify Ad Cost Per Order (₹)</label>
+                                <input type="number" id="mp_ad" value="120" class="w-full p-2.5 border rounded-lg outline-none bg-white" oninput="calculateMulti()">
+                                <p class="field-hint text-gray-600">Avg. FB/Insta ad spend to get 1 website order (enter 0 if organic).</p>
+                            </div>
                         </div>
+
                         <div class="grid md:grid-cols-3 gap-6">
-                            <div class="bg-white border-2 border-gray-200 p-6 rounded-xl text-center"><h4 class="font-bold text-gray-800 text-xl mb-1">Amazon</h4><p id="res_amazon" class="text-3xl font-black text-gray-800 mt-4">₹0</p></div>
-                            <div class="bg-white border-2 border-pink-100 p-6 rounded-xl text-center"><h4 class="font-bold text-pink-600 text-xl mb-1">Meesho</h4><p id="res_meesho" class="text-3xl font-black text-pink-600 mt-4">₹0</p></div>
-                            <div class="bg-white border-2 border-green-100 p-6 rounded-xl text-center"><h4 class="font-bold text-green-600 text-xl mb-1">Your Website</h4><p id="res_shopify" class="text-3xl font-black text-green-600 mt-4">₹0</p></div>
+                            <!-- Amazon Card -->
+                            <div id="card_amazon" class="bg-white border-2 border-gray-200 p-6 rounded-2xl relative">
+                                <span id="win_amazon" class="hidden absolute -top-3 right-4 bg-green-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow">Best Profit</span>
+                                <h4 class="font-extrabold text-gray-900 text-xl mb-1">Amazon India</h4>
+                                <p class="text-xs text-gray-500 mb-4">Referral + Closing Fee + 18% Fee GST</p>
+                                <p id="res_amazon" class="text-3xl font-black text-gray-900">₹0</p>
+                                <p id="marg_amazon" class="text-xs font-bold text-gray-500 mb-4">0% margin</p>
+                                <div id="bk_amazon" class="text-xs space-y-1.5 border-t pt-3 text-gray-600"></div>
+                            </div>
+
+                            <!-- Meesho Card -->
+                            <div id="card_meesho" class="bg-white border-2 border-pink-100 p-6 rounded-2xl relative">
+                                <span id="win_meesho" class="hidden absolute -top-3 right-4 bg-green-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow">Best Profit</span>
+                                <h4 class="font-extrabold text-pink-600 text-xl mb-1">Meesho</h4>
+                                <p class="text-xs text-gray-500 mb-4">0% Commission &amp; ₹0 RTO Shipping</p>
+                                <p id="res_meesho" class="text-3xl font-black text-pink-600">₹0</p>
+                                <p id="marg_meesho" class="text-xs font-bold text-gray-500 mb-4">0% margin</p>
+                                <div id="bk_meesho" class="text-xs space-y-1.5 border-t pt-3 text-gray-600"></div>
+                            </div>
+
+                            <!-- Website / Shopify Card -->
+                            <div id="card_shopify" class="bg-white border-2 border-green-100 p-6 rounded-2xl relative">
+                                <span id="win_shopify" class="hidden absolute -top-3 right-4 bg-green-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow">Best Profit</span>
+                                <h4 class="font-extrabold text-green-600 text-xl mb-1">Your Website</h4>
+                                <p class="text-xs text-gray-500 mb-4">2% PG Fee (+18% GST) + Ad Spend</p>
+                                <p id="res_shopify" class="text-3xl font-black text-green-600">₹0</p>
+                                <p id="marg_shopify" class="text-xs font-bold text-gray-500 mb-4">0% margin</p>
+                                <div id="bk_shopify" class="text-xs space-y-1.5 border-t pt-3 text-gray-600"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -650,7 +988,7 @@
                 <div class="flex flex-col justify-center space-y-8">
                     <div>
                         <h3 class="text-2xl font-bold mb-2">SmallSellerSupport</h3>
-                        <p class="text-gray-400 leading-relaxed mb-6">Empowering Indian D2C sellers and dropshippers with precise financial tools to optimize margins and eliminate hidden losses.</p>
+                        <p class="text-gray-400 leading-relaxed mb-6">Empowering Indian D2C sellers and dropshippers with precise financial and operational tools to optimize margins and eliminate hidden losses.</p>
                     </div>
 
                     <div class="space-y-4">
@@ -660,7 +998,6 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Email Us</p>
-                                <!-- Visual email uses support@ for professionalism -->
                                 <a href="mailto:support@smallsellersupport.com" class="text-lg font-semibold text-white hover:text-blue-400 transition">support@smallsellersupport.com</a>
                             </div>
                         </div>
@@ -677,7 +1014,7 @@
                     </div>
                 </div>
 
-                <!-- Contact Form to your verified Zoho Email -->
+                <!-- Contact Form -->
                 <div class="bg-gray-800 p-8 rounded-3xl border border-gray-700 shadow-2xl relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-green-500"></div>
                     <h4 class="text-xl font-bold mb-6 text-white">Send us a message</h4>
@@ -730,7 +1067,7 @@
         </div>
     </section>
 
-    <!-- LEAD CAPTURE (FAKE DOOR) MODAL -->
+    <!-- LEAD CAPTURE MODAL -->
     <div id="pro-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center px-4">
         <div class="bg-white p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl modal-enter">
             <button onclick="closeProModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
@@ -760,7 +1097,17 @@
 
     <!-- INTERACTIVE LOGIC & CHARTS -->
     <script>
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
         let chartsRendered = false;
+
+        // Toggle (@) info box
+        function toggleInfo(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden');
+        }
 
         function openProModal() {
             document.getElementById('pro-modal').classList.remove('hidden');
@@ -779,7 +1126,6 @@
             let phone = document.getElementById('whatsapp-input').value;
             if(phone.length < 10) { alert("Please enter a valid WhatsApp number."); return; }
             
-            // Gmail Lead Capture for Pro Unlocks (To your verified Zoho ID)
             fetch("https://formsubmit.co/ajax/gawassarvesh14@smallsellersupport.com", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -793,29 +1139,249 @@
                 closeProModal();
                 document.querySelectorAll('.pro-lock-overlay').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.pro-inputs').forEach(el => el.classList.remove('opacity-30', 'pointer-events-none'));
-            }, 2000); 
+            }, 1500); 
         }
 
         function openTool(toolId) {
             document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
             const section = document.getElementById(toolId);
             section.classList.remove('hidden');
-            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             if (toolId === 'basic-section') { calculateExactBasic(); setTimeout(initCharts, 50); }
             if (toolId === 'discount-section') calculateDiscount();
             if (toolId === 'dead-inv-section') calculateDeadInv();
             if (toolId === 'roas-section') calculateROAS();
-            if (toolId === 'b2b-section') calculateB2B();
+            if (toolId === 'b2b-section') { initB2BTable(); calculateB2B(); }
             if (toolId === 'gst-section') calculateGST();
             if (toolId === 'rto-section') calculateRTO();
             if (toolId === 'multi-section') calculateMulti();
-            if (toolId === 'snap-section') { /* Future JS Logic */ }
-            if (toolId === 'ndr-section') { /* Future JS Logic */ }
         }
 
         function closeTools() { document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden')); }
 
+        // ==================== #1 PRO TOOL: BULK LABEL CROPPER + SKU SORTER ====================
+        async function processLabelPDF() {
+            const fileInput = document.getElementById('label_pdf_file');
+            const statusEl = document.getElementById('label_status');
+            const btn = document.getElementById('label_process_btn');
+            const summaryBox = document.getElementById('label_summary_output');
+            const badge = document.getElementById('label_total_badge');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                statusEl.innerText = "Please select a PDF file first.";
+                return;
+            }
+            if (typeof PDFLib === 'undefined' || typeof pdfjsLib === 'undefined') {
+                statusEl.innerText = "PDF libraries are still loading. Please try again in 2 seconds.";
+                return;
+            }
+
+            const platform = document.getElementById('label_platform').value;
+            const sortBySku = document.getElementById('label_sort_sku').checked;
+            const addSummary = document.getElementById('label_add_summary').checked;
+
+            try {
+                btn.disabled = true;
+                btn.innerText = "Processing PDF...";
+                statusEl.innerText = "Reading labels & detecting SKUs...";
+
+                const arrayBuffer = await fileInput.files[0].arrayBuffer();
+                const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+                const totalPages = pdfJsDoc.numPages;
+
+                let pageMeta = [];
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = await pdfJsDoc.getPage(i);
+                    const content = await page.getTextContent();
+                    const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+                    const { sku, qty } = extractSkuAndQty(text);
+                    pageMeta.push({ pageIndex: i - 1, sku, qty });
+                }
+
+                if (sortBySku) {
+                    pageMeta.sort((a, b) => a.sku.localeCompare(b.sku) || b.qty - a.qty);
+                }
+
+                // Aggregate picking summary
+                const skuCounts = {};
+                let totalUnits = 0;
+                pageMeta.forEach(p => {
+                    if (!skuCounts[p.sku]) skuCounts[p.sku] = { orders: 0, units: 0 };
+                    skuCounts[p.sku].orders += 1;
+                    skuCounts[p.sku].units += p.qty;
+                    totalUnits += p.qty;
+                });
+
+                const sortedSkus = Object.keys(skuCounts).sort();
+
+                // Render on-screen preview
+                badge.innerText = `${totalPages} Labels • ${totalUnits} Units`;
+                let html = `<table class="w-full text-left text-xs border-collapse">
+                    <thead><tr class="text-gray-400 border-b border-gray-700"><th class="py-1.5">SKU / Item</th><th class="py-1.5 text-center">Orders</th><th class="py-1.5 text-right">Total Qty</th></tr></thead>
+                    <tbody class="divide-y divide-gray-800">`;
+                sortedSkus.forEach(s => {
+                    html += `<tr><td class="py-2 font-semibold text-white pr-2 break-all">${escapeHtml(s)}</td><td class="py-2 text-center text-gray-300">${skuCounts[s].orders}</td><td class="py-2 text-right font-bold text-green-400">${skuCounts[s].units}</td></tr>`;
+                });
+                html += `</tbody></table>`;
+                summaryBox.innerHTML = html;
+
+                statusEl.innerText = "Cropping & building final PDF...";
+
+                const srcDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                const outDoc = await PDFLib.PDFDocument.create();
+                const fontBold = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                const fontReg = await outDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+                // Optional Page 1 Picking Summary
+                if (addSummary) {
+                    let sumPage = outDoc.addPage([595, 842]);
+                    let y = 800;
+                    sumPage.drawText('SmallSellerSupport - Daily Picking List', { x: 40, y, size: 16, font: fontBold });
+                    y -= 20;
+                    sumPage.drawText(`Date: ${new Date().toLocaleDateString('en-IN')}  |  Total Labels: ${totalPages}  |  Total Units: ${totalUnits}`, { x: 40, y, size: 10, font: fontReg });
+                    y -= 25;
+                    sumPage.drawText('SKU / Product Identifier', { x: 40, y, size: 10, font: fontBold });
+                    sumPage.drawText('Orders', { x: 410, y, size: 10, font: fontBold });
+                    sumPage.drawText('Total Qty', { x: 490, y, size: 10, font: fontBold });
+                    y -= 14;
+
+                    for (const s of sortedSkus) {
+                        if (y < 50) {
+                            sumPage = outDoc.addPage([595, 842]);
+                            y = 800;
+                        }
+                        const safeSku = s.replace(/[^\x20-\x7E]/g, '').slice(0, 58) || 'SKU';
+                        sumPage.drawText(safeSku, { x: 40, y, size: 9, font: fontReg });
+                        sumPage.drawText(String(skuCounts[s].orders), { x: 415, y, size: 9, font: fontReg });
+                        sumPage.drawText(String(skuCounts[s].units), { x: 500, y, size: 9, font: fontBold });
+                        y -= 16;
+                    }
+                }
+
+                // Crop ratios per platform (measured from bottom-left in PDF coordinates)
+                // { xPct, yPct, wPct, hPct }
+                const cropMap = {
+                    meesho:   { x: 0.02, y: 0.54, w: 0.96, h: 0.44 },
+                    flipkart: { x: 0.27, y: 0.52, w: 0.46, h: 0.46 },
+                    amazon:   { x: 0.04, y: 0.48, w: 0.92, h: 0.50 },
+                    a4_4up:   { x: 0.02, y: 0.52, w: 0.96, h: 0.46 },
+                    sort_only:{ x: 0.00, y: 0.00, w: 1.00, h: 1.00 }
+                };
+                const c = cropMap[platform] || cropMap.meesho;
+
+                if (platform === 'a4_4up') {
+                    // Tile 4 cropped labels per A4 page (2x2 grid)
+                    const a4W = 595, a4H = 842, pad = 14;
+                    const cellW = (a4W - pad * 3) / 2;
+                    const cellH = (a4H - pad * 3) / 2;
+
+                    for (let idx = 0; idx < pageMeta.length; idx += 4) {
+                        const sheet = outDoc.addPage([a4W, a4H]);
+                        const batch = pageMeta.slice(idx, idx + 4);
+                        for (let b = 0; b < batch.length; b++) {
+                            const srcPage = srcDoc.getPage(batch[b].pageIndex);
+                            const { width, height } = srcPage.getSize();
+                            const clip = { left: width * c.x, bottom: height * c.y, right: width * (c.x + c.w), top: height * (c.y + c.h) };
+                            const embedded = await outDoc.embedPage(srcPage, clip);
+                            const scale = Math.min(cellW / embedded.width, cellH / embedded.height);
+                            const drawW = embedded.width * scale;
+                            const drawH = embedded.height * scale;
+                            const col = b % 2;
+                            const row = Math.floor(b / 2);
+                            const xPos = pad + col * (cellW + pad) + (cellW - drawW) / 2;
+                            const yPos = a4H - pad - (row + 1) * cellH - row * pad + (cellH - drawH) / 2;
+                            sheet.drawPage(embedded, { x: xPos, y: yPos, width: drawW, height: drawH });
+                        }
+                    }
+                } else if (platform === 'sort_only') {
+                    const indices = pageMeta.map(p => p.pageIndex);
+                    const copied = await outDoc.copyPages(srcDoc, indices);
+                    copied.forEach(p => outDoc.addPage(p));
+                } else {
+                    // 4x6 Thermal (288 x 432 pt)
+                    const thermalW = 288, thermalH = 432;
+                    for (const meta of pageMeta) {
+                        const srcPage = srcDoc.getPage(meta.pageIndex);
+                        const { width, height } = srcPage.getSize();
+                        const clip = { left: width * c.x, bottom: height * c.y, right: width * (c.x + c.w), top: height * (c.y + c.h) };
+                        const embedded = await outDoc.embedPage(srcPage, clip);
+                        const outPage = outDoc.addPage([thermalW, thermalH]);
+                        const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
+                        const drawW = embedded.width * scale;
+                        const drawH = embedded.height * scale;
+                        outPage.drawPage(embedded, {
+                            x: (thermalW - drawW) / 2,
+                            y: (thermalH - drawH) / 2,
+                            width: drawW,
+                            height: drawH
+                        });
+                    }
+                }
+
+                const pdfBytes = await outDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Sorted_Labels_${platform}_SmallSellerSupport.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+
+                statusEl.innerText = `Done! Downloaded ${totalPages} sorted labels successfully.`;
+            } catch (err) {
+                console.error(err);
+                statusEl.innerText = "Error reading PDF. Please ensure it is a valid, unprotected shipping label PDF.";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Crop, Sort & Download PDF";
+            }
+        }
+
+        function extractSkuAndQty(text) {
+            let sku = "UNMATCHED-SKU";
+            let qty = 1;
+
+            // Common marketplace SKU patterns (Meesho, Flipkart, Amazon)
+            const skuPatterns = [
+                /SKU\s*ID\s*[:\-]?\s*([A-Za-z0-9_\-\/\.]{2,40})/i,
+                /SKU\s*[:\-]?\s*([A-Za-z0-9_\-\/\.]{2,40})/i,
+                /Product\s*Details\s+SKU\s+Size\s+Qty\s+Color\s+Order\s*No\.?\s+([A-Za-z0-9_\-\/\.]{2,40})/i,
+                /HSN\s*[:\-]?\s*\d+\s+([A-Za-z0-9_\-\/]{3,35})/i
+            ];
+            for (const rx of skuPatterns) {
+                const m = text.match(rx);
+                if (m && m[1] && !/^(size|qty|color|order|id|description)$/i.test(m[1])) {
+                    sku = m[1].trim();
+                    break;
+                }
+            }
+
+            const qtyMatch = text.match(/(?:Qty|Quantity)\s*[:\-]?\s*(\d{1,3})/i);
+            if (qtyMatch && parseInt(qtyMatch[1], 10) > 0) {
+                qty = parseInt(qtyMatch[1], 10);
+            }
+
+            return { sku, qty };
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+        }
+
+        // ==================== FAKE NDR WHATSAPP HELPER ====================
+        function sendNDRWhatsApp() {
+            let phone = (document.getElementById('ndr_phone').value || '').replace(/\D/g, '');
+            let awb = (document.getElementById('ndr_awb').value || '').trim();
+            if (phone.length < 10) { alert("Please enter a valid 10-digit customer phone number."); return; }
+            if (phone.length === 10) phone = '91' + phone;
+            const msg = `Hi! Your courier marked your order${awb ? ' (AWB: ' + awb + ')' : ''} as undelivered today. Did the delivery rider call or visit you? Please reply YES or NO so we can arrange fast re-delivery.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // ==================== CHARTS ====================
         function initCharts() {
             if (chartsRendered) return;
             if (typeof Chart === 'undefined') { console.error("Chart.js failed to load!"); return; }
@@ -849,7 +1415,7 @@
             chartsRendered = true;
         }
 
-        // Calculations
+        // ==================== BASIC CALCULATOR ====================
         function calculateExactBasic() {
             let qty = parseFloat(document.getElementById('bp_qty').value) || 1;
             let src = parseFloat(document.getElementById('bp_src').value) || 0;
@@ -880,9 +1446,11 @@
             document.getElementById('out_maxad').innerText = '₹' + maxAd.toFixed(2);
 
             let healthElem = document.getElementById('out_health');
+            let healthDesc = document.getElementById('out_health_desc');
             if (target <= 0) { healthElem.innerHTML = '🔴 High Risk'; healthElem.className = 'font-bold text-red-500 text-sm'; } 
             else if (target < 15) { healthElem.innerHTML = '🟡 Medium Risk'; healthElem.className = 'font-bold text-yellow-500 text-sm'; } 
             else { healthElem.innerHTML = '🟢 Healthy Margin'; healthElem.className = 'font-bold text-green-500 text-sm'; }
+            if (healthDesc) healthDesc.innerText = `Net profit is ${target.toFixed(1)}%.`;
 
             if (suggestedSP > 0) {
                 document.getElementById('bar_src').style.width = (src / suggestedSP * 100) + '%';
@@ -933,6 +1501,7 @@
             else { maxSrcElem.innerText = '₹' + maxSourcing.toFixed(2); maxSrcElem.className = 'text-2xl font-black text-green-400 mt-1'; }
         }
 
+        // ==================== DEAD INVENTORY ====================
         function calculateDeadInv() {
             let qty = parseFloat(document.getElementById('di_qty').value) || 0;
             let cp = parseFloat(document.getElementById('di_cp').value) || 0;
@@ -945,6 +1514,7 @@
             lossElem.className = loss >= 0 ? "text-2xl font-bold text-green-400" : "text-2xl font-bold text-red-400";
         }
 
+        // ==================== ROAS & CPA ====================
         function calculateROAS() {
             let sp = parseFloat(document.getElementById('ro_sp').value) || 0;
             let cp = parseFloat(document.getElementById('ro_cp').value) || 0;
@@ -952,21 +1522,87 @@
             let maxCpp = sp - cp - target;
             let roas = sp > 0 && maxCpp > 0 ? (sp / maxCpp) : 0;
             let cppElem = document.getElementById('ro_cpp');
-            if(maxCpp <= 0) { cppElem.innerText = "Negative Margin!"; cppElem.className = "text-xl font-black text-red-500"; } 
-            else { cppElem.innerText = '₹' + maxCpp.toFixed(2); cppElem.className = "text-3xl font-black text-red-400"; }
+            if(maxCpp <= 0) { cppElem.innerText = "Negative Margin!"; cppElem.className = "text-xl font-black text-red-500 mt-1"; } 
+            else { cppElem.innerText = '₹' + maxCpp.toFixed(2); cppElem.className = "text-3xl font-black text-red-400 mt-1"; }
             document.getElementById('ro_roas').innerText = roas.toFixed(2) + 'x';
+        }
+
+        // ==================== B2B BULK PRICING (CUSTOM TIERS) ====================
+        let b2bTiers = [
+            { qty: 10, disc: 5 },
+            { qty: 50, disc: 12 },
+            { qty: 100, disc: 20 }
+        ];
+        let b2bInitialized = false;
+
+        function initB2BTable() {
+            if (b2bInitialized) return;
+            b2bInitialized = true;
+            renderB2BRows();
+        }
+
+        function addB2BRow() {
+            const last = b2bTiers[b2bTiers.length - 1] || { qty: 50, disc: 10 };
+            b2bTiers.push({ qty: last.qty + 50, disc: Math.min(last.disc + 5, 50) });
+            renderB2BRows();
+            calculateB2B();
+        }
+
+        function removeB2BRow(idx) {
+            if (b2bTiers.length <= 1) return;
+            b2bTiers.splice(idx, 1);
+            renderB2BRows();
+            calculateB2B();
+        }
+
+        function renderB2BRows() {
+            const tbody = document.getElementById('b2b_tbody');
+            tbody.innerHTML = '';
+            b2bTiers.forEach((tier, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2.5 pr-3">
+                        <input type="number" min="1" value="${tier.qty}" oninput="b2bTiers[${idx}].qty = parseFloat(this.value)||0; calculateB2B();" class="w-24 p-2 border border-gray-300 rounded-lg text-sm font-semibold focus:border-indigo-500 outline-none">
+                    </td>
+                    <td class="py-2.5 px-3">
+                        <input type="number" min="0" max="99" step="0.5" value="${tier.disc}" oninput="b2bTiers[${idx}].disc = parseFloat(this.value)||0; calculateB2B();" class="w-24 p-2 border border-gray-300 rounded-lg text-sm font-semibold focus:border-indigo-500 outline-none">
+                    </td>
+                    <td id="b2b_pc_${idx}" class="py-2.5 px-3 font-bold text-gray-900">₹0.00</td>
+                    <td id="b2b_tot_${idx}" class="py-2.5 px-3 font-bold text-indigo-700">₹0.00</td>
+                    <td id="b2b_prof_${idx}" class="py-2.5 px-3 font-bold text-green-600">₹0.00</td>
+                    <td class="py-2.5 pl-2 text-right">
+                        <button type="button" onclick="removeB2BRow(${idx})" class="text-xs text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded hover:bg-red-50">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function calculateB2B() {
             let cp = parseFloat(document.getElementById('b2b_cp').value) || 0;
-            let m = parseFloat(document.getElementById('b2b_margin').value) || 0;
-            if(m >= 100) m = 99; 
-            let baseSp = cp / (1 - (m/100));
-            document.getElementById('b2b_10').innerText = '₹' + baseSp.toFixed(2) + '/pc';
-            document.getElementById('b2b_50').innerText = '₹' + (baseSp * 0.95).toFixed(2) + '/pc';
-            document.getElementById('b2b_100').innerText = '₹' + (baseSp * 0.90).toFixed(2) + '/pc';
+            let baseSp = parseFloat(document.getElementById('b2b_base_sp').value) || 0;
+
+            b2bTiers.forEach((tier, idx) => {
+                const qty = Math.max(0, tier.qty || 0);
+                const disc = Math.min(99, Math.max(0, tier.disc || 0));
+                const pricePerPc = baseSp * (1 - disc / 100);
+                const totalQuote = pricePerPc * qty;
+                const totalProfit = (pricePerPc - cp) * qty;
+
+                const pcEl = document.getElementById(`b2b_pc_${idx}`);
+                const totEl = document.getElementById(`b2b_tot_${idx}`);
+                const profEl = document.getElementById(`b2b_prof_${idx}`);
+
+                if (pcEl) pcEl.innerText = '₹' + pricePerPc.toFixed(2);
+                if (totEl) totEl.innerText = '₹' + totalQuote.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+                if (profEl) {
+                    profEl.innerText = '₹' + totalProfit.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+                    profEl.className = totalProfit >= 0 ? 'py-2.5 px-3 font-bold text-green-600' : 'py-2.5 px-3 font-bold text-red-600';
+                }
+            });
         }
 
+        // ==================== GST & ITC ====================
         function calculateGST() {
             let pur = parseFloat(document.getElementById('gst_pur').value) || 0;
             let inRate = parseFloat(document.getElementById('gst_in').value) || 0;
@@ -978,23 +1614,137 @@
             document.getElementById('gst_net').innerText = '₹' + Math.max(0, net).toFixed(2);
         }
 
+        // ==================== DISCOUNT SIMULATOR ====================
         function updateDiscount() { document.getElementById('dsDisplay').innerText = document.getElementById('dsPercent').value + '%'; calculateDiscount(); }
         function calculateDiscount() {
-            let sp = parseFloat(document.getElementById('ds_sp').value) || 0; let cp = parseFloat(document.getElementById('ds_cp').value) || 0; let ship = parseFloat(document.getElementById('ds_ship').value) || 0; let percent = parseFloat(document.getElementById('dsPercent').value) || 0;
-            document.getElementById('ds_new_sp').innerText = '₹' + (sp - (sp * (percent / 100))).toFixed(2);
-            document.getElementById('ds_profit').innerText = '₹' + (sp - (sp * (percent / 100)) - cp - ship).toFixed(2);
+            let sp = parseFloat(document.getElementById('ds_sp').value) || 0;
+            let cp = parseFloat(document.getElementById('ds_cp').value) || 0;
+            let ship = parseFloat(document.getElementById('ds_ship').value) || 0;
+            let percent = parseFloat(document.getElementById('dsPercent').value) || 0;
+            let newSp = sp - (sp * (percent / 100));
+            let prof = newSp - cp - ship;
+            document.getElementById('ds_new_sp').innerText = '₹' + newSp.toFixed(2);
+            let profEl = document.getElementById('ds_profit');
+            profEl.innerText = '₹' + prof.toFixed(2);
+            profEl.className = prof >= 0 ? 'text-2xl font-bold text-green-400' : 'text-2xl font-bold text-red-400';
         }
 
+        // ==================== RTO & COD LOSS (FIXED ACCURATE MATH) ====================
         function updateRTO() { document.getElementById('rtoDisplay').innerText = document.getElementById('rtoPercent').value + '%'; calculateRTO(); }
         function calculateRTO() {
-            document.getElementById('actualProfit').innerText = '₹' + ((parseFloat(document.getElementById('sp').value)||0) - (parseFloat(document.getElementById('cp').value)||0) - (parseFloat(document.getElementById('fwdShip').value)||0)).toFixed(2);
+            let sp = parseFloat(document.getElementById('sp').value) || 0;
+            let cp = parseFloat(document.getElementById('cp').value) || 0;
+            let fwd = parseFloat(document.getElementById('fwdShip').value) || 0;
+            let rto = parseFloat(document.getElementById('rtoShip').value) || 0;
+            let rtoPct = parseFloat(document.getElementById('rtoPercent').value) || 0;
+
+            let deliveredOrders = 100 - rtoPct;
+            let rtoOrders = rtoPct;
+            let totalRtoShippingLoss = rtoOrders * (fwd + rto);
+            let deliveredProfitBeforeRto = deliveredOrders * (sp - cp - fwd);
+            let netBatchProfit = deliveredProfitBeforeRto - totalRtoShippingLoss;
+            let netProfitPerDelivered = deliveredOrders > 0 ? (netBatchProfit / deliveredOrders) : 0;
+
+            let apEl = document.getElementById('actualProfit');
+            apEl.innerText = '₹' + netProfitPerDelivered.toFixed(2);
+            apEl.className = netProfitPerDelivered >= 0 ? 'text-3xl font-bold text-yellow-400 mt-1' : 'text-3xl font-bold text-red-400 mt-1';
+
+            document.getElementById('totalShippingLoss').innerText = '₹' + totalRtoShippingLoss.toFixed(2);
+            let bpEl = document.getElementById('totalBatchProfit');
+            bpEl.innerText = '₹' + netBatchProfit.toFixed(2);
+            bpEl.className = netBatchProfit >= 0 ? 'text-2xl font-black text-green-400 mt-1' : 'text-2xl font-black text-red-400 mt-1';
         }
 
+        // ==================== MULTI-PLATFORM COMPARE (100% ACCURATE) ====================
         function calculateMulti() {
-            let sp = parseFloat(document.getElementById('mp_sp').value) || 0; let cp = parseFloat(document.getElementById('mp_cp').value) || 0; let ship = parseFloat(document.getElementById('mp_ship').value) || 0;
-            document.getElementById('res_amazon').innerText = '₹' + (sp - cp - ship - ((sp * 0.15) + 40)).toFixed(2);
-            document.getElementById('res_meesho').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
-            document.getElementById('res_shopify').innerText = '₹' + (sp - cp - ship - (sp * 0.02)).toFixed(2);
+            let sp = parseFloat(document.getElementById('mp_sp').value) || 0;
+            let cp = parseFloat(document.getElementById('mp_cp').value) || 0;
+            let ship = parseFloat(document.getElementById('mp_ship').value) || 0;
+            let gstRate = parseFloat(document.getElementById('mp_gst').value) || 0;
+            let amzRefPct = parseFloat(document.getElementById('mp_amz_ref').value) || 0;
+            let rtoPct = Math.min(80, Math.max(0, parseFloat(document.getElementById('mp_rto').value) || 0));
+            let webAd = parseFloat(document.getElementById('mp_ad').value) || 0;
+
+            // Net Product GST payable (Output GST on SP minus ITC on Cost, assuming GST-inclusive prices)
+            let outputGst = gstRate > 0 ? (sp - (sp / (1 + gstRate / 100))) : 0;
+            let inputGst = gstRate > 0 ? (cp - (cp / (1 + gstRate / 100))) : 0;
+            let netProductGst = Math.max(0, outputGst - inputGst);
+
+            // RTO multiplier per delivered order: for every (100 - rtoPct) delivered, rtoPct orders return
+            let rtoRatio = rtoPct > 0 ? (rtoPct / (100 - rtoPct)) : 0;
+
+            // 1. AMAZON INDIA
+            // Standard Amazon India Easy Ship Closing Fee slabs
+            let amzClosing = 0;
+            if (sp > 0 && sp <= 250) amzClosing = 4;
+            else if (sp <= 500) amzClosing = 9;
+            else if (sp <= 1000) amzClosing = 30;
+            else if (sp > 1000) amzClosing = 61;
+
+            let amzRefFee = sp * (amzRefPct / 100);
+            let amzFeesSubtotal = amzRefFee + amzClosing + ship;
+            let amzFeeGst = amzFeesSubtotal * 0.18; // 18% GST on Amazon services
+            // RTO cost on Amazon Easy Ship: forward shipping + 18% GST lost per RTO order
+            let amzRtoCost = (ship * 1.18) * rtoRatio;
+            let amzNet = sp - cp - netProductGst - amzFeesSubtotal - amzFeeGst - amzRtoCost;
+
+            // 2. MEESHO
+            // 0% Commission, 0% Closing Fee, ₹0 RTO shipping charge (pure RTO is free on Meesho)
+            let meeshoShipWithGst = ship * 1.18;
+            let meeshoNet = sp - cp - netProductGst - meeshoShipWithGst;
+
+            // 3. YOUR WEBSITE / SHOPIFY
+            // 2% Payment Gateway fee + 18% GST on PG fee + Forward Ship (incl. 18% GST) + RTO (fwd + rev ship incl. 18% GST) + Ad Spend
+            let pgFee = sp * 0.02;
+            let pgGst = pgFee * 0.18;
+            let webShipWithGst = ship * 1.18;
+            let webRtoCost = (ship * 2 * 1.18) * rtoRatio; // Forward + Reverse courier on RTO
+            let webNet = sp - cp - netProductGst - pgFee - pgGst - webShipWithGst - webRtoCost - webAd;
+
+            // Render Results
+            const renderCard = (idPrefix, net, rowsHtml) => {
+                const margin = sp > 0 ? (net / sp) * 100 : 0;
+                const resEl = document.getElementById(`res_${idPrefix}`);
+                resEl.innerText = '₹' + net.toFixed(2);
+                resEl.className = net >= 0 ? 'text-3xl font-black text-gray-900' : 'text-3xl font-black text-red-600';
+                document.getElementById(`marg_${idPrefix}`).innerText = `${margin.toFixed(1)}% Net Margin`;
+                document.getElementById(`bk_${idPrefix}`).innerHTML = rowsHtml;
+            };
+
+            renderCard('amazon', amzNet, `
+                <div class="flex justify-between"><span>Product + Packing:</span><span class="font-semibold">-₹${cp.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Referral (${amzRefPct}%) + Closing:</span><span class="font-semibold">-₹${(amzRefFee + amzClosing).toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Shipping + 18% Fee GST:</span><span class="font-semibold">-₹${(ship + amzFeeGst).toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Net Product GST:</span><span class="font-semibold">-₹${netProductGst.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>RTO Loss (${rtoPct}%):</span><span class="font-semibold text-red-500">-₹${amzRtoCost.toFixed(2)}</span></div>
+            `);
+
+            renderCard('meesho', meeshoNet, `
+                <div class="flex justify-between"><span>Product + Packing:</span><span class="font-semibold">-₹${cp.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Commission (0%):</span><span class="font-semibold text-green-600">₹0.00</span></div>
+                <div class="flex justify-between"><span>Shipping (+18% GST):</span><span class="font-semibold">-₹${meeshoShipWithGst.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Net Product GST:</span><span class="font-semibold">-₹${netProductGst.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>RTO Charge:</span><span class="font-semibold text-green-600">₹0.00</span></div>
+            `);
+
+            renderCard('shopify', webNet, `
+                <div class="flex justify-between"><span>Product + Packing:</span><span class="font-semibold">-₹${cp.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>PG Fee (2% + 18% GST):</span><span class="font-semibold">-₹${(pgFee + pgGst).toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Shipping (+18% GST):</span><span class="font-semibold">-₹${webShipWithGst.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Net Product GST:</span><span class="font-semibold">-₹${netProductGst.toFixed(2)}</span></div>
+                <div class="flex justify-between"><span>Ad Spend + RTO (${rtoPct}%):</span><span class="font-semibold text-red-500">-₹${(webAd + webRtoCost).toFixed(2)}</span></div>
+            `);
+
+            // Highlight Winner
+            ['amazon', 'meesho', 'shopify'].forEach(p => {
+                document.getElementById(`win_${p}`).classList.add('hidden');
+            });
+            const maxProfit = Math.max(amzNet, meeshoNet, webNet);
+            if (sp > 0) {
+                if (amzNet === maxProfit) document.getElementById('win_amazon').classList.remove('hidden');
+                else if (meeshoNet === maxProfit) document.getElementById('win_meesho').classList.remove('hidden');
+                else document.getElementById('win_shopify').classList.remove('hidden');
+            }
         }
     </script>
 </body>
