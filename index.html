@@ -238,10 +238,16 @@
 
                             <div class="space-y-2 pt-2">
                                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer">
-                                    <input type="checkbox" id="label_remove_invoice" checked class="w-4 h-4 accent-green-600 rounded">
-                                    Auto-remove attached Tax Invoice &amp; overflow disclaimer pages
+                                    <input type="checkbox" id="label_stitch_overflow" checked class="w-4 h-4 accent-green-600 rounded">
+                                    Auto-stitch split overflow pages (keeps full border intact)
                                 </label>
-                                <p class="field-hint text-gray-600 ml-6">Slices off Tax Invoice below the label and skips wasted Delhivery disclaimer pages.</p>
+                                <p class="field-hint text-gray-600 ml-6">Merges cut-off bottom lines (e.g. Delhivery Declaration) back onto the same label page seamlessly.</p>
+
+                                <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer mt-2">
+                                    <input type="checkbox" id="label_remove_invoice" checked class="w-4 h-4 accent-green-600 rounded">
+                                    Auto-remove attached Tax Invoice
+                                </label>
+                                <p class="field-hint text-gray-600 ml-6">Slices off Tax Invoice below Meesho / Flipkart / Amazon shipping labels.</p>
 
                                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer mt-2">
                                     <input type="checkbox" id="label_sort_sku" checked class="w-4 h-4 accent-green-600 rounded">
@@ -1348,11 +1354,11 @@
 
         function closeTools() { document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden')); }
 
-        // ==================== FREE TOOL: UNIVERSAL SMART AUTO-DETECT LABEL CROPPER + SKU SORTER ====================
+        // ==================== FREE TOOL: UNIVERSAL SMART AUTO-DETECT + OVERFLOW STITCHER ====================
         const LABEL_SIGNAL_RX = /\b(DELHIVERY|LRN|MAWB|AWB|OID|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Return\s*To|Box\s*:|Meesho|Flipkart|Amazon|Shiprocket|Bluedart|Blue\s*Dart|Xpressbees|Ecom\s*Express|Shadowfax|DTDC|COD|Prepaid|Order\s*(ID|No)|Tracking|Courier|Pickup|Fold\s*Here|Ekart|Waybill|SKU)\b/i;
         const INVOICE_ONLY_RX = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Taxable\s*Value|IGST|CGST|SGST|Invoice\s*Number|Invoice\s*Date)\b/i;
         const INVOICE_CUT_RX  = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Invoice\s*Details|Cut\s*Here|Tear\s*Here|Fold\s*Here)\b/i;
-        const OVERFLOW_JUNK_RX = /shipper\s+hereby\s+declares|Disclaimer|Dangerous\s+goods|prohibited\s+items|pickup\s+receipt|not\s+for\s+sale\s*-\s*No\s+commercial/i;
+        const OVERFLOW_CONT_RX = /shipper\s+hereby\s+declares|Disclaimer|Declaration|Dangerous\s+goods|prohibited\s+items|pickup\s+receipt|not\s+for\s+sale\s*-\s*No\s+commercial/i;
 
         function looksLikeLabel(text) {
             return LABEL_SIGNAL_RX.test(text || '');
@@ -1361,11 +1367,12 @@
             const t = text || '';
             return INVOICE_ONLY_RX.test(t) && !/\b(DELHIVERY|LRN|MAWB|AWB|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Waybill|Tracking|Box\s*:)\b/i.test(t);
         }
-        function looksLikeOverflowJunk(text) {
+        function looksLikeOverflowContinuation(text) {
             const t = (text || '').trim();
-            if (!t) return true;
+            if (!t) return false;
             if (looksLikeLabel(t)) return false;
-            return OVERFLOW_JUNK_RX.test(t) || t.length < 25;
+            if (looksLikeInvoiceOnly(t)) return false;
+            return OVERFLOW_CONT_RX.test(t);
         }
 
         function getTextInBox(textItems, box) {
@@ -1399,11 +1406,10 @@
                     }
                 }
             }
-            if (count < 25) return null;
+            if (count < 20) return null;
             return { x0: minX, y0: minY, x1: maxX, y1: maxY, inkCount: count };
         }
 
-        // Find widest pure-white gutter along X (vertical cut) or Y (horizontal cut)
         function findBestGutter(ink, imgW, box, axis, minGapPx, minSidePx) {
             const start = axis === 'x' ? box.x0 : box.y0;
             const end   = axis === 'x' ? box.x1 : box.y1;
@@ -1462,8 +1468,8 @@
             if (!box) return [];
             if (depth >= 4) return [box];
 
-            const minW = Math.round(135 * scale); // ~1.9 inch min label width
-            const minH = Math.round(95 * scale);  // ~1.3 inch min label height
+            const minW = Math.round(135 * scale);
+            const minH = Math.round(95 * scale);
             const minGapX = Math.round((hasTextLayer ? 6 : 16) * scale);
             const minGapY = Math.round((hasTextLayer ? 8 : 18) * scale);
 
@@ -1473,8 +1479,6 @@
             const candidates = [];
             if (vGap) candidates.push({ axis: 'x', gap: vGap });
             if (hGap) candidates.push({ axis: 'y', gap: hGap });
-
-            // Try the wider gutter first
             candidates.sort((a, b) => b.gap.len - a.gap.len);
 
             for (const cand of candidates) {
@@ -1490,7 +1494,6 @@
 
                 let acceptSplit = false;
                 if (!hasTextLayer) {
-                    // Image-only scanned PDF: accept if both blocks are label-sized
                     acceptSplit =
                         (boxA.x1 - boxA.x0) >= minW && (boxA.y1 - boxA.y0) >= minH &&
                         (boxB.x1 - boxB.x0) >= minW && (boxB.y1 - boxB.y0) >= minH;
@@ -1501,10 +1504,10 @@
                     const bLabel = looksLikeLabel(txtB);
                     const aInv   = looksLikeInvoiceOnly(txtA);
                     const bInv   = looksLikeInvoiceOnly(txtB);
-                    const aJunk  = looksLikeOverflowJunk(txtA);
-                    const bJunk  = looksLikeOverflowJunk(txtB);
+                    const aCont  = looksLikeOverflowContinuation(txtA) || txtA.length < 25;
+                    const bCont  = looksLikeOverflowContinuation(txtB) || txtB.length < 25;
 
-                    if ((aLabel && bLabel) || (aLabel && (bInv || bJunk)) || (bLabel && (aInv || aJunk))) {
+                    if ((aLabel && bLabel) || (aLabel && (bInv || bCont)) || (bLabel && (aInv || aCont))) {
                         acceptSplit = true;
                     }
                 }
@@ -1518,6 +1521,21 @@
             }
 
             return [box];
+        }
+
+        function pixelBoxToPdfClip(viewport, imgW, imgH, x0, y0, x1, y1) {
+            const cx0 = Math.max(0, x0);
+            const cy0 = Math.max(0, y0);
+            const cx1 = Math.min(imgW, x1);
+            const cy1 = Math.min(imgH, y1);
+            const [p1x, p1y] = viewport.convertToPdfPoint(cx0, cy0);
+            const [p2x, p2y] = viewport.convertToPdfPoint(cx1, cy1);
+            return {
+                left: Math.min(p1x, p2x),
+                right: Math.max(p1x, p2x),
+                bottom: Math.min(p1y, p2y),
+                top: Math.max(p1y, p2y)
+            };
         }
 
         async function detectLabelsOnPage(jsPage, removeInvoice) {
@@ -1542,7 +1560,6 @@
                 }
             }
 
-            // Extract text items mapped to canvas pixel coordinates
             const content = await jsPage.getTextContent();
             const textItems = [];
             for (const item of content.items) {
@@ -1555,11 +1572,26 @@
             }
 
             const fullText = textItems.map(t => t.str).join(' ').replace(/\s+/g, ' ').trim();
-            const hasTextLayer = fullText.length >= 12;
+            const hasTextLayer = fullText.length >= 10;
 
-            // Skip entire page if it's an overflow disclaimer / blank junk page
-            if (removeInvoice && hasTextLayer && looksLikeOverflowJunk(fullText)) {
-                return { labels: [], skippedJunk: 1 };
+            // Check if the ENTIRE page is an overflow continuation (like Delhivery Page 2 with bottom border + declaration)
+            const fullInkBox = trimInkBox(ink, imgW, { x0: 0, y0: 0, x1: imgW - 1, y1: imgH - 1 });
+            if (!fullInkBox) {
+                return { labels: [], continuation: null, skippedJunk: 1 };
+            }
+
+            if (hasTextLayer && looksLikeOverflowContinuation(fullText)) {
+                // Return tight PDF clip of the continuation slice so we can stitch it seamlessly!
+                const tightClip = pixelBoxToPdfClip(viewport, imgW, imgH, fullInkBox.x0, fullInkBox.y0, fullInkBox.x1, fullInkBox.y1);
+                return {
+                    labels: [],
+                    continuation: { tightClip, fullText },
+                    skippedJunk: 0
+                };
+            }
+
+            if (removeInvoice && hasTextLayer && looksLikeInvoiceOnly(fullText)) {
+                return { labels: [], continuation: null, skippedJunk: 1 };
             }
 
             const rawRegions = recursiveSplitLabels(
@@ -1574,19 +1606,17 @@
 
             const labels = [];
             let skippedJunk = 0;
-            const padPx = Math.round(5 * scale); // Clean 5pt breathing margin around label border
 
             for (let reg of rawRegions) {
                 let regText = hasTextLayer ? getTextInBox(textItems, reg) : '';
 
-                // Drop standalone Tax Invoice or junk overflow blocks
-                if (removeInvoice && hasTextLayer) {
-                    if (looksLikeInvoiceOnly(regText) || looksLikeOverflowJunk(regText)) {
-                        skippedJunk++;
-                        continue;
-                    }
+                if (removeInvoice && hasTextLayer && looksLikeInvoiceOnly(regText)) {
+                    skippedJunk++;
+                    continue;
+                }
 
-                    // If Tax Invoice is attached inside the same border box, slice right above it
+                // If Tax Invoice is attached inside the same border box, slice right above it
+                if (removeInvoice && hasTextLayer) {
                     const regH = reg.y1 - reg.y0;
                     if (regH > 260 * scale) {
                         let cutY = null;
@@ -1612,38 +1642,133 @@
                     }
                 }
 
-                // Ignore tiny specks/artifacts
                 if ((reg.x1 - reg.x0) < 70 * scale || (reg.y1 - reg.y0) < 45 * scale) {
                     continue;
                 }
 
-                // Add clean padding and clamp to page bounds
-                const cx0 = Math.max(0, reg.x0 - padPx);
-                const cy0 = Math.max(0, reg.y0 - padPx);
-                const cx1 = Math.min(imgW, reg.x1 + padPx);
-                const cy1 = Math.min(imgH, reg.y1 + padPx);
-
-                // Convert canvas pixel box accurately back to PDF points (handles rotation & offsets)
-                const [p1x, p1y] = viewport.convertToPdfPoint(cx0, cy0);
-                const [p2x, p2y] = viewport.convertToPdfPoint(cx1, cy1);
-                const clip = {
-                    left: Math.min(p1x, p2x),
-                    right: Math.max(p1x, p2x),
-                    bottom: Math.min(p1y, p2y),
-                    top: Math.max(p1y, p2y)
-                };
-
+                const tightClip = pixelBoxToPdfClip(viewport, imgW, imgH, reg.x0, reg.y0, reg.x1, reg.y1);
                 const { sku, qty } = extractSkuAndQty(regText || fullText);
                 labels.push({
-                    clip,
-                    clipW: clip.right - clip.left,
-                    clipH: clip.top - clip.bottom,
+                    tightClip,
                     sku,
                     qty
                 });
             }
 
-            return { labels, skippedJunk };
+            return { labels, continuation: null, skippedJunk };
+        }
+
+        // Helper: embed a label unit (single slice OR seamlessly stitched multi-page slices) and draw into target rectangle
+        async function drawLabelUnit(outDoc, srcDoc, unit, targetPage, targetX, targetY, targetW, targetH, padPt = 5) {
+            const slices = unit.slices; // [{ pageIndex, clip }]
+            if (slices.length === 1) {
+                const s = slices[0];
+                const srcPage = srcDoc.getPage(s.pageIndex);
+                const { width, height } = srcPage.getSize();
+                const c = s.clip ? {
+                    left: Math.max(0, s.clip.left - padPt),
+                    right: Math.min(width, s.clip.right + padPt),
+                    bottom: Math.max(0, s.clip.bottom - padPt),
+                    top: Math.min(height, s.clip.top + padPt)
+                } : null;
+                const embedded = c ? await outDoc.embedPage(srcPage, c) : await outDoc.embedPage(srcPage);
+                const scale = Math.min(targetW / embedded.width, targetH / embedded.height);
+                const drawW = embedded.width * scale;
+                const drawH = embedded.height * scale;
+                targetPage.drawPage(embedded, {
+                    x: targetX + (targetW - drawW) / 2,
+                    y: targetY + (targetH - drawH) / 2,
+                    width: drawW,
+                    height: drawH
+                });
+                return;
+            }
+
+            // Multi-slice seamless stitch (e.g., Delhivery Page 1 + Page 2 bottom border)
+            // Align all slices to the exact same left & right X bounds so vertical borders match seamlessly!
+            const minLeft  = Math.min(...slices.map(s => s.clip.left));
+            const maxRight = Math.max(...slices.map(s => s.clip.right));
+
+            const embeddedSlices = [];
+            let totalH = 0;
+            let unifiedW = 0;
+
+            for (let idx = 0; idx < slices.length; idx++) {
+                const s = slices[idx];
+                const srcPage = srcDoc.getPage(s.pageIndex);
+                const { width, height } = srcPage.getSize();
+                const isFirst = (idx === 0);
+                const isLast  = (idx === slices.length - 1);
+
+                // Top padding only on first slice, bottom padding only on last slice, 0 gap at the seam!
+                const clip = {
+                    left:   Math.max(0, minLeft - padPt),
+                    right:  Math.min(width, maxRight + padPt),
+                    bottom: isLast  ? Math.max(0, s.clip.bottom - padPt) : Math.max(0, s.clip.bottom),
+                    top:    isFirst ? Math.min(height, s.clip.top + padPt) : Math.min(height, s.clip.top)
+                };
+                const emb = await outDoc.embedPage(srcPage, clip);
+                embeddedSlices.push(emb);
+                unifiedW = Math.max(unifiedW, emb.width);
+                totalH += emb.height;
+            }
+
+            // Tiny 0.5pt seam overlap per join so vertical side borders connect with zero white hairline
+            const seamOverlap = 0.5;
+            const effectiveTotalH = totalH - seamOverlap * (embeddedSlices.length - 1);
+
+            const scale = Math.min(targetW / unifiedW, targetH / effectiveTotalH);
+            const drawW = unifiedW * scale;
+            const drawTotalH = effectiveTotalH * scale;
+            const startX = targetX + (targetW - drawW) / 2;
+            let cursorTopY = targetY + (targetH + drawTotalH) / 2;
+
+            for (let idx = 0; idx < embeddedSlices.length; idx++) {
+                const emb = embeddedSlices[idx];
+                const sh = emb.height * scale;
+                const sw = emb.width * scale;
+                const drawY = cursorTopY - sh;
+                targetPage.drawPage(emb, {
+                    x: startX,
+                    y: drawY,
+                    width: sw,
+                    height: sh
+                });
+                cursorTopY = drawY + seamOverlap * scale;
+            }
+        }
+
+        function getUnitNaturalSize(srcDoc, unit, padPt = 5) {
+            const slices = unit.slices;
+            if (slices.length === 1) {
+                const s = slices[0];
+                const { width, height } = srcDoc.getPage(s.pageIndex).getSize();
+                if (!s.clip) return { w: width, h: height };
+                const l = Math.max(0, s.clip.left - padPt);
+                const r = Math.min(width, s.clip.right + padPt);
+                const b = Math.max(0, s.clip.bottom - padPt);
+                const t = Math.min(height, s.clip.top + padPt);
+                return { w: Math.max(72, r - l), h: Math.max(72, t - b) };
+            }
+
+            const minLeft  = Math.min(...slices.map(s => s.clip.left));
+            const maxRight = Math.max(...slices.map(s => s.clip.right));
+            let totalH = 0;
+            let maxW = 72;
+            for (let idx = 0; idx < slices.length; idx++) {
+                const s = slices[idx];
+                const { width, height } = srcDoc.getPage(s.pageIndex).getSize();
+                const isFirst = (idx === 0);
+                const isLast  = (idx === slices.length - 1);
+                const l = Math.max(0, minLeft - padPt);
+                const r = Math.min(width, maxRight + padPt);
+                const b = isLast  ? Math.max(0, s.clip.bottom - padPt) : Math.max(0, s.clip.bottom);
+                const t = isFirst ? Math.min(height, s.clip.top + padPt) : Math.min(height, s.clip.top);
+                maxW = Math.max(maxW, r - l);
+                totalH += (t - b);
+            }
+            totalH -= 0.5 * (slices.length - 1);
+            return { w: maxW, h: Math.max(72, totalH) };
         }
 
         async function processLabelPDF() {
@@ -1663,6 +1788,7 @@
             }
 
             const mode = document.getElementById('label_platform').value;
+            const stitchOverflow = document.getElementById('label_stitch_overflow').checked;
             const removeInvoice = document.getElementById('label_remove_invoice').checked;
             const sortBySku = document.getElementById('label_sort_sku').checked;
             const addSummary = document.getElementById('label_add_summary').checked;
@@ -1685,6 +1811,7 @@
 
                 let labelUnits = [];
                 let skippedPages = 0;
+                let stitchedCount = 0;
 
                 const useSmartAuto = (mode === 'auto' || mode === 'thermal_4x6' || mode === 'a4_4up');
 
@@ -1693,14 +1820,32 @@
                     const jsPage = await pdfJsDoc.getPage(i + 1);
 
                     if (useSmartAuto) {
-                        const { labels, skippedJunk } = await detectLabelsOnPage(jsPage, removeInvoice);
+                        const { labels, continuation, skippedJunk } = await detectLabelsOnPage(jsPage, removeInvoice);
                         skippedPages += skippedJunk;
+
+                        if (continuation) {
+                            // Stitch this overflow continuation seamlessly onto the immediately preceding label!
+                            if (stitchOverflow && labelUnits.length > 0) {
+                                const prevUnit = labelUnits[labelUnits.length - 1];
+                                const prevSlice = prevUnit.slices[prevUnit.slices.length - 1];
+                                const prevW = prevSlice.clip.right - prevSlice.clip.left;
+                                const contW = continuation.tightClip.right - continuation.tightClip.left;
+                                // Verify width roughly matches (same label box continuing onto next page)
+                                if (contW >= prevW * 0.65 && contW <= prevW * 1.35) {
+                                    prevUnit.slices.push({ pageIndex: i, clip: continuation.tightClip });
+                                    stitchedCount++;
+                                } else {
+                                    skippedPages++;
+                                }
+                            } else {
+                                skippedPages++;
+                            }
+                            continue;
+                        }
+
                         for (const lb of labels) {
                             labelUnits.push({
-                                pageIndex: i,
-                                clip: lb.clip,
-                                clipW: lb.clipW,
-                                clipH: lb.clipH,
+                                slices: [{ pageIndex: i, clip: lb.tightClip }],
                                 sku: lb.sku,
                                 qty: lb.qty
                             });
@@ -1709,10 +1854,8 @@
                         const content = await jsPage.getTextContent();
                         const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
                         const { sku, qty } = extractSkuAndQty(text);
-                        const { width, height } = srcDoc.getPage(i).getSize();
-                        labelUnits.push({ pageIndex: i, clip: null, clipW: width, clipH: height, sku, qty });
+                        labelUnits.push({ slices: [{ pageIndex: i, clip: null }], sku, qty });
                     } else {
-                        // Manual fixed preset fallback (Meesho / Flipkart / Amazon)
                         const content = await jsPage.getTextContent();
                         const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
                         const { sku, qty } = extractSkuAndQty(text);
@@ -1724,19 +1867,12 @@
                             right: width * (c.x + c.w),
                             top: height * (c.y + c.h)
                         };
-                        labelUnits.push({
-                            pageIndex: i,
-                            clip,
-                            clipW: clip.right - clip.left,
-                            clipH: clip.top - clip.bottom,
-                            sku,
-                            qty
-                        });
+                        labelUnits.push({ slices: [{ pageIndex: i, clip }], sku, qty });
                     }
                 }
 
                 if (labelUnits.length === 0) {
-                    statusEl.innerText = "No shipping labels detected. Try unchecking 'Auto-remove Tax Invoice' or choose 'Keep Original Pages'.";
+                    statusEl.innerText = "No shipping labels detected. Try unchecking 'Auto-remove attached Tax Invoice' or choose 'Keep Original Pages'.";
                     return;
                 }
 
@@ -1765,7 +1901,7 @@
                 html += `</tbody></table>`;
                 summaryBox.innerHTML = html;
 
-                statusEl.innerText = "Building crisp, individual label pages...";
+                statusEl.innerText = "Building complete, unbroken label pages...";
 
                 const outDoc = await PDFLib.PDFDocument.create();
                 const fontBold = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
@@ -1805,55 +1941,29 @@
                         const sheet = outDoc.addPage([a4W, a4H]);
                         const batch = labelUnits.slice(idx, idx + 4);
                         for (let b = 0; b < batch.length; b++) {
-                            const unit = batch[b];
-                            const srcPage = srcDoc.getPage(unit.pageIndex);
-                            const embedded = unit.clip
-                                ? await outDoc.embedPage(srcPage, unit.clip)
-                                : await outDoc.embedPage(srcPage);
-                            const scale = Math.min(cellW / embedded.width, cellH / embedded.height);
-                            const drawW = embedded.width * scale;
-                            const drawH = embedded.height * scale;
                             const col = b % 2;
                             const row = Math.floor(b / 2);
-                            const xPos = pad + col * (cellW + pad) + (cellW - drawW) / 2;
-                            const yPos = a4H - pad - (row + 1) * cellH - row * pad + (cellH - drawH) / 2;
-                            sheet.drawPage(embedded, { x: xPos, y: yPos, width: drawW, height: drawH });
+                            const xPos = pad + col * (cellW + pad);
+                            const yPos = a4H - pad - (row + 1) * cellH - row * pad;
+                            await drawLabelUnit(outDoc, srcDoc, batch[b], sheet, xPos, yPos, cellW, cellH, 4);
                         }
                     }
                 } else if (mode === 'sort_only') {
-                    const indices = labelUnits.map(u => u.pageIndex);
+                    const indices = labelUnits.map(u => u.slices[0].pageIndex);
                     const copied = await outDoc.copyPages(srcDoc, indices);
                     copied.forEach(p => outDoc.addPage(p));
                 } else if (mode === 'auto') {
-                    // EXACT SIZE PER LABEL (NO SIZE RESTRICTIONS — 1 CLEAN LABEL PER PAGE)
+                    // EXACT SIZE PER COMPLETE LABEL (STITCHED + FULL BORDER INTACT)
                     for (const unit of labelUnits) {
-                        const srcPage = srcDoc.getPage(unit.pageIndex);
-                        const embedded = unit.clip
-                            ? await outDoc.embedPage(srcPage, unit.clip)
-                            : await outDoc.embedPage(srcPage);
-                        const pageW = Math.max(72, embedded.width);
-                        const pageH = Math.max(72, embedded.height);
-                        const outPage = outDoc.addPage([pageW, pageH]);
-                        outPage.drawPage(embedded, { x: 0, y: 0, width: pageW, height: pageH });
+                        const nat = getUnitNaturalSize(srcDoc, unit, 5);
+                        const outPage = outDoc.addPage([nat.w, nat.h]);
+                        await drawLabelUnit(outDoc, srcDoc, unit, outPage, 0, 0, nat.w, nat.h, 5);
                     }
                 } else {
-                    // Fit cleanly to standard 4x6 thermal page (auto-rotates landscape thermal if needed)
                     const thermalW = 288, thermalH = 432;
                     for (const unit of labelUnits) {
-                        const srcPage = srcDoc.getPage(unit.pageIndex);
-                        const embedded = unit.clip
-                            ? await outDoc.embedPage(srcPage, unit.clip)
-                            : await outDoc.embedPage(srcPage);
                         const outPage = outDoc.addPage([thermalW, thermalH]);
-                        const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
-                        const drawW = embedded.width * scale;
-                        const drawH = embedded.height * scale;
-                        outPage.drawPage(embedded, {
-                            x: (thermalW - drawW) / 2,
-                            y: (thermalH - drawH) / 2,
-                            width: drawW,
-                            height: drawH
-                        });
+                        await drawLabelUnit(outDoc, srcDoc, unit, outPage, 4, 4, thermalW - 8, thermalH - 8, 4);
                     }
                 }
 
@@ -1868,8 +1978,11 @@
                 a.remove();
                 URL.revokeObjectURL(url);
 
-                const skipNote = skippedPages > 0 ? ` (Removed ${skippedPages} invoice/overflow blocks)` : '';
-                statusEl.innerText = `Done! Downloaded ${labelUnits.length} perfect labels${skipNote}.`;
+                const notes = [];
+                if (stitchedCount > 0) notes.push(`Stitched ${stitchedCount} split overflow page(s)`);
+                if (skippedPages > 0) notes.push(`Removed ${skippedPages} invoice/blank block(s)`);
+                const noteStr = notes.length ? ` (${notes.join(', ')})` : '';
+                statusEl.innerText = `Done! Downloaded ${labelUnits.length} complete labels${noteStr}.`;
             } catch (err) {
                 console.error(err);
                 statusEl.innerText = "Error reading PDF. Please ensure it is a valid, unprotected shipping label PDF.";
