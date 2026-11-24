@@ -78,7 +78,7 @@
                             <h4 class="text-lg font-bold text-gray-900">Label Cropper &amp; SKU Sorter</h4>
                             <span class="bg-green-100 text-green-700 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded">Free</span>
                         </div>
-                        <p class="text-sm text-gray-600 mb-4">Auto-crop Meesho, Flipkart &amp; Amazon PDFs to 4×6 + Picking List.</p>
+                        <p class="text-sm text-gray-600 mb-4">Auto-crop Delhivery, Meesho, Flipkart &amp; Amazon PDFs + Picking List.</p>
                         <span class="text-green-600 font-semibold text-sm flex items-center">Open Tool <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></span>
                     </button>
 
@@ -158,7 +158,7 @@
                     <!-- 4. GST Impact -->
                     <button onclick="openTool('gst-section')" class="text-left bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition group focus:outline-none">
                         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.995 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
                         </div>
                         <h4 class="text-lg font-bold text-gray-900 mb-1">GST &amp; ITC Impact</h4>
                         <p class="text-sm text-gray-600 mb-4">Find your true tax liability after claiming Input Tax Credit.</p>
@@ -210,7 +210,7 @@
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
                     <div id="info-label" class="hidden mb-6 bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl text-sm">
-                        <strong>What it does:</strong> Auto-crops bulky A4 Meesho, Flipkart &amp; Amazon shipping PDFs into clean 4×6 thermal labels (or 4-per-A4), sorts all pages by SKU, and adds a Page 1 Picking List—saving 45+ minutes of daily packing chaos. 100% private (runs in your browser, files never leave your PC).
+                        <strong>What it does:</strong> Auto-detects and cleanly crops Delhivery (3×2, 4×2, 4×2.5 thermal + A4 2×2 grid, automatically removing wasted overflow disclaimer pages and empty slots), Meesho, Flipkart &amp; Amazon shipping PDFs, sorts all pages by SKU/Order, and adds a Page 1 Picking List. 100% private (runs in your browser, files never leave your PC).
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8">
@@ -219,25 +219,27 @@
                             <div>
                                 <label class="block text-sm font-bold text-gray-800 mb-1">1. Upload Raw Labels PDF</label>
                                 <input type="file" id="label_pdf_file" accept="application/pdf" class="w-full p-2.5 bg-white border border-green-200 rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:font-semibold hover:file:bg-green-700 cursor-pointer">
-                                <p class="field-hint text-gray-600">Select the combined shipping label PDF downloaded from your seller panel.</p>
+                                <p class="field-hint text-gray-600">Select the combined shipping label PDF downloaded from your seller/courier panel.</p>
                             </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-800 mb-1">2. Select Platform &amp; Crop Preset</label>
                                 <select id="label_platform" class="w-full p-3 bg-white border border-green-200 rounded-xl text-sm outline-none">
+                                    <option value="auto" selected>Auto-Detect (Delhivery 3×2 / 4×2 / 4×2.5 / A4 4-Up, Meesho, Flipkart, Amazon)</option>
+                                    <option value="delhivery">Delhivery (Thermal 3×2 / 4×2 / 4×2.5 + A4 2×2 Split &amp; Overflow Fix)</option>
                                     <option value="meesho">Meesho (Crop Top Label — 4×6 Thermal)</option>
                                     <option value="flipkart">Flipkart (Crop Label Area — 4×6 Thermal)</option>
                                     <option value="amazon">Amazon Easy Ship (Crop Top Half — 4×6 Thermal)</option>
                                     <option value="a4_4up">4 Labels per A4 Page (Normal Printer Paper Saver)</option>
                                     <option value="sort_only">Keep Original Size (Only Sort by SKU + Picking List)</option>
                                 </select>
-                                <p class="field-hint text-gray-600">Choose your marketplace or normal A4 4-in-1 print layout.</p>
+                                <p class="field-hint text-gray-600">Auto-Detect automatically fixes Delhivery thermal overflow pages, splits Delhivery A4 2×2 grids, and crops Meesho/Flipkart/Amazon PDFs.</p>
                             </div>
 
                             <div class="space-y-2 pt-2">
                                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer">
                                     <input type="checkbox" id="label_sort_sku" checked class="w-4 h-4 accent-green-600 rounded">
-                                    Sort all labels alphabetically by SKU
+                                    Sort all labels alphabetically by SKU / Order ID
                                 </label>
                                 <p class="field-hint text-gray-600 ml-6">Groups identical products back-to-back so packing is 3× faster.</p>
 
@@ -1035,7 +1037,7 @@
                         <span class="text-blue-600 text-xl font-bold group-open:rotate-45 transition-transform">+</span>
                     </summary>
                     <p class="text-sm text-gray-600 mt-3 leading-relaxed">
-                        Yes! You can crop Meesho, Flipkart, and Amazon shipping labels to 4×6 thermal size (or 4-per-A4), sort them by SKU, and generate a Page 1 Picking List for free—with zero annoying pop-up ads.
+                        Yes! You can crop Delhivery, Meesho, Flipkart, and Amazon shipping labels cleanly (thermal sizes or 4-per-A4), sort them by SKU, and generate a Page 1 Picking List for free—with zero annoying pop-up ads.
                     </p>
                 </details>
 
@@ -1201,10 +1203,10 @@
                     </select>
                 </div>
 
-           <!-- Step 2: UPI QR Scanner + UPI ID Box -->
+                <!-- Step 2: UPI QR Scanner + UPI ID Box -->
                 <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4">
                     <p class="text-xs font-bold text-blue-800 uppercase mb-2">2. Scan QR or Pay via GPay / PhonePe / Paytm</p>
-                    
+
                     <!-- UPI QR Code Scanner -->
                     <div class="bg-white p-2.5 rounded-xl border border-blue-200 w-44 mx-auto mb-3 shadow-sm">
                         <img src="upi-qr1.jpg" alt="Scan to Pay via UPI" class="w-full h-auto rounded-lg object-contain">
@@ -1217,7 +1219,7 @@
                     </div>
                     <p class="text-[11px] text-blue-700 mt-2">After payment, copy the <strong>12-digit UTR / Ref No.</strong> from your UPI receipt.</p>
                 </div>
-                
+
                 <!-- Step 3: UTR + WhatsApp -->
                 <div class="space-y-3 mb-5">
                     <div>
@@ -1340,7 +1342,7 @@
 
         function closeTools() { document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden')); }
 
-        // ==================== FREE TOOL: BULK LABEL CROPPER + SKU SORTER ====================
+        // ==================== FREE TOOL: BULK LABEL CROPPER + SKU SORTER (UPGRADED WITH DELHIVERY AUTO-FIX) ====================
         async function processLabelPDF() {
             const fileInput = document.getElementById('label_pdf_file');
             const statusEl = document.getElementById('label_status');
@@ -1357,46 +1359,164 @@
                 return;
             }
 
-            const platform = document.getElementById('label_platform').value;
+            const selectedPlatform = document.getElementById('label_platform').value;
             const sortBySku = document.getElementById('label_sort_sku').checked;
             const addSummary = document.getElementById('label_add_summary').checked;
+
+            const cropMap = {
+                meesho:   { x: 0.02, y: 0.54, w: 0.96, h: 0.44 },
+                flipkart: { x: 0.27, y: 0.52, w: 0.46, h: 0.46 },
+                amazon:   { x: 0.04, y: 0.48, w: 0.92, h: 0.50 },
+                a4_4up:   { x: 0.02, y: 0.52, w: 0.96, h: 0.46 },
+                sort_only:{ x: 0.00, y: 0.00, w: 1.00, h: 1.00 }
+            };
 
             try {
                 btn.disabled = true;
                 btn.innerText = "Processing PDF...";
-                statusEl.innerText = "Reading labels & detecting SKUs...";
+                statusEl.innerText = "Scanning pages, detecting layout & SKUs...";
 
                 const arrayBuffer = await fileInput.files[0].arrayBuffer();
+                const srcDoc = await PDFLib.PDFDocument.load(arrayBuffer);
                 const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-                const totalPages = pdfJsDoc.numPages;
+                const totalSrcPages = srcDoc.getPageCount();
 
-                let pageMeta = [];
-                for (let i = 1; i <= totalPages; i++) {
-                    const page = await pdfJsDoc.getPage(i);
-                    const content = await page.getTextContent();
-                    const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
-                    const { sku, qty } = extractSkuAndQty(text);
-                    pageMeta.push({ pageIndex: i - 1, sku, qty });
+                // Unified list of extracted label units
+                // Each item: { pageIndex, clip, nativeThermal, srcWidth, srcHeight, sku, qty }
+                let labelUnits = [];
+                let skippedOverflowPages = 0;
+
+                for (let i = 0; i < totalSrcPages; i++) {
+                    const srcPage = srcDoc.getPage(i);
+                    const { width, height } = srcPage.getSize();
+                    const jsPage = await pdfJsDoc.getPage(i + 1);
+                    const content = await jsPage.getTextContent();
+                    const fullText = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+
+                    // CASE 1: Pre-Sized Thermal Label (e.g. Delhivery 3x2 = 216x144, 4x2 = 288x144, 4x2.5 = 288x180, 4x6 = 288x432)
+                    const isSmallThermal = (width <= 320 && height <= 450);
+                    if (isSmallThermal && selectedPlatform !== 'sort_only') {
+                        const isOverflowDisclaimer =
+                            !/LRN\s*:|MAWB\s*:|OID\s*:|Box\s*:|AWB|SKU/i.test(fullText) &&
+                            /shipper hereby declares|Disclaimer|Dangerous goods|prohibited items|pickup receipt/i.test(fullText);
+
+                        if (isOverflowDisclaimer) {
+                            skippedOverflowPages++;
+                            continue;
+                        }
+
+                        const { sku, qty } = extractSkuAndQty(fullText);
+                        labelUnits.push({
+                            pageIndex: i,
+                            clip: null, // Keep full thermal label untouched
+                            nativeThermal: true,
+                            srcWidth: width,
+                            srcHeight: height,
+                            sku,
+                            qty
+                        });
+                        continue;
+                    }
+
+                    // CASE 2: Delhivery A4 2x2 Grid (multiple labels on 1 A4 page)
+                    const delhiveryMatches = (fullText.match(/DELHIVERY/gi) || []).length;
+                    const lrnMatches = (fullText.match(/LRN\s*:/gi) || []).length;
+                    const isDelhiveryA4Grid =
+                        width > 500 && height > 700 &&
+                        (delhiveryMatches >= 2 || lrnMatches >= 2) &&
+                        (selectedPlatform === 'auto' || selectedPlatform === 'delhivery' || selectedPlatform === 'a4_4up');
+
+                    if (isDelhiveryA4Grid) {
+                        const halfW = width / 2;
+                        const halfH = height / 2;
+                        // PDF coordinates start at bottom-left (0, 0)
+                        const quadrants = [
+                            { left: 0,     bottom: halfH, right: halfW, top: height }, // Top-Left
+                            { left: halfW, bottom: halfH, right: width, top: height }, // Top-Right
+                            { left: 0,     bottom: 0,     right: halfW, top: halfH  }, // Bottom-Left
+                            { left: halfW, bottom: 0,     right: width, top: halfH  }  // Bottom-Right
+                        ];
+
+                        for (const q of quadrants) {
+                            const quadItems = content.items.filter(item => {
+                                if (!item.str || !item.str.trim()) return false;
+                                const x = item.transform[4];
+                                const y = item.transform[5];
+                                return x >= q.left && x <= q.right && y >= q.bottom && y <= q.top;
+                            });
+                            const quadText = quadItems.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+
+                            // Skip empty quadrant (e.g., 4th slot when only 3 labels exist on A4)
+                            if (quadText.length < 15) continue;
+
+                            const { sku, qty } = extractSkuAndQty(quadText);
+                            labelUnits.push({
+                                pageIndex: i,
+                                clip: q,
+                                nativeThermal: false,
+                                srcWidth: halfW,
+                                srcHeight: halfH,
+                                sku,
+                                qty
+                            });
+                        }
+                        continue;
+                    }
+
+                    // CASE 3: Standard A4 single-label (Meesho / Flipkart / Amazon / Sort Only)
+                    let effectivePlatform = selectedPlatform;
+                    if (effectivePlatform === 'auto' || effectivePlatform === 'delhivery') {
+                        if (/flipkart/i.test(fullText)) effectivePlatform = 'flipkart';
+                        else if (/amazon/i.test(fullText) && !/delhivery/i.test(fullText)) effectivePlatform = 'amazon';
+                        else if (/meesho/i.test(fullText)) effectivePlatform = 'meesho';
+                        else effectivePlatform = 'meesho';
+                    }
+
+                    const c = cropMap[effectivePlatform] || cropMap.meesho;
+                    const clip = effectivePlatform === 'sort_only'
+                        ? null
+                        : {
+                            left: width * c.x,
+                            bottom: height * c.y,
+                            right: width * (c.x + c.w),
+                            top: height * (c.y + c.h)
+                        };
+
+                    const { sku, qty } = extractSkuAndQty(fullText);
+                    labelUnits.push({
+                        pageIndex: i,
+                        clip,
+                        nativeThermal: false,
+                        srcWidth: clip ? (clip.right - clip.left) : width,
+                        srcHeight: clip ? (clip.top - clip.bottom) : height,
+                        sku,
+                        qty
+                    });
+                }
+
+                if (labelUnits.length === 0) {
+                    statusEl.innerText = "No valid shipping labels found in this PDF.";
+                    return;
                 }
 
                 if (sortBySku) {
-                    pageMeta.sort((a, b) => a.sku.localeCompare(b.sku) || b.qty - a.qty);
+                    labelUnits.sort((a, b) => a.sku.localeCompare(b.sku) || b.qty - a.qty);
                 }
 
                 const skuCounts = {};
                 let totalUnits = 0;
-                pageMeta.forEach(p => {
-                    if (!skuCounts[p.sku]) skuCounts[p.sku] = { orders: 0, units: 0 };
-                    skuCounts[p.sku].orders += 1;
-                    skuCounts[p.sku].units += p.qty;
-                    totalUnits += p.qty;
+                labelUnits.forEach(u => {
+                    if (!skuCounts[u.sku]) skuCounts[u.sku] = { orders: 0, units: 0 };
+                    skuCounts[u.sku].orders += 1;
+                    skuCounts[u.sku].units += u.qty;
+                    totalUnits += u.qty;
                 });
 
                 const sortedSkus = Object.keys(skuCounts).sort();
 
-                badge.innerText = `${totalPages} Labels • ${totalUnits} Units`;
+                badge.innerText = `${labelUnits.length} Labels • ${totalUnits} Units`;
                 let html = `<table class="w-full text-left text-xs border-collapse">
-                    <thead><tr class="text-gray-400 border-b border-gray-700"><th class="py-1.5">SKU / Item</th><th class="py-1.5 text-center">Orders</th><th class="py-1.5 text-right">Total Qty</th></tr></thead>
+                    <thead><tr class="text-gray-400 border-b border-gray-700"><th class="py-1.5">SKU / Order ID</th><th class="py-1.5 text-center">Labels</th><th class="py-1.5 text-right">Total Qty</th></tr></thead>
                     <tbody class="divide-y divide-gray-800">`;
                 sortedSkus.forEach(s => {
                     html += `<tr><td class="py-2 font-semibold text-white pr-2 break-all">${escapeHtml(s)}</td><td class="py-2 text-center text-gray-300">${skuCounts[s].orders}</td><td class="py-2 text-right font-bold text-green-400">${skuCounts[s].units}</td></tr>`;
@@ -1406,7 +1526,6 @@
 
                 statusEl.innerText = "Cropping & building final PDF...";
 
-                const srcDoc = await PDFLib.PDFDocument.load(arrayBuffer);
                 const outDoc = await PDFLib.PDFDocument.create();
                 const fontBold = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
                 const fontReg = await outDoc.embedFont(PDFLib.StandardFonts.Helvetica);
@@ -1416,10 +1535,10 @@
                     let y = 800;
                     sumPage.drawText('SmallSellerSupport - Daily Picking List', { x: 40, y, size: 16, font: fontBold });
                     y -= 20;
-                    sumPage.drawText(`Date: ${new Date().toLocaleDateString('en-IN')}  |  Total Labels: ${totalPages}  |  Total Units: ${totalUnits}`, { x: 40, y, size: 10, font: fontReg });
+                    sumPage.drawText(`Date: ${new Date().toLocaleDateString('en-IN')}  |  Total Labels: ${labelUnits.length}  |  Total Units: ${totalUnits}`, { x: 40, y, size: 10, font: fontReg });
                     y -= 25;
-                    sumPage.drawText('SKU / Product Identifier', { x: 40, y, size: 10, font: fontBold });
-                    sumPage.drawText('Orders', { x: 410, y, size: 10, font: fontBold });
+                    sumPage.drawText('SKU / Order Identifier', { x: 40, y, size: 10, font: fontBold });
+                    sumPage.drawText('Labels', { x: 410, y, size: 10, font: fontBold });
                     sumPage.drawText('Total Qty', { x: 490, y, size: 10, font: fontBold });
                     y -= 14;
 
@@ -1436,28 +1555,21 @@
                     }
                 }
 
-                const cropMap = {
-                    meesho:   { x: 0.02, y: 0.54, w: 0.96, h: 0.44 },
-                    flipkart: { x: 0.27, y: 0.52, w: 0.46, h: 0.46 },
-                    amazon:   { x: 0.04, y: 0.48, w: 0.92, h: 0.50 },
-                    a4_4up:   { x: 0.02, y: 0.52, w: 0.96, h: 0.46 },
-                    sort_only:{ x: 0.00, y: 0.00, w: 1.00, h: 1.00 }
-                };
-                const c = cropMap[platform] || cropMap.meesho;
-
-                if (platform === 'a4_4up') {
+                // Output generation
+                if (selectedPlatform === 'a4_4up') {
                     const a4W = 595, a4H = 842, pad = 14;
                     const cellW = (a4W - pad * 3) / 2;
                     const cellH = (a4H - pad * 3) / 2;
 
-                    for (let idx = 0; idx < pageMeta.length; idx += 4) {
+                    for (let idx = 0; idx < labelUnits.length; idx += 4) {
                         const sheet = outDoc.addPage([a4W, a4H]);
-                        const batch = pageMeta.slice(idx, idx + 4);
+                        const batch = labelUnits.slice(idx, idx + 4);
                         for (let b = 0; b < batch.length; b++) {
-                            const srcPage = srcDoc.getPage(batch[b].pageIndex);
-                            const { width, height } = srcPage.getSize();
-                            const clip = { left: width * c.x, bottom: height * c.y, right: width * (c.x + c.w), top: height * (c.y + c.h) };
-                            const embedded = await outDoc.embedPage(srcPage, clip);
+                            const unit = batch[b];
+                            const srcPage = srcDoc.getPage(unit.pageIndex);
+                            const embedded = unit.clip
+                                ? await outDoc.embedPage(srcPage, unit.clip)
+                                : await outDoc.embedPage(srcPage);
                             const scale = Math.min(cellW / embedded.width, cellH / embedded.height);
                             const drawW = embedded.width * scale;
                             const drawH = embedded.height * scale;
@@ -1468,27 +1580,33 @@
                             sheet.drawPage(embedded, { x: xPos, y: yPos, width: drawW, height: drawH });
                         }
                     }
-                } else if (platform === 'sort_only') {
-                    const indices = pageMeta.map(p => p.pageIndex);
+                } else if (selectedPlatform === 'sort_only') {
+                    const indices = labelUnits.map(u => u.pageIndex);
                     const copied = await outDoc.copyPages(srcDoc, indices);
                     copied.forEach(p => outDoc.addPage(p));
                 } else {
                     const thermalW = 288, thermalH = 432;
-                    for (const meta of pageMeta) {
-                        const srcPage = srcDoc.getPage(meta.pageIndex);
-                        const { width, height } = srcPage.getSize();
-                        const clip = { left: width * c.x, bottom: height * c.y, right: width * (c.x + c.w), top: height * (c.y + c.h) };
-                        const embedded = await outDoc.embedPage(srcPage, clip);
-                        const outPage = outDoc.addPage([thermalW, thermalH]);
-                        const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
-                        const drawW = embedded.width * scale;
-                        const drawH = embedded.height * scale;
-                        outPage.drawPage(embedded, {
-                            x: (thermalW - drawW) / 2,
-                            y: (thermalH - drawH) / 2,
-                            width: drawW,
-                            height: drawH
-                        });
+                    for (const unit of labelUnits) {
+                        const srcPage = srcDoc.getPage(unit.pageIndex);
+                        // Preserve native pre-sized thermal labels (3x2, 4x2, 4x2.5) at their exact dimensions
+                        if (unit.nativeThermal && !unit.clip) {
+                            const [copied] = await outDoc.copyPages(srcDoc, [unit.pageIndex]);
+                            outDoc.addPage(copied);
+                        } else {
+                            const embedded = unit.clip
+                                ? await outDoc.embedPage(srcPage, unit.clip)
+                                : await outDoc.embedPage(srcPage);
+                            const outPage = outDoc.addPage([thermalW, thermalH]);
+                            const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
+                            const drawW = embedded.width * scale;
+                            const drawH = embedded.height * scale;
+                            outPage.drawPage(embedded, {
+                                x: (thermalW - drawW) / 2,
+                                y: (thermalH - drawH) / 2,
+                                width: drawW,
+                                height: drawH
+                            });
+                        }
                     }
                 }
 
@@ -1497,13 +1615,14 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `Sorted_Labels_${platform}_SmallSellerSupport.pdf`;
+                a.download = `Sorted_Labels_${selectedPlatform}_SmallSellerSupport.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
                 URL.revokeObjectURL(url);
 
-                statusEl.innerText = `Done! Downloaded ${totalPages} sorted labels successfully.`;
+                const skipNote = skippedOverflowPages > 0 ? ` (Removed ${skippedOverflowPages} empty/overflow pages)` : '';
+                statusEl.innerText = `Done! Downloaded ${labelUnits.length} clean labels${skipNote}.`;
             } catch (err) {
                 console.error(err);
                 statusEl.innerText = "Error reading PDF. Please ensure it is a valid, unprotected shipping label PDF.";
@@ -1520,7 +1639,10 @@
                 /SKU\s*ID\s*[:\-]?\s*([A-Za-z0-9_\-\/\.]{2,40})/i,
                 /SKU\s*[:\-]?\s*([A-Za-z0-9_\-\/\.]{2,40})/i,
                 /Product\s*Details\s+SKU\s+Size\s+Qty\s+Color\s+Order\s*No\.?\s+([A-Za-z0-9_\-\/\.]{2,40})/i,
-                /HSN\s*[:\-]?\s*\d+\s+([A-Za-z0-9_\-\/]{3,35})/i
+                /HSN\s*[:\-]?\s*\d+\s+([A-Za-z0-9_\-\/]{3,35})/i,
+                /OID\s*[:\-]?\s*([A-Za-z0-9_\-\/]{4,35})/i,
+                /LRN\s*[:\-]?\s*([A-Za-z0-9_\-\/]{4,30})/i,
+                /MAWB\s*[:\-]?\s*([A-Za-z0-9_\-\/]{4,30})/i
             ];
             for (const rx of skuPatterns) {
                 const m = text.match(rx);
@@ -1528,6 +1650,10 @@
                     sku = m[1].trim();
                     break;
                 }
+            }
+            const boxMatch = text.match(/Box\s*[:\-]?\s*(\d+\s*\/\s*\d+)/i);
+            if (boxMatch && sku !== "UNMATCHED-SKU" && !sku.includes('Box')) {
+                sku = `${sku} (Box ${boxMatch[1].replace(/\s+/g, '')})`;
             }
             const qtyMatch = text.match(/(?:Qty|Quantity)\s*[:\-]?\s*(\d{1,3})/i);
             if (qtyMatch && parseInt(qtyMatch[1], 10) > 0) qty = parseInt(qtyMatch[1], 10);
