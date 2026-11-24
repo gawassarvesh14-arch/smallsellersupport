@@ -210,7 +210,7 @@
                         <button onclick="closeTools()" class="text-gray-400 hover:text-red-500 font-bold p-2 bg-gray-50 rounded-lg">✕ Close</button>
                     </div>
                     <div id="info-label" class="hidden mb-6 bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl text-sm">
-                        <strong>What it does:</strong> Auto-detects and cleanly crops Delhivery (3×2, 4×2, 4×2.5 thermal + A4 2×2 grid, automatically removing wasted overflow disclaimer pages and empty slots), Meesho, Flipkart &amp; Amazon shipping PDFs, sorts all pages by SKU/Order, and adds a Page 1 Picking List. 100% private (runs in your browser, files never leave your PC).
+                        <strong>What it does:</strong> Universal Smart Auto-Detect scans every page visually, splits multi-label grids (2-up, 4-up A4), removes attached Tax Invoices &amp; wasted overflow/blank pages, tight-crops every shipping label to its exact border (zero size restrictions), puts each label on its own clean page, sorts by SKU/Order, and adds a Page 1 Picking List. 100% private in your browser.
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8">
@@ -219,25 +219,31 @@
                             <div>
                                 <label class="block text-sm font-bold text-gray-800 mb-1">1. Upload Raw Labels PDF</label>
                                 <input type="file" id="label_pdf_file" accept="application/pdf" class="w-full p-2.5 bg-white border border-green-200 rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:font-semibold hover:file:bg-green-700 cursor-pointer">
-                                <p class="field-hint text-gray-600">Select the combined shipping label PDF downloaded from your seller/courier panel.</p>
+                                <p class="field-hint text-gray-600">Works with ANY courier or marketplace PDF (Delhivery, Meesho, Flipkart, Amazon, Shiprocket, Bluedart, etc.).</p>
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-800 mb-1">2. Select Platform &amp; Crop Preset</label>
+                                <label class="block text-sm font-bold text-gray-800 mb-1">2. Output Layout Mode</label>
                                 <select id="label_platform" class="w-full p-3 bg-white border border-green-200 rounded-xl text-sm outline-none">
-                                    <option value="auto" selected>Auto-Detect (Delhivery 3×2 / 4×2 / 4×2.5 / A4 4-Up, Meesho, Flipkart, Amazon)</option>
-                                    <option value="delhivery">Delhivery (Thermal 3×2 / 4×2 / 4×2.5 + A4 2×2 Split &amp; Overflow Fix)</option>
-                                    <option value="meesho">Meesho (Crop Top Label — 4×6 Thermal)</option>
-                                    <option value="flipkart">Flipkart (Crop Label Area — 4×6 Thermal)</option>
-                                    <option value="amazon">Amazon Easy Ship (Crop Top Half — 4×6 Thermal)</option>
-                                    <option value="a4_4up">4 Labels per A4 Page (Normal Printer Paper Saver)</option>
-                                    <option value="sort_only">Keep Original Size (Only Sort by SKU + Picking List)</option>
+                                    <option value="auto" selected>Smart Auto-Detect — 1 Exact Label Per Page (No Size Restriction)</option>
+                                    <option value="thermal_4x6">Smart Auto-Detect — Fit Each Label to 4×6 Thermal Page</option>
+                                    <option value="a4_4up">Smart Auto-Detect — 4 Labels per A4 Page (Paper Saver)</option>
+                                    <option value="meesho">Manual Preset: Meesho (Top Label 4×6)</option>
+                                    <option value="flipkart">Manual Preset: Flipkart (Label Area 4×6)</option>
+                                    <option value="amazon">Manual Preset: Amazon Easy Ship (Top Half 4×6)</option>
+                                    <option value="sort_only">Keep Original Pages (Only Sort by SKU + Picking List)</option>
                                 </select>
-                                <p class="field-hint text-gray-600">Auto-Detect automatically fixes Delhivery thermal overflow pages, splits Delhivery A4 2×2 grids, and crops Meesho/Flipkart/Amazon PDFs.</p>
+                                <p class="field-hint text-gray-600">Default mode detects every label's exact size, splits multi-label sheets, and removes junk/overflow pages automatically.</p>
                             </div>
 
                             <div class="space-y-2 pt-2">
                                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer">
+                                    <input type="checkbox" id="label_remove_invoice" checked class="w-4 h-4 accent-green-600 rounded">
+                                    Auto-remove attached Tax Invoice &amp; overflow disclaimer pages
+                                </label>
+                                <p class="field-hint text-gray-600 ml-6">Slices off Tax Invoice below the label and skips wasted Delhivery disclaimer pages.</p>
+
+                                <label class="flex items-center gap-2 text-sm font-semibold text-gray-800 cursor-pointer mt-2">
                                     <input type="checkbox" id="label_sort_sku" checked class="w-4 h-4 accent-green-600 rounded">
                                     Sort all labels alphabetically by SKU / Order ID
                                 </label>
@@ -1342,7 +1348,304 @@
 
         function closeTools() { document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden')); }
 
-        // ==================== FREE TOOL: BULK LABEL CROPPER + SKU SORTER (UPGRADED WITH DELHIVERY AUTO-FIX) ====================
+        // ==================== FREE TOOL: UNIVERSAL SMART AUTO-DETECT LABEL CROPPER + SKU SORTER ====================
+        const LABEL_SIGNAL_RX = /\b(DELHIVERY|LRN|MAWB|AWB|OID|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Return\s*To|Box\s*:|Meesho|Flipkart|Amazon|Shiprocket|Bluedart|Blue\s*Dart|Xpressbees|Ecom\s*Express|Shadowfax|DTDC|COD|Prepaid|Order\s*(ID|No)|Tracking|Courier|Pickup|Fold\s*Here|Ekart|Waybill|SKU)\b/i;
+        const INVOICE_ONLY_RX = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Taxable\s*Value|IGST|CGST|SGST|Invoice\s*Number|Invoice\s*Date)\b/i;
+        const INVOICE_CUT_RX  = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Invoice\s*Details|Cut\s*Here|Tear\s*Here|Fold\s*Here)\b/i;
+        const OVERFLOW_JUNK_RX = /shipper\s+hereby\s+declares|Disclaimer|Dangerous\s+goods|prohibited\s+items|pickup\s+receipt|not\s+for\s+sale\s*-\s*No\s+commercial/i;
+
+        function looksLikeLabel(text) {
+            return LABEL_SIGNAL_RX.test(text || '');
+        }
+        function looksLikeInvoiceOnly(text) {
+            const t = text || '';
+            return INVOICE_ONLY_RX.test(t) && !/\b(DELHIVERY|LRN|MAWB|AWB|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Waybill|Tracking|Box\s*:)\b/i.test(t);
+        }
+        function looksLikeOverflowJunk(text) {
+            const t = (text || '').trim();
+            if (!t) return true;
+            if (looksLikeLabel(t)) return false;
+            return OVERFLOW_JUNK_RX.test(t) || t.length < 25;
+        }
+
+        function getTextInBox(textItems, box) {
+            const parts = [];
+            for (const it of textItems) {
+                if (it.cx >= box.x0 && it.cx <= box.x1 && it.cy >= box.y0 && it.cy <= box.y1) {
+                    parts.push(it.str);
+                }
+            }
+            return parts.join(' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function trimInkBox(ink, imgW, box) {
+            let x0 = Math.max(0, Math.floor(box.x0));
+            let y0 = Math.max(0, Math.floor(box.y0));
+            let x1 = Math.min(imgW - 1, Math.ceil(box.x1));
+            let y1 = Math.max(y0, Math.ceil(box.y1));
+
+            let minX = x1, maxX = x0, minY = y1, maxY = y0;
+            let count = 0;
+
+            for (let y = y0; y <= y1; y++) {
+                const rowOff = y * imgW;
+                for (let x = x0; x <= x1; x++) {
+                    if (ink[rowOff + x]) {
+                        count++;
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+            if (count < 25) return null;
+            return { x0: minX, y0: minY, x1: maxX, y1: maxY, inkCount: count };
+        }
+
+        // Find widest pure-white gutter along X (vertical cut) or Y (horizontal cut)
+        function findBestGutter(ink, imgW, box, axis, minGapPx, minSidePx) {
+            const start = axis === 'x' ? box.x0 : box.y0;
+            const end   = axis === 'x' ? box.x1 : box.y1;
+            const span  = end - start;
+            if (span < minSidePx * 2 + minGapPx) return null;
+
+            const searchStart = start + minSidePx;
+            const searchEnd   = end - minSidePx;
+            if (searchEnd <= searchStart) return null;
+
+            let bestGap = null;
+            let runStart = -1;
+
+            for (let pos = searchStart; pos <= searchEnd; pos++) {
+                let inkHits = 0;
+                if (axis === 'x') {
+                    for (let y = box.y0; y <= box.y1; y++) {
+                        if (ink[y * imgW + pos]) {
+                            inkHits++;
+                            if (inkHits > 1) break;
+                        }
+                    }
+                } else {
+                    const rowOff = pos * imgW;
+                    for (let x = box.x0; x <= box.x1; x++) {
+                        if (ink[rowOff + x]) {
+                            inkHits++;
+                            if (inkHits > 1) break;
+                        }
+                    }
+                }
+
+                if (inkHits <= 1) {
+                    if (runStart === -1) runStart = pos;
+                } else {
+                    if (runStart !== -1) {
+                        const gapLen = pos - runStart;
+                        if (gapLen >= minGapPx && (!bestGap || gapLen > bestGap.len)) {
+                            bestGap = { start: runStart, end: pos - 1, len: gapLen, mid: Math.floor((runStart + pos - 1) / 2) };
+                        }
+                        runStart = -1;
+                    }
+                }
+            }
+            if (runStart !== -1) {
+                const gapLen = searchEnd - runStart + 1;
+                if (gapLen >= minGapPx && (!bestGap || gapLen > bestGap.len)) {
+                    bestGap = { start: runStart, end: searchEnd, len: gapLen, mid: Math.floor((runStart + searchEnd) / 2) };
+                }
+            }
+            return bestGap;
+        }
+
+        function recursiveSplitLabels(ink, imgW, rawBox, textItems, scale, hasTextLayer, depth = 0) {
+            const box = trimInkBox(ink, imgW, rawBox);
+            if (!box) return [];
+            if (depth >= 4) return [box];
+
+            const minW = Math.round(135 * scale); // ~1.9 inch min label width
+            const minH = Math.round(95 * scale);  // ~1.3 inch min label height
+            const minGapX = Math.round((hasTextLayer ? 6 : 16) * scale);
+            const minGapY = Math.round((hasTextLayer ? 8 : 18) * scale);
+
+            const vGap = findBestGutter(ink, imgW, box, 'x', minGapX, minW);
+            const hGap = findBestGutter(ink, imgW, box, 'y', minGapY, minH);
+
+            const candidates = [];
+            if (vGap) candidates.push({ axis: 'x', gap: vGap });
+            if (hGap) candidates.push({ axis: 'y', gap: hGap });
+
+            // Try the wider gutter first
+            candidates.sort((a, b) => b.gap.len - a.gap.len);
+
+            for (const cand of candidates) {
+                let boxA, boxB;
+                if (cand.axis === 'x') {
+                    boxA = trimInkBox(ink, imgW, { x0: box.x0, y0: box.y0, x1: cand.gap.start - 1, y1: box.y1 });
+                    boxB = trimInkBox(ink, imgW, { x0: cand.gap.end + 1, y0: box.y0, x1: box.x1, y1: box.y1 });
+                } else {
+                    boxA = trimInkBox(ink, imgW, { x0: box.x0, y0: box.y0, x1: box.x1, y1: cand.gap.start - 1 });
+                    boxB = trimInkBox(ink, imgW, { x0: box.x0, y0: cand.gap.end + 1, x1: box.x1, y1: box.y1 });
+                }
+                if (!boxA || !boxB) continue;
+
+                let acceptSplit = false;
+                if (!hasTextLayer) {
+                    // Image-only scanned PDF: accept if both blocks are label-sized
+                    acceptSplit =
+                        (boxA.x1 - boxA.x0) >= minW && (boxA.y1 - boxA.y0) >= minH &&
+                        (boxB.x1 - boxB.x0) >= minW && (boxB.y1 - boxB.y0) >= minH;
+                } else {
+                    const txtA = getTextInBox(textItems, boxA);
+                    const txtB = getTextInBox(textItems, boxB);
+                    const aLabel = looksLikeLabel(txtA);
+                    const bLabel = looksLikeLabel(txtB);
+                    const aInv   = looksLikeInvoiceOnly(txtA);
+                    const bInv   = looksLikeInvoiceOnly(txtB);
+                    const aJunk  = looksLikeOverflowJunk(txtA);
+                    const bJunk  = looksLikeOverflowJunk(txtB);
+
+                    if ((aLabel && bLabel) || (aLabel && (bInv || bJunk)) || (bLabel && (aInv || aJunk))) {
+                        acceptSplit = true;
+                    }
+                }
+
+                if (acceptSplit) {
+                    return [
+                        ...recursiveSplitLabels(ink, imgW, boxA, textItems, scale, hasTextLayer, depth + 1),
+                        ...recursiveSplitLabels(ink, imgW, boxB, textItems, scale, hasTextLayer, depth + 1)
+                    ];
+                }
+            }
+
+            return [box];
+        }
+
+        async function detectLabelsOnPage(jsPage, removeInvoice) {
+            const scale = 1.5;
+            const viewport = jsPage.getViewport({ scale });
+            const canvas = document.createElement('canvas');
+            const imgW = Math.ceil(viewport.width);
+            const imgH = Math.ceil(viewport.height);
+            canvas.width = imgW;
+            canvas.height = imgH;
+
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, imgW, imgH);
+            await jsPage.render({ canvasContext: ctx, viewport }).promise;
+
+            const imgData = ctx.getImageData(0, 0, imgW, imgH).data;
+            const ink = new Uint8Array(imgW * imgH);
+            for (let i = 0, p = 0; i < imgData.length; i += 4, p++) {
+                if (imgData[i] < 242 || imgData[i + 1] < 242 || imgData[i + 2] < 242) {
+                    ink[p] = 1;
+                }
+            }
+
+            // Extract text items mapped to canvas pixel coordinates
+            const content = await jsPage.getTextContent();
+            const textItems = [];
+            for (const item of content.items) {
+                const str = (item.str || '').trim();
+                if (!str) continue;
+                const tx = item.transform[4];
+                const ty = item.transform[5];
+                const [vx, vy] = viewport.convertToViewportPoint(tx, ty);
+                textItems.push({ str, cx: vx, cy: vy });
+            }
+
+            const fullText = textItems.map(t => t.str).join(' ').replace(/\s+/g, ' ').trim();
+            const hasTextLayer = fullText.length >= 12;
+
+            // Skip entire page if it's an overflow disclaimer / blank junk page
+            if (removeInvoice && hasTextLayer && looksLikeOverflowJunk(fullText)) {
+                return { labels: [], skippedJunk: 1 };
+            }
+
+            const rawRegions = recursiveSplitLabels(
+                ink,
+                imgW,
+                { x0: 0, y0: 0, x1: imgW - 1, y1: imgH - 1 },
+                textItems,
+                scale,
+                hasTextLayer,
+                0
+            );
+
+            const labels = [];
+            let skippedJunk = 0;
+            const padPx = Math.round(5 * scale); // Clean 5pt breathing margin around label border
+
+            for (let reg of rawRegions) {
+                let regText = hasTextLayer ? getTextInBox(textItems, reg) : '';
+
+                // Drop standalone Tax Invoice or junk overflow blocks
+                if (removeInvoice && hasTextLayer) {
+                    if (looksLikeInvoiceOnly(regText) || looksLikeOverflowJunk(regText)) {
+                        skippedJunk++;
+                        continue;
+                    }
+
+                    // If Tax Invoice is attached inside the same border box, slice right above it
+                    const regH = reg.y1 - reg.y0;
+                    if (regH > 260 * scale) {
+                        let cutY = null;
+                        for (const it of textItems) {
+                            if (it.cx >= reg.x0 && it.cx <= reg.x1 && it.cy >= reg.y0 + regH * 0.25 && it.cy <= reg.y1) {
+                                if (INVOICE_CUT_RX.test(it.str)) {
+                                    if (cutY === null || it.cy < cutY) cutY = it.cy;
+                                }
+                            }
+                        }
+                        if (cutY !== null) {
+                            const sliced = trimInkBox(ink, imgW, {
+                                x0: reg.x0,
+                                y0: reg.y0,
+                                x1: reg.x1,
+                                y1: Math.max(reg.y0 + 20, Math.floor(cutY - 10 * scale))
+                            });
+                            if (sliced && (sliced.y1 - sliced.y0) >= 80 * scale) {
+                                reg = sliced;
+                                regText = getTextInBox(textItems, reg);
+                            }
+                        }
+                    }
+                }
+
+                // Ignore tiny specks/artifacts
+                if ((reg.x1 - reg.x0) < 70 * scale || (reg.y1 - reg.y0) < 45 * scale) {
+                    continue;
+                }
+
+                // Add clean padding and clamp to page bounds
+                const cx0 = Math.max(0, reg.x0 - padPx);
+                const cy0 = Math.max(0, reg.y0 - padPx);
+                const cx1 = Math.min(imgW, reg.x1 + padPx);
+                const cy1 = Math.min(imgH, reg.y1 + padPx);
+
+                // Convert canvas pixel box accurately back to PDF points (handles rotation & offsets)
+                const [p1x, p1y] = viewport.convertToPdfPoint(cx0, cy0);
+                const [p2x, p2y] = viewport.convertToPdfPoint(cx1, cy1);
+                const clip = {
+                    left: Math.min(p1x, p2x),
+                    right: Math.max(p1x, p2x),
+                    bottom: Math.min(p1y, p2y),
+                    top: Math.max(p1y, p2y)
+                };
+
+                const { sku, qty } = extractSkuAndQty(regText || fullText);
+                labels.push({
+                    clip,
+                    clipW: clip.right - clip.left,
+                    clipH: clip.top - clip.bottom,
+                    sku,
+                    qty
+                });
+            }
+
+            return { labels, skippedJunk };
+        }
+
         async function processLabelPDF() {
             const fileInput = document.getElementById('label_pdf_file');
             const statusEl = document.getElementById('label_status');
@@ -1359,143 +1662,81 @@
                 return;
             }
 
-            const selectedPlatform = document.getElementById('label_platform').value;
+            const mode = document.getElementById('label_platform').value;
+            const removeInvoice = document.getElementById('label_remove_invoice').checked;
             const sortBySku = document.getElementById('label_sort_sku').checked;
             const addSummary = document.getElementById('label_add_summary').checked;
 
-            const cropMap = {
+            const manualCropMap = {
                 meesho:   { x: 0.02, y: 0.54, w: 0.96, h: 0.44 },
                 flipkart: { x: 0.27, y: 0.52, w: 0.46, h: 0.46 },
-                amazon:   { x: 0.04, y: 0.48, w: 0.92, h: 0.50 },
-                a4_4up:   { x: 0.02, y: 0.52, w: 0.96, h: 0.46 },
-                sort_only:{ x: 0.00, y: 0.00, w: 1.00, h: 1.00 }
+                amazon:   { x: 0.04, y: 0.48, w: 0.92, h: 0.50 }
             };
 
             try {
                 btn.disabled = true;
-                btn.innerText = "Processing PDF...";
-                statusEl.innerText = "Scanning pages, detecting layout & SKUs...";
+                btn.innerText = "Scanning & Auto-Detecting...";
+                statusEl.innerText = "Analyzing pages visually for exact label borders...";
 
                 const arrayBuffer = await fileInput.files[0].arrayBuffer();
                 const srcDoc = await PDFLib.PDFDocument.load(arrayBuffer);
                 const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
                 const totalSrcPages = srcDoc.getPageCount();
 
-                // Unified list of extracted label units
-                // Each item: { pageIndex, clip, nativeThermal, srcWidth, srcHeight, sku, qty }
                 let labelUnits = [];
-                let skippedOverflowPages = 0;
+                let skippedPages = 0;
+
+                const useSmartAuto = (mode === 'auto' || mode === 'thermal_4x6' || mode === 'a4_4up');
 
                 for (let i = 0; i < totalSrcPages; i++) {
-                    const srcPage = srcDoc.getPage(i);
-                    const { width, height } = srcPage.getSize();
+                    statusEl.innerText = `Scanning page ${i + 1} of ${totalSrcPages}...`;
                     const jsPage = await pdfJsDoc.getPage(i + 1);
-                    const content = await jsPage.getTextContent();
-                    const fullText = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
 
-                    // CASE 1: Pre-Sized Thermal Label (e.g. Delhivery 3x2 = 216x144, 4x2 = 288x144, 4x2.5 = 288x180, 4x6 = 288x432)
-                    const isSmallThermal = (width <= 320 && height <= 450);
-                    if (isSmallThermal && selectedPlatform !== 'sort_only') {
-                        const isOverflowDisclaimer =
-                            !/LRN\s*:|MAWB\s*:|OID\s*:|Box\s*:|AWB|SKU/i.test(fullText) &&
-                            /shipper hereby declares|Disclaimer|Dangerous goods|prohibited items|pickup receipt/i.test(fullText);
-
-                        if (isOverflowDisclaimer) {
-                            skippedOverflowPages++;
-                            continue;
-                        }
-
-                        const { sku, qty } = extractSkuAndQty(fullText);
-                        labelUnits.push({
-                            pageIndex: i,
-                            clip: null, // Keep full thermal label untouched
-                            nativeThermal: true,
-                            srcWidth: width,
-                            srcHeight: height,
-                            sku,
-                            qty
-                        });
-                        continue;
-                    }
-
-                    // CASE 2: Delhivery A4 2x2 Grid (multiple labels on 1 A4 page)
-                    const delhiveryMatches = (fullText.match(/DELHIVERY/gi) || []).length;
-                    const lrnMatches = (fullText.match(/LRN\s*:/gi) || []).length;
-                    const isDelhiveryA4Grid =
-                        width > 500 && height > 700 &&
-                        (delhiveryMatches >= 2 || lrnMatches >= 2) &&
-                        (selectedPlatform === 'auto' || selectedPlatform === 'delhivery' || selectedPlatform === 'a4_4up');
-
-                    if (isDelhiveryA4Grid) {
-                        const halfW = width / 2;
-                        const halfH = height / 2;
-                        // PDF coordinates start at bottom-left (0, 0)
-                        const quadrants = [
-                            { left: 0,     bottom: halfH, right: halfW, top: height }, // Top-Left
-                            { left: halfW, bottom: halfH, right: width, top: height }, // Top-Right
-                            { left: 0,     bottom: 0,     right: halfW, top: halfH  }, // Bottom-Left
-                            { left: halfW, bottom: 0,     right: width, top: halfH  }  // Bottom-Right
-                        ];
-
-                        for (const q of quadrants) {
-                            const quadItems = content.items.filter(item => {
-                                if (!item.str || !item.str.trim()) return false;
-                                const x = item.transform[4];
-                                const y = item.transform[5];
-                                return x >= q.left && x <= q.right && y >= q.bottom && y <= q.top;
-                            });
-                            const quadText = quadItems.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
-
-                            // Skip empty quadrant (e.g., 4th slot when only 3 labels exist on A4)
-                            if (quadText.length < 15) continue;
-
-                            const { sku, qty } = extractSkuAndQty(quadText);
+                    if (useSmartAuto) {
+                        const { labels, skippedJunk } = await detectLabelsOnPage(jsPage, removeInvoice);
+                        skippedPages += skippedJunk;
+                        for (const lb of labels) {
                             labelUnits.push({
                                 pageIndex: i,
-                                clip: q,
-                                nativeThermal: false,
-                                srcWidth: halfW,
-                                srcHeight: halfH,
-                                sku,
-                                qty
+                                clip: lb.clip,
+                                clipW: lb.clipW,
+                                clipH: lb.clipH,
+                                sku: lb.sku,
+                                qty: lb.qty
                             });
                         }
-                        continue;
-                    }
-
-                    // CASE 3: Standard A4 single-label (Meesho / Flipkart / Amazon / Sort Only)
-                    let effectivePlatform = selectedPlatform;
-                    if (effectivePlatform === 'auto' || effectivePlatform === 'delhivery') {
-                        if (/flipkart/i.test(fullText)) effectivePlatform = 'flipkart';
-                        else if (/amazon/i.test(fullText) && !/delhivery/i.test(fullText)) effectivePlatform = 'amazon';
-                        else if (/meesho/i.test(fullText)) effectivePlatform = 'meesho';
-                        else effectivePlatform = 'meesho';
-                    }
-
-                    const c = cropMap[effectivePlatform] || cropMap.meesho;
-                    const clip = effectivePlatform === 'sort_only'
-                        ? null
-                        : {
+                    } else if (mode === 'sort_only') {
+                        const content = await jsPage.getTextContent();
+                        const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+                        const { sku, qty } = extractSkuAndQty(text);
+                        const { width, height } = srcDoc.getPage(i).getSize();
+                        labelUnits.push({ pageIndex: i, clip: null, clipW: width, clipH: height, sku, qty });
+                    } else {
+                        // Manual fixed preset fallback (Meesho / Flipkart / Amazon)
+                        const content = await jsPage.getTextContent();
+                        const text = content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim();
+                        const { sku, qty } = extractSkuAndQty(text);
+                        const { width, height } = srcDoc.getPage(i).getSize();
+                        const c = manualCropMap[mode] || manualCropMap.meesho;
+                        const clip = {
                             left: width * c.x,
                             bottom: height * c.y,
                             right: width * (c.x + c.w),
                             top: height * (c.y + c.h)
                         };
-
-                    const { sku, qty } = extractSkuAndQty(fullText);
-                    labelUnits.push({
-                        pageIndex: i,
-                        clip,
-                        nativeThermal: false,
-                        srcWidth: clip ? (clip.right - clip.left) : width,
-                        srcHeight: clip ? (clip.top - clip.bottom) : height,
-                        sku,
-                        qty
-                    });
+                        labelUnits.push({
+                            pageIndex: i,
+                            clip,
+                            clipW: clip.right - clip.left,
+                            clipH: clip.top - clip.bottom,
+                            sku,
+                            qty
+                        });
+                    }
                 }
 
                 if (labelUnits.length === 0) {
-                    statusEl.innerText = "No valid shipping labels found in this PDF.";
+                    statusEl.innerText = "No shipping labels detected. Try unchecking 'Auto-remove Tax Invoice' or choose 'Keep Original Pages'.";
                     return;
                 }
 
@@ -1524,7 +1765,7 @@
                 html += `</tbody></table>`;
                 summaryBox.innerHTML = html;
 
-                statusEl.innerText = "Cropping & building final PDF...";
+                statusEl.innerText = "Building crisp, individual label pages...";
 
                 const outDoc = await PDFLib.PDFDocument.create();
                 const fontBold = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
@@ -1555,8 +1796,7 @@
                     }
                 }
 
-                // Output generation
-                if (selectedPlatform === 'a4_4up') {
+                if (mode === 'a4_4up') {
                     const a4W = 595, a4H = 842, pad = 14;
                     const cellW = (a4W - pad * 3) / 2;
                     const cellH = (a4H - pad * 3) / 2;
@@ -1580,33 +1820,40 @@
                             sheet.drawPage(embedded, { x: xPos, y: yPos, width: drawW, height: drawH });
                         }
                     }
-                } else if (selectedPlatform === 'sort_only') {
+                } else if (mode === 'sort_only') {
                     const indices = labelUnits.map(u => u.pageIndex);
                     const copied = await outDoc.copyPages(srcDoc, indices);
                     copied.forEach(p => outDoc.addPage(p));
+                } else if (mode === 'auto') {
+                    // EXACT SIZE PER LABEL (NO SIZE RESTRICTIONS — 1 CLEAN LABEL PER PAGE)
+                    for (const unit of labelUnits) {
+                        const srcPage = srcDoc.getPage(unit.pageIndex);
+                        const embedded = unit.clip
+                            ? await outDoc.embedPage(srcPage, unit.clip)
+                            : await outDoc.embedPage(srcPage);
+                        const pageW = Math.max(72, embedded.width);
+                        const pageH = Math.max(72, embedded.height);
+                        const outPage = outDoc.addPage([pageW, pageH]);
+                        outPage.drawPage(embedded, { x: 0, y: 0, width: pageW, height: pageH });
+                    }
                 } else {
+                    // Fit cleanly to standard 4x6 thermal page (auto-rotates landscape thermal if needed)
                     const thermalW = 288, thermalH = 432;
                     for (const unit of labelUnits) {
                         const srcPage = srcDoc.getPage(unit.pageIndex);
-                        // Preserve native pre-sized thermal labels (3x2, 4x2, 4x2.5) at their exact dimensions
-                        if (unit.nativeThermal && !unit.clip) {
-                            const [copied] = await outDoc.copyPages(srcDoc, [unit.pageIndex]);
-                            outDoc.addPage(copied);
-                        } else {
-                            const embedded = unit.clip
-                                ? await outDoc.embedPage(srcPage, unit.clip)
-                                : await outDoc.embedPage(srcPage);
-                            const outPage = outDoc.addPage([thermalW, thermalH]);
-                            const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
-                            const drawW = embedded.width * scale;
-                            const drawH = embedded.height * scale;
-                            outPage.drawPage(embedded, {
-                                x: (thermalW - drawW) / 2,
-                                y: (thermalH - drawH) / 2,
-                                width: drawW,
-                                height: drawH
-                            });
-                        }
+                        const embedded = unit.clip
+                            ? await outDoc.embedPage(srcPage, unit.clip)
+                            : await outDoc.embedPage(srcPage);
+                        const outPage = outDoc.addPage([thermalW, thermalH]);
+                        const scale = Math.min((thermalW - 8) / embedded.width, (thermalH - 8) / embedded.height);
+                        const drawW = embedded.width * scale;
+                        const drawH = embedded.height * scale;
+                        outPage.drawPage(embedded, {
+                            x: (thermalW - drawW) / 2,
+                            y: (thermalH - drawH) / 2,
+                            width: drawW,
+                            height: drawH
+                        });
                     }
                 }
 
@@ -1615,14 +1862,14 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `Sorted_Labels_${selectedPlatform}_SmallSellerSupport.pdf`;
+                a.download = `AutoCropped_Labels_${mode}_SmallSellerSupport.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
                 URL.revokeObjectURL(url);
 
-                const skipNote = skippedOverflowPages > 0 ? ` (Removed ${skippedOverflowPages} empty/overflow pages)` : '';
-                statusEl.innerText = `Done! Downloaded ${labelUnits.length} clean labels${skipNote}.`;
+                const skipNote = skippedPages > 0 ? ` (Removed ${skippedPages} invoice/overflow blocks)` : '';
+                statusEl.innerText = `Done! Downloaded ${labelUnits.length} perfect labels${skipNote}.`;
             } catch (err) {
                 console.error(err);
                 statusEl.innerText = "Error reading PDF. Please ensure it is a valid, unprotected shipping label PDF.";
