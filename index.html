@@ -678,7 +678,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">AWB Tracking Number</label>
-                                <input type="text" id="ndr_awb" value="" placeholder="e.g. 123456789" class="w-full p-3 border rounded-lg outline-none">
+                                <input type="text" id="ndr_awb" value="" placeholder="e.g. 123456789" class="w-full p-3 border rounded-lg outline-none" oninput="updateNdrPreview()">
                                 <p class="field-hint text-gray-600">Courier tracking ID of the undelivered parcel.</p>
                             </div>
                             <div>
@@ -1043,7 +1043,7 @@
                     </div>
                     <ul class="space-y-3 mb-8 text-sm text-gray-700 flex-grow">
                         <li class="flex items-center"><span class="text-indigo-600 mr-2 font-bold">✔</span> Every Pro Tool Unlocked for 3 Days</li>
-                        <li class="flex items-center"><span class="text-indigo-600 mr-2 font-bold">✔</span> Instant UPI + UTR Activation</li>
+                        <li class="flex items-center"><span class="text-indigo-600 mr-2 font-bold">✔</span> Verified UPI + WhatsApp Activation Key</li>
                         <li class="flex items-center"><span class="text-indigo-600 mr-2 font-bold">✔</span> No Auto-Renewal or Card Needed</li>
                         <li class="flex items-center"><span class="text-indigo-600 mr-2 font-bold">✔</span> ₹49 Adjusted If You Upgrade in 7 Days</li>
                     </ul>
@@ -1126,7 +1126,7 @@
                         <span class="text-blue-600 text-xl font-bold group-open:rotate-45 transition-transform">+</span>
                     </summary>
                     <p class="text-sm text-gray-600 mt-3 leading-relaxed">
-                        Pay ₹49 via UPI and submit your 12-digit UTR number to unlock all Pro tools immediately for 3 full days. If you decide to upgrade to the Monthly (₹199) or Yearly (₹1,499) plan within 7 days, we deduct that ₹49 from your plan price.
+                        Pay ₹49 via UPI and submit your 12-digit UTR number and WhatsApp number. Once verified, we send your Pro Activation Key on WhatsApp within 10–15 minutes to unlock all Pro tools for 3 full days. If you upgrade to Monthly (₹199) or Yearly (₹1,499) within 7 days, we deduct ₹49 from your plan price.
                     </p>
                 </details>
                 <details class="group bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
@@ -1135,7 +1135,7 @@
                         <span class="text-blue-600 text-xl font-bold group-open:rotate-45 transition-transform">+</span>
                     </summary>
                     <p class="text-sm text-gray-600 mt-3 leading-relaxed">
-                        Activation is <strong>instant</strong>. As soon as you enter your 12-digit UPI UTR number and WhatsApp number in the unlock popup, all Pro tools open immediately while our team verifies the UTR in the background.
+                        Typically within <strong>10–15 minutes</strong> during support hours. As soon as we verify your 12-digit UPI UTR number, we send your Pro Activation Key directly to your WhatsApp number.
                     </p>
                 </details>
                 <details class="group bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
@@ -1242,7 +1242,7 @@
     </section>
 
     <!-- INSTANT UPI + 12-DIGIT UTR PRO UNLOCK MODAL -->
-   <div id="pro-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center px-4 py-6 overflow-y-auto">
+    <div id="pro-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center px-4 py-6 overflow-y-auto">
         <div class="bg-white p-7 rounded-3xl max-w-md w-full text-left relative shadow-2xl modal-enter my-auto">
             <button onclick="closeProModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -1295,8 +1295,8 @@
                 <div class="mt-5 pt-4 border-t border-gray-200">
                     <label class="block text-xs font-bold text-gray-700 uppercase mb-1.5">Already Paid? Enter Activation Key</label>
                     <div class="flex gap-2">
-                        <input type="text" id="pro-key-input" placeholder="e.g. SSS-PRO-2026" class="flex-grow p-2.5 border border-gray-300 rounded-xl text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button type="button" onclick="activateWithKey()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shrink-0">Activate</button>
+                        <input type="text" id="pro-key-input" placeholder="e.g. SSS-PRO-199" class="flex-grow p-2.5 border border-gray-300 rounded-xl text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="button" onclick="activateWithKey('pro-key-input')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shrink-0">Activate</button>
                     </div>
                     <p id="key-error-msg" class="text-xs text-red-600 font-semibold mt-1.5 hidden"></p>
                 </div>
@@ -1314,10 +1314,12 @@
                         <input type="text" id="pro-key-input-2" placeholder="SSS-PRO-XXXX" class="flex-grow p-2.5 border border-gray-300 rounded-xl text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <button type="button" onclick="activateWithKey('pro-key-input-2')" class="bg-green-600 hover:bg-green-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shrink-0">Unlock</button>
                     </div>
+                    <p id="key-error-msg-2" class="text-xs text-red-600 font-semibold mt-1.5 hidden"></p>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- INTERACTIVE LOGIC & CHARTS -->
     <script>
         if (typeof pdfjsLib !== 'undefined') {
@@ -1347,6 +1349,10 @@
             document.getElementById('modal-success-view').classList.add('hidden');
             document.getElementById('whatsapp-input').value = "";
             document.getElementById('utr-input').value = "";
+            const err1 = document.getElementById('key-error-msg');
+            const err2 = document.getElementById('key-error-msg-2');
+            if (err1) err1.classList.add('hidden');
+            if (err2) err2.classList.add('hidden');
             const sel = document.getElementById('upi-plan-select');
             if (defaultPlan === '199') sel.selectedIndex = 1;
             else if (defaultPlan === '1499') sel.selectedIndex = 2;
@@ -1368,8 +1374,7 @@
             });
         }
 
-        function submitUpiUnlock() {
-          // Secret Activation Keys (Change these anytime to your own secret codes!)
+        // Secret Activation Keys (Change these anytime to your own secret codes!)
         const VALID_PRO_KEYS = {
             'SSS-TRIAL-49': 3,    // 3 days access
             'SSS-PRO-199': 30,    // 30 days access
@@ -1387,9 +1392,10 @@
         }
         window.addEventListener('DOMContentLoaded', checkSavedProAccess);
 
-        function activateWithKey(inputId = 'pro-key-input') {
-            const rawKey = (document.getElementById(inputId)?.value || '').trim().toUpperCase();
-            const errEl = document.getElementById('key-error-msg');
+        function activateWithKey(inputId) {
+            const targetId = inputId || 'pro-key-input';
+            const rawKey = (document.getElementById(targetId)?.value || '').trim().toUpperCase();
+            const errEl = document.getElementById(targetId === 'pro-key-input-2' ? 'key-error-msg-2' : 'key-error-msg');
             const days = VALID_PRO_KEYS[rawKey];
             if (!days) {
                 if (errEl) {
@@ -1603,15 +1609,15 @@
         }
 
         // ==================== FREE TOOL: UNIVERSAL SMART AUTO-DETECT + OVERFLOW STITCHER ====================
-        const LABEL_SIGNAL_RX = /\b(DELHIVERY|LRN|MAWB|AWB|OID|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Return\s*To|Box\s*:|Meesho|Flipkart|Amazon|Shiprocket|Bluedart|Blue\s*Dart|Xpressbees|Ecom\s*Express|Shadowfax|DTDC|COD|Prepaid|Order\s*(ID|No)|Tracking|Courier|Pickup|Fold\s*Here|Ekart|Waybill|SKU)\b/i;
-        const INVOICE_ONLY_RX = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Taxable\s*Value|IGST|CGST|SGST|Invoice\s*Number|Invoice\s*Date)\b/i;
-        const INVOICE_CUT_RX  = /\b(Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Invoice\s*Details|Cut\s*Here|Tear\s*Here|Fold\s*Here)\b/i;
+        const LABEL_SIGNAL_RX = / (DELHIVERY|LRN|MAWB|AWB|OID|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Return\s*To|Box\s*:|Meesho|Flipkart|Amazon|Shiprocket|Bluedart|Blue\s*Dart|Xpressbees|Ecom\s*Express|Shadowfax|DTDC|COD|Prepaid|Order\s*(ID|No)|Tracking|Courier|Pickup|Fold\s*Here|Ekart|Waybill|SKU) /i;
+        const INVOICE_ONLY_RX = / (Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Taxable\s*Value|IGST|CGST|SGST|Invoice\s*Number|Invoice\s*Date) /i;
+        const INVOICE_CUT_RX  = / (Tax\s*Invoice|Original\s*for\s*Recipient|Bill\s*of\s*Supply|Invoice\s*Details|Cut\s*Here|Tear\s*Here|Fold\s*Here) /i;
         const OVERFLOW_CONT_RX = /shipper\s+hereby\s+declares|Disclaimer|Declaration|Dangerous\s+goods|prohibited\s+items|pickup\s+receipt|not\s+for\s+sale\s*-\s*No\s+commercial/i;
 
         function looksLikeLabel(text) { return LABEL_SIGNAL_RX.test(text || ''); }
         function looksLikeInvoiceOnly(text) {
             const t = text || '';
-            return INVOICE_ONLY_RX.test(t) && !/\b(DELHIVERY|LRN|MAWB|AWB|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Waybill|Tracking|Box\s*:)\b/i.test(t);
+            return INVOICE_ONLY_RX.test(t) && !/ (DELHIVERY|LRN|MAWB|AWB|Ship\s*To|Shipping\s*Address|Deliver\s*To|Customer\s*Address|Return\s*Address|Waybill|Tracking|Box\s*:) /i.test(t);
         }
         function looksLikeOverflowContinuation(text) {
             const t = (text || '').trim();
@@ -2067,7 +2073,7 @@
                             sumPage = outDoc.addPage([595, 842]);
                             y = 800;
                         }
-                        const safeSku = s.replace(/[^\x20-\x7E]/g, '').slice(0, 58) || 'SKU';
+                        const safeSku = s.replace(/[^ -~]/g, '').slice(0, 58) || 'SKU';
                         sumPage.drawText(safeSku, { x: 40, y, size: 9, font: fontReg });
                         sumPage.drawText(String(skuCounts[s].orders), { x: 415, y, size: 9, font: fontReg });
                         sumPage.drawText(String(skuCounts[s].units), { x: 500, y, size: 9, font: fontBold });
